@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
+import '../../../../../core/widgets/header_text.dart';
 import 'active_report.dart';
-import 'reports_grid_view.dart';
+import 'previous_issues_listView.dart';
 
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key});
@@ -10,13 +10,15 @@ class HomeViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
+      child: ListView(
         children: [
+          HeaderText(title: "العطل الحالي"),
           ActiveReport(), // Active report
           SizedBox(
-            height: 10,
+            height: 16,
           ),
-          ReportsGridView(), // Reports Boxes
+          HeaderText(title: "الأعطال السابقة"),
+          PreviousIssuesListView(),
         ],
       ),
     );
