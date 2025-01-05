@@ -1,6 +1,9 @@
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'constants.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -19,6 +22,20 @@ class UpDown extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: AppRouter.router,
       debugShowCheckedModeBanner: false,
+      supportedLocales: [
+        Locale('en', 'US'), // English
+        Locale('ar', 'AE'), // Arabic
+      ],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: Locale('ar', 'AE'),
+      theme: ThemeData(
+        useMaterial3: true,
+        primaryColor: kprimaryColor,
+      ),
     );
   }
 }

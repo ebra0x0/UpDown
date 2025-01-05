@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PreviousIssuesListView extends StatelessWidget {
-  const PreviousIssuesListView({super.key});
+class PreviousReportsListView extends StatelessWidget {
+  const PreviousReportsListView({super.key});
 
   @override
   Widget build(BuildContext context) {
