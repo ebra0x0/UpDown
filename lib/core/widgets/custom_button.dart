@@ -6,10 +6,12 @@ class CustomButton extends StatelessWidget {
     super.key,
     required this.title,
     required this.onPress,
+    this.isLoading = false,
   });
 
   final String title;
   final Function() onPress;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,16 @@ class CustomButton extends StatelessWidget {
             )),
             backgroundColor: WidgetStatePropertyAll(kprimaryColor),
           ),
-          child: const Text("إرسال",
-              style: TextStyle(fontSize: 20, color: Colors.white)),
+          child: isLoading
+              ? SizedBox(
+                  width: 25,
+                  height: 25,
+                  child: const CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : const Text("إنشاء حساب",
+                  style: TextStyle(fontSize: 20, color: Colors.white)),
         ));
   }
 }

@@ -1,3 +1,4 @@
+import 'package:UpDown/features/auth/presentaion/views/registration_view.dart';
 import 'package:UpDown/features/create_report/presentation/views/create_report_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,7 +11,7 @@ abstract class AppRouter {
   static final router = GoRouter(routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const HomeView(),
+      builder: (context, state) => const RegistrationView(),
     ),
     GoRoute(
       path: khomeView,

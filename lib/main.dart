@@ -2,15 +2,22 @@ import 'package:UpDown/core/utils/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'constants.dart';
 
-void main() {
+Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.white, // Match this with the app's theme
+    systemNavigationBarColor: Colors.white,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: kSUPABASE_URL,
+    anonKey: kSUPABASE_KEY,
+  );
   runApp(const UpDown());
 }
 
