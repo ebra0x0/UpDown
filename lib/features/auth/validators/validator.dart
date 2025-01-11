@@ -13,16 +13,24 @@ class Validator {
     }
   }
 
-  String? passwordValidator(String? password) {
+  String? regestrationPasswordValidator(String? password) {
     final RegExp regex = RegExp(r'^(?=.*?)(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
     if (password == null || !regex.hasMatch(password)) {
-      return ("كلمة مرور ضعيفة");
+      return ("كلمة مرور ضعيفة.");
     } else {
       return null;
     }
   }
 
-  String? rePasswordValidator(String? rePassword) {
+  String? loginPasswordValidator(String? password) {
+    if (password == null || password.isEmpty) {
+      return ("ادخل كلمة المرور.");
+    } else {
+      return null;
+    }
+  }
+
+  String? confirmPasswordValidator(String? rePassword) {
     if (rePassword != password) {
       return ("كلمة المرور غير متطابقة.");
     } else {

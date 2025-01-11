@@ -1,4 +1,3 @@
-import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/core/widgets/header_text.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +15,6 @@ class RegistrationViewBody extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 30),
-            const BackNavigationButton(),
             const SizedBox(height: 30),
             const HeaderText(title: "انشاء حساب جديد", textSize: 26),
             const SizedBox(height: 50),

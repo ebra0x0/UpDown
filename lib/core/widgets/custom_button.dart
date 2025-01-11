@@ -19,7 +19,7 @@ class CustomButton extends StatelessWidget {
         width: 160,
         height: 50,
         child: ElevatedButton(
-          onPressed: onPress,
+          onPressed: isLoading ? null : onPress,
           style: ButtonStyle(
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -34,7 +34,7 @@ class CustomButton extends StatelessWidget {
                     color: Colors.white,
                   ),
                 )
-              : const Text("إنشاء حساب",
+              : Text(title,
                   style: TextStyle(fontSize: 20, color: Colors.white)),
         ));
   }

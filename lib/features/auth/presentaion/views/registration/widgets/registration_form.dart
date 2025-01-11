@@ -8,7 +8,7 @@ import 'package:UpDown/features/auth/validators/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'password_field.dart';
+import '../../../../../../core/widgets/password_field.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({super.key});
@@ -34,7 +34,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     labelText: "كلمة المرور",
     isPassword: true,
     isSecure: true,
-    validator: Validator().passwordValidator,
+    validator: Validator().regestrationPasswordValidator,
   );
 
   final FormFieldModel _rePasswordField = FormFieldModel(
@@ -42,24 +42,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
     isPassword: true,
     isConfirmPassword: true,
     isSecure: true,
-    validator: Validator().rePasswordValidator,
+    validator: Validator().confirmPasswordValidator,
   );
-  // final List<FormFieldModel> _fields = [
-  //   FormFieldModel(labelText: "الأسم", validator: Validator().nameValidator),
-  //   FormFieldModel(labelText: "الإيميل", validator: Validator().emailValidator),
-  //   FormFieldModel(
-  //       labelText: "كلمة المرور",
-  //       isPassword: true,
-  //       isSecure: true,
-  //       validator: Validator().passwordValidator),
-  //   FormFieldModel(
-  //       labelText: "تأكيد كلمة المرور",
-  //       isPassword: true,
-  //       isConfirmPassword: true,
-  //       isSecure: true,
-
-  //       validator: Validator().rePasswordValidator),
-  // ];
 
   @override
   void dispose() {
@@ -70,7 +54,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     super.dispose();
   }
 
-  Future<void> _signUp() async {
+  void _submit() {
     if (_registrationFormKey.currentState!.validate()) {
       _registrationFormKey.currentState!.save();
       final newUser = AuthUserModel(
@@ -110,7 +94,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             onChanged: (value) {
               setState(() {
                 _rePasswordField.validator =
-                    Validator(password: value).rePasswordValidator;
+                    Validator(password: value).confirmPasswordValidator;
               });
             },
             toggleVisibility: () {
@@ -134,7 +118,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           BlocBuilder<RegistrationCubit, RegistraionCubitState>(
               builder: (context, state) => CustomButton(
                     title: "إنشاء حساب ",
-                    onPress: _signUp,
+                    onPress: _submit,
                     isLoading: state is RegistraionCubitLoading,
                   )),
         ],
