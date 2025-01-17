@@ -1,3 +1,4 @@
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/header_text.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,10 @@ class RegistrationViewBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
-            const HeaderText(title: "انشاء حساب جديد", textSize: 26),
+            const HeaderText(
+              title: "انشاء حساب جديد",
+              textStyle: Styles.textStyle26,
+            ),
             const SizedBox(height: 50),
             RegistrationForm(),
           ],

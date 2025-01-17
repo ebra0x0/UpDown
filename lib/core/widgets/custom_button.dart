@@ -1,4 +1,5 @@
-import 'package:UpDown/constants.dart';
+import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
@@ -18,13 +19,13 @@ class CustomButton extends StatelessWidget {
     return SizedBox(
         width: 160,
         height: 50,
-        child: ElevatedButton(
+        child: TextButton(
           onPressed: isLoading ? null : onPress,
           style: ButtonStyle(
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             )),
-            backgroundColor: WidgetStatePropertyAll(kprimaryColor),
+            backgroundColor: WidgetStatePropertyAll(Pallete.primary),
           ),
           child: isLoading
               ? SizedBox(
@@ -35,7 +36,7 @@ class CustomButton extends StatelessWidget {
                   ),
                 )
               : Text(title,
-                  style: TextStyle(fontSize: 20, color: Colors.white)),
+                  style: Styles.textStyle16.copyWith(color: Colors.black87)),
         ));
   }
 }

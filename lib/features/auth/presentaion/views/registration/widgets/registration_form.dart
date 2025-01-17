@@ -1,7 +1,7 @@
 import 'package:UpDown/core/widgets/custom_button.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
-import 'package:UpDown/features/auth/data/auth_user_model.dart';
-import 'package:UpDown/features/auth/data/form_field_model.dart';
+import 'package:UpDown/core/utils/model/auth_user_model.dart';
+import 'package:UpDown/core/utils/model/form_field_model.dart';
 import 'package:UpDown/features/auth/presentaion/manager/registration_cubit/registraion_cubit_state.dart';
 import 'package:UpDown/features/auth/presentaion/manager/registration_cubit/registration_cubit.dart';
 import 'package:UpDown/features/auth/validators/validator.dart';
@@ -19,11 +19,7 @@ class RegistrationForm extends StatefulWidget {
 
 class _RegistrationFormState extends State<RegistrationForm> {
   final GlobalKey<FormState> _registrationFormKey = GlobalKey<FormState>();
-
-  final FormFieldModel _nameField = FormFieldModel(
-    labelText: "الأسم",
-    validator: Validator().nameValidator,
-  );
+  AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
 
   final FormFieldModel _emailField = FormFieldModel(
     labelText: "الإيميل",
@@ -47,7 +43,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   @override
   void dispose() {
-    _nameField.controller.dispose();
     _emailField.controller.dispose();
     _passwordField.controller.dispose();
     _rePasswordField.controller.dispose();
@@ -58,12 +53,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
     if (_registrationFormKey.currentState!.validate()) {
       _registrationFormKey.currentState!.save();
       final newUser = AuthUserModel(
-        name: _nameField.controller.text,
         email: _emailField.controller.text,
         password: _passwordField.controller.text,
       );
 
       BlocProvider.of<RegistrationCubit>(context).signUp(newUser);
+    } else {
+      setState(() {
+        _autoValidateMode = AutovalidateMode.always;
+      });
     }
   }
 
@@ -71,15 +69,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _registrationFormKey,
+      autovalidateMode: _autoValidateMode,
       child: Column(
         spacing: 16,
         children: [
-          CustomTextFormField(
-            keyType: TextInputType.text,
-            labelText: _nameField.labelText,
-            controller: _nameField.controller,
-            validator: _nameField.validator,
-          ),
           CustomTextFormField(
             keyType: TextInputType.emailAddress,
             labelText: _emailField.labelText,
@@ -114,6 +107,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
               });
             },
           ),
+          SizedBox(height: 16),
+          BlocBuilder<RegistrationCubit, RegistraionCubitState>(
+              builder: (context, state) {
+            return Text(
+              state is RegistraionCubitError ? state.error : "",
+              style: TextStyle(color: Colors.red),
+              textAlign: TextAlign.center,
+            );
+          }),
           SizedBox(height: 120),
           BlocBuilder<RegistrationCubit, RegistraionCubitState>(
               builder: (context, state) => CustomButton(

@@ -73,7 +73,6 @@ class _CreateReportFormState extends State<CreateReportForm> {
                 onPress: () {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    print(reportData);
                   }
                 }),
           ],

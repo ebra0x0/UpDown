@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:UpDown/constants.dart';
+import 'package:UpDown/core/utils/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -54,7 +53,7 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
               ? DecorationImage(
                   image: Image.file(_image!).image, fit: BoxFit.cover)
               : null,
-          color: kprimaryColor,
+          color: Pallete.primary,
           borderRadius: BorderRadius.circular(8),
         ),
         child: _video != null

@@ -13,7 +13,7 @@ class RegistrationView extends StatelessWidget {
         create: (context) => RegistrationCubit(),
         child: Scaffold(
             appBar: AppBar(
-              title: BackButtonNavigation(),
+              leading: BackButtonNavigation(),
             ),
             body: RegistrationViewBody()));
   }

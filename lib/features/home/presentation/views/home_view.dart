@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../core/utils/app_router.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
 import 'widgets/home_view_body.dart';

@@ -1,3 +1,4 @@
+import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,15 @@ class PasswordField extends StatelessWidget {
       toggleVisibility: toggleVisibility,
       obscureText: obscureText,
       suffixIcon: IconButton(
-        icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+        icon: obscureText
+            ? Icon(
+                Icons.visibility_off_outlined,
+                color: Pallete.textSecondary,
+              )
+            : Icon(
+                Icons.visibility_outlined,
+                color: Pallete.textSecondary,
+              ),
         onPressed: toggleVisibility,
       ),
       validator: validator,

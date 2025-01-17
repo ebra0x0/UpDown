@@ -1,5 +1,6 @@
-import 'package:UpDown/core/widgets/back_nav_button.dart';
+import 'package:UpDown/features/auth/presentaion/manager/login_cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'widgets/login_view_body.dart';
 
 class LoginView extends StatelessWidget {
@@ -7,10 +8,9 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: BackButtonNavigation(),
-        ),
-        body: LoginViewBody());
+    return BlocProvider<LoginCubit>(
+      create: (context) => LoginCubit(),
+      child: Scaffold(appBar: AppBar(), body: LoginViewBody()),
+    );
   }
 }

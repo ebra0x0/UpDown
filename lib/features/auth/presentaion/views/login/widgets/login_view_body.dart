@@ -1,3 +1,4 @@
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/header_text.dart';
 import 'package:UpDown/features/auth/presentaion/views/login/widgets/login_form.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,14 @@ class LoginViewBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 30),
-          const HeaderText(title: "أهلاً من جديد", textSize: 28),
-          const HeaderText(title: "هيا نسجل الدخول لحسابك", textSize: 18),
+          const HeaderText(
+            title: "أهلاً من جديد",
+            textStyle: Styles.textStyle26,
+          ),
+          const HeaderText(
+            title: "هيا نسجل الدخول لحسابك",
+            textStyle: Styles.textStyle16,
+          ),
           const SizedBox(height: 50),
           LoginForm(),
         ],
