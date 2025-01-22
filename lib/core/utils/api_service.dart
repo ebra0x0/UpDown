@@ -153,9 +153,10 @@ class ApiService {
 
       if (response.isEmpty) return [];
 
-      return response
-          .map((elevator) => ElevatorModel.fromJson(elevator))
-          .toList();
+      List<ElevatorModel> elevators =
+          response.map((elevator) => ElevatorModel.fromJson(elevator)).toList();
+
+      return elevators;
     } catch (e) {
       throw Exception(e.toString());
     }

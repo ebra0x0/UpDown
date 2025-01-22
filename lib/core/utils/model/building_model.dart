@@ -5,6 +5,7 @@ class BuildingModel {
   final String name;
   final String address;
   final String ownerId;
+  final int floorCount;
   final DateTime createdAt;
   final DateTime updatedAt;
   final List<ElevatorModel> elevators;
@@ -14,6 +15,7 @@ class BuildingModel {
     required this.name,
     required this.address,
     required this.ownerId,
+    required this.floorCount,
     required this.createdAt,
     required this.updatedAt,
     required this.elevators,
@@ -21,11 +23,12 @@ class BuildingModel {
 
   factory BuildingModel.fromJson(Map<String, dynamic> json) {
     return BuildingModel(
-      elevators: [],
+      elevators: json['elevators'],
       buildingId: json['building_id'],
       name: json['building_name'],
       address: json['address'],
       ownerId: json['owner_id'],
+      floorCount: json['floor_count'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -37,6 +40,7 @@ class BuildingModel {
       'building_name': name,
       'address': address,
       'owner_id': ownerId,
+      'floor_count': floorCount,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };

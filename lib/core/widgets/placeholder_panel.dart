@@ -1,19 +1,19 @@
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-class BuildingsGridViewError extends StatelessWidget {
-  const BuildingsGridViewError({
+class PlaceholderPanel extends StatelessWidget {
+  const PlaceholderPanel({
     super.key,
-    required this.errorMsg,
+    required this.message,
   });
 
-  final String errorMsg;
+  final String message;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        errorMsg,
+        message,
         style: Styles.textStyle20,
       ),
     );

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'buildings_grid_view_box.dart';
-import 'buildings_grid_view_error.dart';
+import '../../../../../../core/widgets/placeholder_panel.dart';
 
 class BuildingsGridView extends StatelessWidget {
   const BuildingsGridView({
@@ -16,33 +16,23 @@ class BuildingsGridView extends StatelessWidget {
     return BlocBuilder<BuildingsCubit, BuildingsCubitState>(
         builder: (context, state) {
       if (state is BuildingsCubitEmpty) {
-        return BuildingsGridViewError(
-          errorMsg: "لا يوجد عقارات مسجلة",
-        );
+        return PlaceholderPanel(message: "لا يوجد عقارات مسجلة");
       } else if (state is BuildingsCubitError) {
-        return BuildingsGridViewError(errorMsg: "حدث خطأ ما وجاري حل المشكلة");
-      } else if (state is BuildingsCubitLoading ||
-          state is BuildingsCubitInitial) {
-        return LoadingIndicator();
-      }
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 16,
-        ),
-        itemCount: 1,
-        itemBuilder: (context, index) {
-          return BlocBuilder<BuildingsCubit, BuildingsCubitState>(
-              builder: (context, state) {
-            if (state is BuildingsCubitSuccess) {
+        return PlaceholderPanel(message: "حدث خطأ ما وجاري حل المشكلة");
+      } else if (state is BuildingsCubitSuccess) {
+        // print(state.buildings[0]);
+        return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 16,
+            ),
+            itemCount: state.buildings.length,
+            itemBuilder: (context, index) {
               return BuildingsGridViewBox(building: state.buildings[index]);
-            } else {
-              return Container();
-            }
-          });
-        },
-      );
+            });
+      }
+      return LoadingIndicator();
     });
   }
 }
