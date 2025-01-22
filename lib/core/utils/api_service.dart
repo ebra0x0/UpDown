@@ -1,4 +1,6 @@
 import 'package:UpDown/core/utils/function/auth_exceptions_handler.dart';
+import 'package:UpDown/core/utils/model/building_model.dart';
+import 'package:UpDown/core/utils/model/elevator_model.dart';
 import 'package:UpDown/core/utils/model/user_model.dart';
 import 'package:UpDown/core/utils/model/auth_user_model.dart';
 import 'package:UpDown/core/utils/model/report_model.dart';
@@ -6,8 +8,8 @@ import 'package:UpDown/core/utils/model/report_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ApiService {
-  ApiService();
   final supabase = Supabase.instance.client;
+  ApiService();
 
   Future<void> signUp(AuthUserModel user) async {
     try {
@@ -114,6 +116,45 @@ class ApiService {
 
       return activeReports
           .map((report) => ReportModel.fromJson(report))
+          .toList();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<BuildingModel>> getBuildings() async {
+    try {
+      // final String userId = supabase.auth.currentUser!.id.toString();
+
+      final List<Map<String, dynamic>> response = await supabase
+          .from('Buildings')
+          .select()
+          .eq("owner_id", "17b33518-b78b-4f01-ab26-28ef24b46d5b");
+
+      final List<BuildingModel> buildings =
+          await Future.wait(response.map((b) async {
+        List<ElevatorModel> elevators = await getElevators(b["building_id"]);
+
+        return BuildingModel.fromJson({...b, "elevators": elevators});
+      }));
+
+      return buildings;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<ElevatorModel>> getElevators(String buildingId) async {
+    try {
+      final List<Map<String, dynamic>> response = await supabase
+          .from('Elevators')
+          .select()
+          .eq("building_id", buildingId);
+
+      if (response.isEmpty) return [];
+
+      return response
+          .map((elevator) => ElevatorModel.fromJson(elevator))
           .toList();
     } catch (e) {
       throw Exception(e.toString());

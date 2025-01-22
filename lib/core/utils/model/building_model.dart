@@ -1,10 +1,13 @@
+import 'elevator_model.dart';
+
 class BuildingModel {
-  final int buildingId;
+  final String buildingId;
   final String name;
   final String address;
-  final int ownerId;
+  final String ownerId;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final List<ElevatorModel> elevators;
 
   BuildingModel({
     required this.buildingId,
@@ -13,27 +16,29 @@ class BuildingModel {
     required this.ownerId,
     required this.createdAt,
     required this.updatedAt,
+    required this.elevators,
   });
 
   factory BuildingModel.fromJson(Map<String, dynamic> json) {
     return BuildingModel(
-      buildingId: json['BuildingID'],
-      name: json['Name'],
-      address: json['Address'],
-      ownerId: json['OwnerID'],
-      createdAt: DateTime.parse(json['CreatedAt']),
-      updatedAt: DateTime.parse(json['UpdatedAt']),
+      elevators: [],
+      buildingId: json['building_id'],
+      name: json['building_name'],
+      address: json['address'],
+      ownerId: json['owner_id'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'BuildingID': buildingId,
-      'Name': name,
-      'Address': address,
-      'OwnerID': ownerId,
-      'CreatedAt': createdAt.toIso8601String(),
-      'UpdatedAt': updatedAt.toIso8601String(),
+      'building_id': buildingId,
+      'building_name': name,
+      'address': address,
+      'owner_id': ownerId,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
     };
   }
 }

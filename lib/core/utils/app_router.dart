@@ -1,4 +1,3 @@
-import 'package:UpDown/core/utils/auth_listener.dart';
 import 'package:UpDown/features/auth/presentaion/views/login/login_view.dart';
 import 'package:UpDown/features/auth/presentaion/views/registration/registration_view.dart';
 import 'package:UpDown/features/create_report/presentation/views/create_report_view.dart';
@@ -18,7 +17,7 @@ abstract class AppRouter {
   static final router = GoRouter(routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const AuthListener(),
+      builder: (context, state) => const HomeView(),
     ),
     GoRoute(
       path: ksplashView,
