@@ -1,10 +1,12 @@
 import 'package:UpDown/features/auth/presentaion/views/login/login_view.dart';
 import 'package:UpDown/features/auth/presentaion/views/registration/registration_view.dart';
 import 'package:UpDown/features/create_report/presentation/views/create_report_view.dart';
+import 'package:UpDown/features/home/presentation/views/building_details_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/home/presentation/views/home_view.dart';
+import 'model/building_model.dart';
 
 abstract class AppRouter {
   static const String ksplashView = '/splashView';
@@ -12,7 +14,8 @@ abstract class AppRouter {
   static const String kcreateReportView = '/createReportView';
   static const String kregistrationView = '/registrationView';
   static const String kloginView = '/loginView';
-  static const String kAuthListener = '/AuthListener';
+  static const String kauthListener = '/authListener';
+  static const String kbuildingDetails = '/buildingDetails';
 
   static final router = GoRouter(routes: [
     GoRoute(
@@ -23,6 +26,12 @@ abstract class AppRouter {
       path: ksplashView,
       builder: (context, state) => const SplashView(),
     ),
+    GoRoute(
+        path: kbuildingDetails,
+        builder: (context, state) {
+          final building = state.extra as BuildingModel;
+          return BuildingDetailsView(building: building);
+        }),
     GoRoute(
       path: kregistrationView,
       builder: (context, state) => const RegistrationView(),

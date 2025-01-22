@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomAnimatedButton extends StatefulWidget {
-  const CustomAnimatedButton({super.key, required this.child});
+  const CustomAnimatedButton(
+      {super.key, required this.child, required this.action});
 
   final Widget child;
+  final void Function() action;
 
   @override
   State<CustomAnimatedButton> createState() => _CustomAnimatedButtonState();
@@ -22,9 +24,7 @@ class _CustomAnimatedButtonState extends State<CustomAnimatedButton> {
         opacity: _opacity,
         duration: Duration(milliseconds: 100),
         child: GestureDetector(
-          onTap: () {
-            print("tap");
-          },
+          onTap: widget.action,
           onTapDown: (d) {
             setState(() {
               _scale = .9;

@@ -1,5 +1,5 @@
+import 'package:UpDown/features/home/presentation/views/widgets/buildings_section/buildings_grid_view_section.dart';
 import 'package:flutter/material.dart';
-import 'buildings_section/buildings_grid_view.dart';
 
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key});
@@ -8,7 +8,7 @@ class HomeViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 16, right: 16, top: 16).copyWith(),
-      child: BuildingsGridView(),
+      child: BuildingsGridViewSection(),
     );
   }
 }
