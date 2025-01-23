@@ -1,4 +1,4 @@
-import 'package:UpDown/features/home/presentation/views/widgets/buildings_section/buildings_grid_view_section.dart';
+import 'package:UpDown/features/home/presentation/views/widgets/home_widgets/buildings_section/buildings_grid_view_section.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewBody extends StatelessWidget {

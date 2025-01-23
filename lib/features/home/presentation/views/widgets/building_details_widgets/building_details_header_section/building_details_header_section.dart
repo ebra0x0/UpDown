@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'building_attributes_box.dart';
 
-class BuildingDetailsInfoSection extends StatelessWidget {
-  const BuildingDetailsInfoSection({super.key, required this.building});
+class BuildingDetailsHeaderSection extends StatelessWidget {
+  const BuildingDetailsHeaderSection({super.key, required this.building});
 
   final BuildingModel building;
 

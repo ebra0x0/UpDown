@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'buildings_grid_view_box.dart';
-import '../../../../../../core/widgets/placeholder_panel.dart';
+import '../../../../../../../core/widgets/placeholder_panel.dart';
 
 class BuildingsGridView extends StatelessWidget {
   const BuildingsGridView({

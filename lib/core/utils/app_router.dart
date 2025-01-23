@@ -29,7 +29,7 @@ abstract class AppRouter {
     GoRoute(
         path: kbuildingDetails,
         builder: (context, state) {
-          final building = state.extra as BuildingModel;
+          final BuildingModel building = state.extra as BuildingModel;
           return BuildingDetailsView(building: building);
         }),
     GoRoute(

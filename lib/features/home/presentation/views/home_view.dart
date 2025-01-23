@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
-import 'widgets/home_view_body.dart';
+import 'widgets/home_widgets/home_view_body.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
