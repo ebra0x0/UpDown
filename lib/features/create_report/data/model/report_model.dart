@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/model/issue_model.dart';
+import 'issue_model.dart';
 
 class ReportModel {
   final String status;

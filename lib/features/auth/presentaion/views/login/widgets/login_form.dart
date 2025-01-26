@@ -2,7 +2,7 @@ import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/widgets/custom_button.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/core/widgets/password_field.dart';
-import 'package:UpDown/core/utils/model/auth_user_model.dart';
+import 'package:UpDown/features/auth/data/model/auth_user_model.dart';
 import 'package:UpDown/core/utils/model/form_field_model.dart';
 import 'package:UpDown/features/auth/presentaion/manager/login_cubit/login_cubit.dart';
 import 'package:UpDown/features/auth/presentaion/manager/login_cubit/login_cubit_state.dart';

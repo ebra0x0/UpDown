@@ -1,9 +1,9 @@
 import 'package:UpDown/core/utils/function/auth_exceptions_handler.dart';
-import 'package:UpDown/core/utils/model/building_model.dart';
-import 'package:UpDown/core/utils/model/elevator_model.dart';
+import 'package:UpDown/features/home/data/model/building_model.dart';
+import 'package:UpDown/features/home/data/model/elevator_model.dart';
 import 'package:UpDown/core/utils/model/user_model.dart';
-import 'package:UpDown/core/utils/model/auth_user_model.dart';
-import 'package:UpDown/core/utils/model/report_model.dart';
+import 'package:UpDown/features/auth/data/model/auth_user_model.dart';
+import 'package:UpDown/features/create_report/data/model/report_model.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 

@@ -1,5 +1,5 @@
 import 'package:UpDown/core/utils/app_router.dart';
-import 'package:UpDown/core/utils/model/building_model.dart';
+import 'package:UpDown/features/home/data/model/building_model.dart';
 import 'package:UpDown/core/widgets/custom_animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

@@ -1,6 +1,6 @@
 import 'package:UpDown/core/widgets/custom_button.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
-import 'package:UpDown/core/utils/model/auth_user_model.dart';
+import 'package:UpDown/features/auth/data/model/auth_user_model.dart';
 import 'package:UpDown/core/utils/model/form_field_model.dart';
 import 'package:UpDown/features/auth/presentaion/manager/registration_cubit/registraion_cubit_state.dart';
 import 'package:UpDown/features/auth/presentaion/manager/registration_cubit/registration_cubit.dart';

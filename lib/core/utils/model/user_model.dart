@@ -1,5 +1,5 @@
-import 'package:UpDown/core/utils/model/building_model.dart';
-import 'package:UpDown/core/utils/model/report_model.dart';
+import 'package:UpDown/features/home/data/model/building_model.dart';
+import 'package:UpDown/features/create_report/data/model/report_model.dart';
 
 class UserModel {
   String id;
@@ -7,7 +7,6 @@ class UserModel {
   String? email;
   String? phone;
   String role;
-  String passwordHash;
   DateTime createdAt;
   DateTime updatedAt;
   List<BuildingModel> buildings;
@@ -19,7 +18,6 @@ class UserModel {
     this.email,
     this.phone,
     required this.role,
-    required this.passwordHash,
     required this.createdAt,
     required this.updatedAt,
     required this.buildings,
@@ -34,7 +32,6 @@ class UserModel {
         createdAt: DateTime.parse(json['created_at']),
         updatedAt: DateTime.parse(json['updated_at']),
         role: json['role'],
-        passwordHash: json['password_hash'],
         buildings: [],
       );
 
@@ -44,7 +41,6 @@ class UserModel {
         'email': email,
         'phone': phone,
         'role': role,
-        'password_hash': passwordHash,
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
         'Buildings': buildings.map((building) => building.toJson()).toList(),

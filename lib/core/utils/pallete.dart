@@ -4,10 +4,14 @@ abstract class Pallete {
   // Primary color
   static const Color primary = Color(0xFF8FE7DA);
 
+  // Secondary color
+  static const Color secondary = Color(0xFF7C7C7C);
+
   // status color
   static const Color warning = Color(0xFFFFD166);
   static const Color success = Color(0xFF07CFB1);
   static const Color error = Color(0xFFEF476F);
+  static const Color info = Color(0xFF2F80ED);
 
   // Background colors
   static const Color backgroundDark = Color(0xFF073B4C);

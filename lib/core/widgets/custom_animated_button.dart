@@ -1,3 +1,4 @@
+import 'package:UpDown/constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomAnimatedButton extends StatefulWidget {
@@ -19,10 +20,10 @@ class _CustomAnimatedButtonState extends State<CustomAnimatedButton> {
   Widget build(BuildContext context) {
     return AnimatedScale(
       scale: _scale,
-      duration: Duration(milliseconds: 100),
+      duration: kTranstionDuration,
       child: AnimatedOpacity(
         opacity: _opacity,
-        duration: Duration(milliseconds: 100),
+        duration: kTranstionDuration,
         child: GestureDetector(
           onTap: widget.action,
           onTapDown: (d) {

@@ -6,7 +6,7 @@ import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/home/presentation/views/home_view.dart';
-import 'model/building_model.dart';
+import '../../features/home/data/model/building_model.dart';
 
 abstract class AppRouter {
   static const String ksplashView = '/splashView';

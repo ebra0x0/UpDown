@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/model/building_model.dart';
+import 'package:UpDown/features/home/data/model/building_model.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_card.dart';
 import 'package:flutter/material.dart';

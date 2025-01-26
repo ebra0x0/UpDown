@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/model/building_model.dart';
+import 'package:UpDown/features/home/data/model/building_model.dart';
 import 'package:UpDown/features/home/presentation/views/widgets/building_details_widgets/building_details_elevators_section/building_details_elevators_section.dart';
 import 'package:flutter/widgets.dart';
 
@@ -21,10 +21,12 @@ class BuildingDetailsViewBody extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 16),
+            child: SizedBox(height: 26),
           ),
           SliverFillRemaining(
-            child: BuildingDetailsElevatorsSection(),
+            child: BuildingDetailsElevatorsSection(
+              elevators: building.elevators,
+            ),
           ),
         ],
       ),

@@ -18,6 +18,7 @@ class BuildingsGridView extends StatelessWidget {
       if (state is BuildingsCubitEmpty) {
         return PlaceholderPanel(message: "لا يوجد عقارات مسجلة");
       } else if (state is BuildingsCubitError) {
+        print(state.error);
         return PlaceholderPanel(message: "حدث خطأ ما وجاري حل المشكلة");
       } else if (state is BuildingsCubitSuccess) {
         // print(state.buildings[0]);

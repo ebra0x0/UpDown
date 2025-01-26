@@ -1,5 +1,5 @@
 import 'package:UpDown/core/utils/api_service.dart';
-import 'package:UpDown/core/utils/model/building_model.dart';
+import 'package:UpDown/features/home/data/model/building_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'buildings_cubit_state.dart';
