@@ -17,6 +17,7 @@ class BuildingElevatorsBox extends StatelessWidget {
         elevatorNumber: elevator.elevatorNumber,
         elevatorStatus: elevator.status,
         nextMaintenanceDate: elevator.nextMaintenanceDate,
+        issueType: elevator.issueType,
       ),
       action: () {
         GoRouter.of(context)

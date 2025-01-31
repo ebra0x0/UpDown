@@ -20,7 +20,7 @@ class BuildingBoxContent extends StatelessWidget {
             buildingName: building.name,
             elevatorsCount: building.elevatorCount),
         BuildingBoxFooter(
-          reportsCount: building.reportsCount,
+          hasActiveReport: building.hasActiveReport,
         )
       ]),
     );
@@ -67,21 +67,23 @@ class BuildingBoxHeader extends StatelessWidget {
 class BuildingBoxFooter extends StatelessWidget {
   const BuildingBoxFooter({
     super.key,
-    required this.reportsCount,
+    required this.hasActiveReport,
   });
 
-  final int reportsCount;
+  final bool hasActiveReport;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          reportsCount > 0 ? "هناك $reportsCount إبلاغات" : "لا توجد إبلاغات",
-          style: Styles.textStyle14
-              .copyWith(color: reportsCount > 0 ? Colors.red : Colors.grey),
-        ),
+        hasActiveReport
+            ? Text(
+                "يوجد إبلاغ",
+                style: Styles.textStyle14.copyWith(
+                    color: hasActiveReport ? Colors.red : Colors.grey),
+              )
+            : SizedBox(),
         Icon(
           Icons.arrow_forward_ios_rounded,
           color: Colors.grey,

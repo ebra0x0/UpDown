@@ -3,13 +3,12 @@ import 'issue_model.dart';
 class ReportModel {
   final String status;
   final String reportId;
+  final String buildingId;
   final String reportedBy;
-  final List<IssueModel> issues;
   final String? description;
-  final List<String>? images;
-  final String? video;
+  final List<IssueModel> issues;
   final DateTime createdAt;
-  final String updatedAt;
+  final DateTime updatedAt;
 
   const ReportModel({
     required this.status,
@@ -17,8 +16,7 @@ class ReportModel {
     required this.reportedBy,
     this.description,
     required this.issues,
-    this.images,
-    this.video,
+    required this.buildingId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -26,14 +24,12 @@ class ReportModel {
   factory ReportModel.fromJson(Map<String, dynamic> json) => ReportModel(
         status: json['status'],
         reportId: json['report_id'],
-        reportedBy: json['reporter_by'],
-        issues: json['issues'],
+        buildingId: json['building_id'],
+        reportedBy: json['reported_by'],
         description: json['description'],
-        images:
-            json['images'] != null ? List<String>.from(json['images']) : null,
-        video: json['video'],
         createdAt: DateTime.parse(json['created_at']),
-        updatedAt: json['updated_at'],
+        updatedAt: DateTime.parse(json['updated_at']),
+        issues: json['issues'],
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -41,9 +37,8 @@ class ReportModel {
         'report_id': reportId,
         'reporter_by': reportedBy,
         'description': description,
-        'images': images,
-        'video': video,
+        'building_id': buildingId,
         'created_at': createdAt.toIso8601String(),
-        'updated_at': updatedAt,
+        'updated_at': updatedAt.toIso8601String(),
       };
 }

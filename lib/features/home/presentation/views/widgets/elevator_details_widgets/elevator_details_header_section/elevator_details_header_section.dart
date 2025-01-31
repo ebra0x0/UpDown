@@ -1,4 +1,3 @@
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/status_handler.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';
@@ -61,12 +60,13 @@ class HeaderTitle extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: Pallete.success.withValues(alpha: 0.1),
+            color: StatusHandler.getStatusColor(status).withValues(alpha: 0.1),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             StatusHandler.getStatusTitle(status: status),
-            style: Styles.textStyle16.copyWith(color: Pallete.success),
+            style: Styles.textStyle16
+                .copyWith(color: StatusHandler.getStatusColor(status)),
           ),
         ),
       ],

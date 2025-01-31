@@ -11,7 +11,7 @@ class BuildingModel {
   final DateTime updatedAt;
   final List<ElevatorSummaryModel> elevators;
   final List<ReportModel>? reports;
-  final List<ReportModel>? activeReports;
+  final ReportModel? activeReport;
 
   BuildingModel({
     required this.buildingId,
@@ -23,13 +23,13 @@ class BuildingModel {
     required this.updatedAt,
     required this.elevators,
     this.reports,
-    this.activeReports,
+    this.activeReport,
   });
 
   factory BuildingModel.fromJson(Map<String, dynamic> json) {
     return BuildingModel(
       reports: json['reports'],
-      activeReports: json['active_reports'],
+      activeReport: json['active_report'],
       elevators: json['elevators'],
       buildingId: json['building_id'],
       name: json['building_name'],

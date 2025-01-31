@@ -2,13 +2,13 @@ class BuildingSummary {
   final String buildingId;
   final String name;
   final int elevatorCount;
-  final int reportsCount;
+  final bool hasActiveReport;
 
   BuildingSummary({
     required this.buildingId,
     required this.name,
     required this.elevatorCount,
-    required this.reportsCount,
+    required this.hasActiveReport,
   });
 
   factory BuildingSummary.fromJson(Map<String, dynamic> json) {
@@ -16,7 +16,7 @@ class BuildingSummary {
       buildingId: json['building_id'],
       name: json['building_name'],
       elevatorCount: json['elevator_count'],
-      reportsCount: json['reports_count'] ?? 0,
+      hasActiveReport: json['active_report'],
     );
   }
 }

@@ -1,29 +1,47 @@
 import 'dart:ui';
-
 import 'package:intl/intl.dart';
 
 import 'pallete.dart';
 
 abstract class StatusHandler {
   static String getStatusDescription(
-      {required String status, required DateTime? nextMaintenanceDate}) {
-    final String maintanceDate = nextMaintenanceDate == null
-        ? "لم يحدد بعد"
-        : DateFormat.yMd().format(nextMaintenanceDate);
-
+      {required String status,
+      String? issueType,
+      DateTime? nextMaintenanceDate}) {
     switch (status) {
       case "Working":
-        return 'الصيانة القادمة: $maintanceDate';
+        return 'الصيانة القادمة: ${nextMaintenanceDate == null ? 'لم يحدد بعد' : DateFormat.yMd().format(nextMaintenanceDate)}';
       case "Broken":
-        return 'في إنتظار الفني';
+        return getIssueDescription(issueType: issueType!);
       case "Maintenance":
-        return 'تحت الصيانة';
+        return 'جاري صيانة المصعد';
       case "Repair":
-        return 'وصل الفني وجاري الإصلاح';
+        return 'جاري حل مشكلة "${getIssueDescription(issueType: issueType!)}"';
       case "Disabled":
-        return 'مغلق';
+        return 'المصعد مغلق';
       default:
-        return 'الصيانة القادمة: $maintanceDate';
+        return 'الصيانة القادمة: ${nextMaintenanceDate == null ? 'لم يحدد بعد' : DateFormat.yMd().format(nextMaintenanceDate)}';
+    }
+  }
+
+  static String getIssueDescription({required String issueType}) {
+    switch (issueType) {
+      case "Door_Not_Opening":
+        return 'الباب مش بيفتح';
+      case "Stuck_Between_Floors":
+        return 'واقف بين الأدوار';
+      case "Noise":
+        return 'فيه صوت غريب';
+      case "Not_Responding":
+        return 'الأسانسير مش بيتحرك';
+      case "Button_Not_Responding":
+        return 'الزرار مش شغال';
+      case "Above_Floor":
+        return 'بيقف بعيد عن الدور';
+      case "Other":
+        return 'الأسانسير عطلان';
+      default:
+        return 'الأسانسير عطلان';
     }
   }
 
@@ -32,11 +50,11 @@ abstract class StatusHandler {
       case "Working":
         return 'يعمل';
       case "Broken":
-        return 'في إنتظار الفني';
+        return 'معطل';
       case "Maintenance":
-        return 'تحت الصيانة';
+        return 'صيانة';
       case "Repair":
-        return 'وصل الفني وجاري الإصلاح';
+        return 'جاري الإصلاح';
       case "Disabled":
         return 'مغلق';
       default:

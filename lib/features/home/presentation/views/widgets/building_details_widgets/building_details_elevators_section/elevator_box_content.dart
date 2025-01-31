@@ -10,10 +10,12 @@ class ElevatorBoxContent extends StatelessWidget {
       {super.key,
       required this.elevatorNumber,
       required this.elevatorStatus,
+      required this.issueType,
       required this.nextMaintenanceDate});
 
   final int elevatorNumber;
   final String elevatorStatus;
+  final String? issueType;
   final DateTime? nextMaintenanceDate;
 
   @override
@@ -27,7 +29,7 @@ class ElevatorBoxContent extends StatelessWidget {
           ),
           ElevatorBoxBody(
             elevatorStatus: elevatorStatus,
-            nextMaintenanceDate: nextMaintenanceDate,
+            issueType: issueType,
           ),
         ],
       ),
@@ -74,10 +76,12 @@ class ElevatorBoxHeader extends StatelessWidget {
 class ElevatorBoxBody extends StatelessWidget {
   const ElevatorBoxBody(
       {super.key,
-      required this.nextMaintenanceDate,
+      this.issueType,
+      this.nextMaintenanceDate,
       required this.elevatorStatus});
 
   final DateTime? nextMaintenanceDate;
+  final String? issueType;
   final String elevatorStatus;
 
   @override
@@ -87,6 +91,7 @@ class ElevatorBoxBody extends StatelessWidget {
         child: Text(
             StatusHandler.getStatusDescription(
                 status: elevatorStatus,
+                issueType: issueType,
                 nextMaintenanceDate: nextMaintenanceDate),
             textAlign: TextAlign.center,
             style: Styles.textStyle14.copyWith(

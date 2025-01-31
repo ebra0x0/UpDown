@@ -81,7 +81,22 @@ class ApiService {
       final List<Map<String, dynamic>> response =
           await supabase.from('Reports').select().eq("building_id", buildingId);
 
-      return response.map((report) => ReportModel.fromJson(report)).toList();
+      return Future.wait(response.map((report) async {
+        final List<IssueModel> issues =
+            await fetchReportIssues(reportId: report["report_id"]);
+        return ReportModel.fromJson({...report, "issues": issues});
+      }));
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<IssueModel>> fetchReportIssues({required String reportId}) async {
+    try {
+      final List<Map<String, dynamic>> response =
+          await supabase.from('Issues').select().eq("report_id", reportId);
+
+      return response.map((issue) => IssueModel.fromJson(issue)).toList();
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -119,17 +134,17 @@ class ApiService {
             .eq('building_id', b["building_id"])
             .count(CountOption.exact);
 
-        var activeReportsCount = await supabase
+        var activeReport = await supabase
             .from('Reports')
             .select("report_id")
             .eq('building_id', b["building_id"])
-            .eq('status', 'Resolved')
-            .count(CountOption.exact);
+            .not('status', 'eq', 'Resolved')
+            .single();
 
         return BuildingSummary.fromJson({
           ...b,
           "elevator_count": elevatorsCount.count,
-          "reports_count": activeReportsCount.count
+          "active_report": activeReport.isEmpty ? false : true
         });
       }));
 
@@ -152,14 +167,24 @@ class ApiService {
       List<ReportModel> reports =
           await fetchBuildingReports(buildingId: buildingId);
 
-      List<ElevatorSummaryModel> elevators =
-          await fetchBuildingElevators(buildingId: buildingId);
-
       if (reports.isEmpty) {
         reports = [];
       }
-      return BuildingModel.fromJson(
-          {...response, "elevators": elevators, "reports": reports});
+
+      final ReportModel activeReport = reports.firstWhere(
+        (r) => r.status != "Resolved",
+        orElse: () => ReportModel.fromJson({}),
+      );
+
+      List<ElevatorSummaryModel> elevators =
+          await fetchElevatorsSummary(buildingId: buildingId);
+
+      return BuildingModel.fromJson({
+        ...response,
+        "elevators": elevators,
+        "reports": reports,
+        "active_report": activeReport
+      });
     } catch (e) {
       print(e);
       throw Exception(e.toString());
@@ -174,8 +199,6 @@ class ApiService {
           .select()
           .eq("elevator_id", elevatorId)
           .single();
-
-      print(response);
 
       final List<IssueModel> issues =
           await fetchElevatorIssues(elevatorId: response["elevator_id"]);
@@ -220,7 +243,7 @@ class ApiService {
     }
   }
 
-  Future<List<ElevatorSummaryModel>> fetchBuildingElevators(
+  Future<List<ElevatorSummaryModel>> fetchElevatorsSummary(
       {required String buildingId}) async {
     try {
       final List<Map<String, dynamic>> response = await supabase
@@ -231,7 +254,13 @@ class ApiService {
       if (response.isEmpty) return [];
 
       final List<ElevatorSummaryModel> elevators =
-          response.map((e) => ElevatorSummaryModel.fromJson(e)).toList();
+          await Future.wait(response.map((e) async {
+        final List<IssueModel> issues =
+            await fetchElevatorIssues(elevatorId: e["elevator_id"]);
+
+        return ElevatorSummaryModel.fromJson(
+            {...e, "issue_type": issues[issues.length - 1].issueType});
+      }));
 
       return elevators;
     } catch (e) {
