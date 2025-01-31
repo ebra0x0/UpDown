@@ -1,8 +1,9 @@
+import 'package:UpDown/core/utils/function/get_status_color.dart';
 import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/utils/status_handler.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_card.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ElevatorBoxContent extends StatelessWidget {
   const ElevatorBoxContent(
@@ -40,23 +41,6 @@ class ElevatorBoxHeader extends StatelessWidget {
   final int elevatorNumber;
   final String elevatorStatus;
 
-  Color getStatusColor(String status) {
-    switch (status) {
-      case "Working":
-        return Pallete.success;
-      case "Broken":
-        return Pallete.error;
-      case "Maintenance":
-        return Pallete.warning;
-      case "Repair":
-        return Pallete.info;
-      case "Disabled":
-        return Pallete.secondary;
-      default:
-        return Pallete.secondary;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -69,13 +53,18 @@ class ElevatorBoxHeader extends StatelessWidget {
           height: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: getStatusColor(elevatorStatus).withValues(alpha: 0.2),
+            color: elevatorStatus != "Disabled"
+                ? getStatusColor(elevatorStatus).withValues(alpha: 0.2)
+                : Colors.transparent,
           ),
-          child: Icon(
-            Icons.circle,
-            color: getStatusColor(elevatorStatus),
-            size: 12,
-          ),
+          child: elevatorStatus != "Disabled"
+              ? Icon(
+                  Icons.circle,
+                  color: getStatusColor(elevatorStatus),
+                  size: 12,
+                )
+              : Icon(Icons.lock,
+                  color: getStatusColor(elevatorStatus), size: 16),
         ),
       ],
     );
@@ -91,34 +80,17 @@ class ElevatorBoxBody extends StatelessWidget {
   final DateTime? nextMaintenanceDate;
   final String elevatorStatus;
 
-  String getStatusDescription(String status) {
-    final String maintanceDate = nextMaintenanceDate == null
-        ? "لم يحدد بعد"
-        : DateFormat.yMd().format(nextMaintenanceDate!);
-
-    switch (status) {
-      case "Working":
-        return 'الصيانة القادمة: $maintanceDate';
-      case "Broken":
-        return 'في إنتظار الفني';
-      case "Maintenance":
-        return 'تحت الصيانة';
-      case "Repair":
-        return 'وصل الفني وجاري الإصلاح';
-      case "Disabled":
-        return 'مغلق';
-      default:
-        return 'الصيانة القادمة: $maintanceDate';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Center(
-        child: Text(getStatusDescription(elevatorStatus),
+        child: Text(
+            StatusHandler.getStatusDescription(
+                status: elevatorStatus,
+                nextMaintenanceDate: nextMaintenanceDate),
             textAlign: TextAlign.center,
-            style: Styles.textStyle14.copyWith(color: Pallete.textPrimary)),
+            style: Styles.textStyle14.copyWith(
+                fontWeight: FontWeight.bold, color: Pallete.textPrimary)),
       ),
     );
   }

@@ -7,8 +7,12 @@ class LoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: const CircularProgressIndicator(
-      color: Pallete.backgroundDark,
-    ));
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Pallete.secondary.withValues(alpha: 0.1),
+        ),
+      ),
+    );
   }
 }

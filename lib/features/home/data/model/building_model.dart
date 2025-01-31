@@ -1,4 +1,5 @@
-import 'elevator_model.dart';
+import 'package:UpDown/features/create_report/data/model/report_model.dart';
+import 'package:UpDown/features/home/data/model/elevator_summary_model.dart';
 
 class BuildingModel {
   final String buildingId;
@@ -8,7 +9,9 @@ class BuildingModel {
   final int floorCount;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<ElevatorModel> elevators;
+  final List<ElevatorSummaryModel> elevators;
+  final List<ReportModel>? reports;
+  final List<ReportModel>? activeReports;
 
   BuildingModel({
     required this.buildingId,
@@ -19,10 +22,14 @@ class BuildingModel {
     required this.createdAt,
     required this.updatedAt,
     required this.elevators,
+    this.reports,
+    this.activeReports,
   });
 
   factory BuildingModel.fromJson(Map<String, dynamic> json) {
     return BuildingModel(
+      reports: json['reports'],
+      activeReports: json['active_reports'],
       elevators: json['elevators'],
       buildingId: json['building_id'],
       name: json['building_name'],

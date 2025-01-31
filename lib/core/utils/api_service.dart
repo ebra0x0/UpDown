@@ -1,10 +1,13 @@
 import 'package:UpDown/core/utils/function/auth_exceptions_handler.dart';
+import 'package:UpDown/features/create_report/data/model/issue_model.dart';
 import 'package:UpDown/features/home/data/model/building_model.dart';
+import 'package:UpDown/features/home/data/model/building_summary_model.dart';
 import 'package:UpDown/features/home/data/model/elevator_model.dart';
 import 'package:UpDown/core/utils/model/user_model.dart';
 import 'package:UpDown/features/auth/data/model/auth_user_model.dart';
 import 'package:UpDown/features/create_report/data/model/report_model.dart';
-
+import 'package:UpDown/features/home/data/model/elevator_summary_model.dart';
+import 'package:UpDown/features/home/data/model/floor_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ApiService {
@@ -72,15 +75,12 @@ class ApiService {
     return null;
   }
 
-  Future<List<ReportModel>> getReports() async {
+  Future<List<ReportModel>> fetchBuildingReports(
+      {required String buildingId}) async {
     try {
-      final String userId = supabase.auth.currentUser!.id.toString();
-      final List<Map<String, dynamic>> response = await supabase
-          .from('Users')
-          .select()
-          .eq("id", userId)
-          .limit(1)
-          .select("reports");
+      final List<Map<String, dynamic>> response =
+          await supabase.from('Reports').select().eq("building_id", buildingId);
+
       return response.map((report) => ReportModel.fromJson(report)).toList();
     } catch (e) {
       throw Exception(e.toString());
@@ -102,62 +102,140 @@ class ApiService {
     }
   }
 
-  Future<List<ReportModel>> getActiveReports() async {
-    try {
-      final String userId = supabase.auth.currentUser!.id.toString();
-      final List<Map<String, dynamic>> response = await supabase
-          .from('Users')
-          .select()
-          .eq("id", userId)
-          .limit(1)
-          .select("reports");
-      final List<Map<String, dynamic>> activeReports =
-          response.where((r) => r["status"] == "active").toList();
-
-      return activeReports
-          .map((report) => ReportModel.fromJson(report))
-          .toList();
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  Future<List<BuildingModel>> getBuildings() async {
+  Future<List<BuildingSummary>> fetchBuildingsSummary() async {
     try {
       // final String userId = supabase.auth.currentUser!.id.toString();
 
       final List<Map<String, dynamic>> response = await supabase
           .from('Buildings')
-          .select()
+          .select("building_id,building_name")
           .eq("owner_id", "17b33518-b78b-4f01-ab26-28ef24b46d5b");
 
-      final List<BuildingModel> buildings =
+      final List<BuildingSummary> buildings =
           await Future.wait(response.map((b) async {
-        List<ElevatorModel> elevators = await getElevators(b["building_id"]);
+        var elevatorsCount = await supabase
+            .from('Elevators')
+            .select("elevator_id")
+            .eq('building_id', b["building_id"])
+            .count(CountOption.exact);
 
-        return BuildingModel.fromJson({...b, "elevators": elevators});
+        var activeReportsCount = await supabase
+            .from('Reports')
+            .select("report_id")
+            .eq('building_id', b["building_id"])
+            .eq('status', 'Resolved')
+            .count(CountOption.exact);
+
+        return BuildingSummary.fromJson({
+          ...b,
+          "elevator_count": elevatorsCount.count,
+          "reports_count": activeReportsCount.count
+        });
       }));
 
       return buildings;
     } catch (e) {
+      print(e);
       throw Exception(e.toString());
     }
   }
 
-  Future<List<ElevatorModel>> getElevators(String buildingId) async {
+  Future<BuildingModel> fetchBuildingDetails(
+      {required String buildingId}) async {
+    try {
+      final Map<String, dynamic> response = await supabase
+          .from('Buildings')
+          .select()
+          .eq("building_id", buildingId)
+          .single();
+
+      List<ReportModel> reports =
+          await fetchBuildingReports(buildingId: buildingId);
+
+      List<ElevatorSummaryModel> elevators =
+          await fetchBuildingElevators(buildingId: buildingId);
+
+      if (reports.isEmpty) {
+        reports = [];
+      }
+      return BuildingModel.fromJson(
+          {...response, "elevators": elevators, "reports": reports});
+    } catch (e) {
+      print(e);
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<ElevatorModel> fetchElevatorDetails(
+      {required String elevatorId}) async {
+    try {
+      final Map<String, dynamic> response = await supabase
+          .from('Elevators')
+          .select()
+          .eq("elevator_id", elevatorId)
+          .single();
+
+      print(response);
+
+      final List<IssueModel> issues =
+          await fetchElevatorIssues(elevatorId: response["elevator_id"]);
+
+      final List<FloorModel> floors =
+          (response["floors"] as List<dynamic>? ?? [])
+              .map((f) => FloorModel.fromJson(f))
+              .toList();
+
+      final List<FloorModel> closedFloors =
+          (response["closed_floors"] as List<dynamic>? ?? [])
+              .map((cf) => FloorModel.fromJson(cf))
+              .toList();
+
+      return ElevatorModel.fromJson({
+        ...response,
+        "issues": issues,
+        "floors": floors,
+        "closed_floors": closedFloors
+      });
+    } catch (e) {
+      print("fetchElevatorDetails error => $e");
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<IssueModel>> fetchElevatorIssues(
+      {required String elevatorId}) async {
+    try {
+      final List<Map<String, dynamic>> response =
+          await supabase.from('Issues').select().eq("elevator_id", elevatorId);
+
+      if (response.isEmpty) return [];
+
+      List<IssueModel> issues =
+          response.map((issue) => IssueModel.fromJson(issue)).toList();
+
+      return issues;
+    } catch (e) {
+      print("fetchElevatorIssues error => $e");
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<ElevatorSummaryModel>> fetchBuildingElevators(
+      {required String buildingId}) async {
     try {
       final List<Map<String, dynamic>> response = await supabase
           .from('Elevators')
-          .select()
+          .select("elevator_id,elevator_number,status,next_maintenance_date")
           .eq("building_id", buildingId);
 
       if (response.isEmpty) return [];
 
-      List<ElevatorModel> elevators =
-          response.map((elevator) => ElevatorModel.fromJson(elevator)).toList();
+      final List<ElevatorSummaryModel> elevators =
+          response.map((e) => ElevatorSummaryModel.fromJson(e)).toList();
 
       return elevators;
     } catch (e) {
+      print("fetchBuildingElevators error => $e");
       throw Exception(e.toString());
     }
   }

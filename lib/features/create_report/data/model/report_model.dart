@@ -4,9 +4,8 @@ class ReportModel {
   final String status;
   final String reportId;
   final String reportedBy;
-  final String elevatorId;
+  final List<IssueModel> issues;
   final String? description;
-  final List<IssueModel> issue;
   final List<String>? images;
   final String? video;
   final DateTime createdAt;
@@ -16,9 +15,8 @@ class ReportModel {
     required this.status,
     required this.reportId,
     required this.reportedBy,
-    required this.elevatorId,
     this.description,
-    required this.issue,
+    required this.issues,
     this.images,
     this.video,
     required this.createdAt,
@@ -29,9 +27,8 @@ class ReportModel {
         status: json['status'],
         reportId: json['report_id'],
         reportedBy: json['reporter_by'],
-        elevatorId: json['elevator_id'],
+        issues: json['issues'],
         description: json['description'],
-        issue: [],
         images:
             json['images'] != null ? List<String>.from(json['images']) : null,
         video: json['video'],
@@ -43,7 +40,6 @@ class ReportModel {
         'status': status,
         'report_id': reportId,
         'reporter_by': reportedBy,
-        'elevator_id': elevatorId,
         'description': description,
         'images': images,
         'video': video,

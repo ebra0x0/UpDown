@@ -2,26 +2,25 @@ import 'package:UpDown/core/utils/api_service.dart';
 import 'package:UpDown/features/home/data/model/building_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'buildings_cubit_state.dart';
+part 'buildings_state.dart';
 
-class BuildingsCubit extends Cubit<BuildingsCubitState> {
-  BuildingsCubit() : super(BuildingsCubitInitial());
+class BuildingsCubit extends Cubit<BuildingsState> {
+  BuildingsCubit() : super(BuildingsInitial());
 
-  List<BuildingModel> buildings = [];
-  Future<void> getBuildings() async {
-    emit(BuildingsCubitLoading());
+  BuildingModel? buildingDetails;
+
+  Future<void> getBuildingDetails({required String buildingId}) async {
     try {
-      List<BuildingModel> response = await ApiService().getBuildings();
+      emit(BuildingsLoading());
 
-      if (response.isEmpty) {
-        emit(BuildingsCubitEmpty());
-        return;
-      }
-      buildings = response;
+      final BuildingModel response =
+          await ApiService().fetchBuildingDetails(buildingId: buildingId);
 
-      emit(BuildingsCubitSuccess(buildings: buildings));
+      buildingDetails = response;
+
+      emit(BuildingsLoaded(building: response));
     } catch (e) {
-      emit(BuildingsCubitError(error: e.toString()));
+      emit(BuildingsError(error: e.toString()));
     }
   }
 }

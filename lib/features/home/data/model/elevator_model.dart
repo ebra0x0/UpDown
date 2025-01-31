@@ -1,4 +1,6 @@
 import 'package:UpDown/features/create_report/data/model/issue_model.dart';
+import 'package:UpDown/features/home/data/model/floor_model.dart';
+import 'package:intl/intl.dart';
 
 class ElevatorModel {
   final String elevatorId;
@@ -7,6 +9,9 @@ class ElevatorModel {
   final String status;
   final DateTime? lastMaintenanceDate;
   final DateTime? nextMaintenanceDate;
+  final int maxLoad;
+  final List<FloorModel> floors;
+  final List<FloorModel> closedFloors;
   final List<IssueModel> issues;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -18,20 +23,26 @@ class ElevatorModel {
     required this.status,
     required this.lastMaintenanceDate,
     required this.nextMaintenanceDate,
-    required this.issues,
+    required this.maxLoad,
+    required this.floors,
+    this.closedFloors = const [],
+    this.issues = const [],
     required this.createdAt,
     required this.updatedAt,
   });
 
   factory ElevatorModel.fromJson(Map<String, dynamic> json) {
     return ElevatorModel(
-      issues: [],
       elevatorId: json['elevator_id'],
       buildingId: json['building_id'],
       elevatorNumber: json['elevator_number'],
+      maxLoad: json['max_load'],
+      floors: json['floors'],
+      closedFloors: json['closed_floors'],
+      issues: json['issues'],
       status: json['status'],
       lastMaintenanceDate: json['last_maintenance_date'] != null
-          ? DateTime.parse(json['last_maintenance_date'])
+          ? DateFormat("yyyy-MM-dd").parse(json['last_maintenance_date'])
           : null,
       nextMaintenanceDate: json['next_maintenance_date'] != null
           ? DateTime.parse(json['next_maintenance_date'])
@@ -45,6 +56,9 @@ class ElevatorModel {
         'elevator_id': elevatorId,
         'building_id': buildingId,
         'elevator_number': elevatorNumber,
+        'max_load': maxLoad,
+        'floors': floors,
+        'closed_floors': closedFloors,
         'status': status,
         'last_maintenance_date': lastMaintenanceDate?.toIso8601String(),
         'next_maintenance_date': nextMaintenanceDate?.toIso8601String(),

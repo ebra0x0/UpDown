@@ -1,6 +1,6 @@
-import 'package:UpDown/features/home/data/model/building_model.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_card.dart';
+import 'package:UpDown/features/home/data/model/building_summary_model.dart';
 import 'package:flutter/material.dart';
 
 class BuildingBoxContent extends StatelessWidget {
@@ -9,17 +9,20 @@ class BuildingBoxContent extends StatelessWidget {
     required this.building,
   });
 
-  final BuildingModel building;
+  final BuildingSummary building;
 
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            BuildingBoxHeader(building: building),
-            BuildingBoxFooter()
-          ]),
+      child:
+          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        BuildingBoxHeader(
+            buildingName: building.name,
+            elevatorsCount: building.elevatorCount),
+        BuildingBoxFooter(
+          reportsCount: building.reportsCount,
+        )
+      ]),
     );
   }
 }
@@ -27,10 +30,11 @@ class BuildingBoxContent extends StatelessWidget {
 class BuildingBoxHeader extends StatelessWidget {
   const BuildingBoxHeader({
     super.key,
-    required this.building,
+    required this.buildingName,
+    required this.elevatorsCount,
   });
-
-  final BuildingModel building;
+  final String buildingName;
+  final int elevatorsCount;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +45,11 @@ class BuildingBoxHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              building.name,
+              buildingName,
               style: Styles.textStyle18,
             ),
             Text(
-              "${building.elevators.length} مصعد",
+              "$elevatorsCount مصعد",
               style: Styles.textStyle14.copyWith(color: Colors.grey),
             ),
           ],
@@ -63,7 +67,10 @@ class BuildingBoxHeader extends StatelessWidget {
 class BuildingBoxFooter extends StatelessWidget {
   const BuildingBoxFooter({
     super.key,
+    required this.reportsCount,
   });
+
+  final int reportsCount;
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +78,9 @@ class BuildingBoxFooter extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "",
-          style: Styles.textStyle14.copyWith(color: Colors.green),
+          reportsCount > 0 ? "هناك $reportsCount إبلاغات" : "لا توجد إبلاغات",
+          style: Styles.textStyle14
+              .copyWith(color: reportsCount > 0 ? Colors.red : Colors.grey),
         ),
         Icon(
           Icons.arrow_forward_ios_rounded,

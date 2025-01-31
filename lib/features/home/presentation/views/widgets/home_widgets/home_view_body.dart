@@ -7,7 +7,7 @@ class HomeViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 16, right: 16, top: 16).copyWith(),
+      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: BuildingsGridViewSection(),
     );
   }

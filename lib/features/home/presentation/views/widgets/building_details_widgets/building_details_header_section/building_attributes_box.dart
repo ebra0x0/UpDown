@@ -16,8 +16,7 @@ class BuildingAttributesBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 70,
-      child:
-          Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      child: Column(spacing: 6, children: [
         Icon(
           icon,
           color: Pallete.textSecondary,
