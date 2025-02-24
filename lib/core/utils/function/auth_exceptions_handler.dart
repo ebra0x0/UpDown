@@ -1,9 +1,11 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void authExceptionsHandler(AuthException error) {
+  print(error.code);
   switch (error.code) {
     case "user_not_found":
       throw AuthException("البريد الالكتروني غير موجود.");
+
     case "user_banned":
       throw AuthException("حسابك محظور يرجى التواصل مع الادارة.");
     case "email_exists":
@@ -15,6 +17,8 @@ void authExceptionsHandler(AuthException error) {
           "حسابك لم يتم تفعيله برجاء مراجعة بريدك لتفعيل الحساب");
     case "invalid_password":
       throw AuthException("كلمة المرور غير صحيحة.");
+    case "invalid_credentials":
+      throw AuthException("البريد الالكتروني او كلمة المرور غير صحيحة.");
 
     default:
       throw AuthException("حدث خطأ ما.");

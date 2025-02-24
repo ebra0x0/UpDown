@@ -10,7 +10,7 @@ class LoginCubit extends Cubit<LoginCubitState> {
   Future<void> login(AuthUserModel user) async {
     emit(LoginCubitLoading());
     try {
-      await ApiService().signInWithPassword(user);
+      await ApiService.signInWithPassword(user);
       emit(LoginCubitSuccess());
     } on AuthException catch (e) {
       emit(LoginCubitError(error: e.message));

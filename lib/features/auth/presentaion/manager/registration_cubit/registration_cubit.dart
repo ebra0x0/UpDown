@@ -10,7 +10,7 @@ class RegistrationCubit extends Cubit<RegistraionCubitState> {
   Future<void> signUp(AuthUserModel user) async {
     emit(RegistraionCubitLoading());
     try {
-      await ApiService().signUp(user);
+      await ApiService.signUp(user);
       emit(RegistraionCubitSuccess());
     } on AuthException catch (e) {
       emit(RegistraionCubitError(error: e.message));
