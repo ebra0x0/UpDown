@@ -32,6 +32,8 @@ abstract class Styles {
     letterSpacing: 1.2,
   );
 
+  // Border Radius
+
   static const borderRadius4 = BorderRadius.all(Radius.circular(4));
 
   static const borderRadius6 = BorderRadius.all(Radius.circular(6));
@@ -43,4 +45,12 @@ abstract class Styles {
   static const borderRadius14 = BorderRadius.all(Radius.circular(14));
 
   static const borderRadius18 = BorderRadius.all(Radius.circular(18));
+
+  // Box Shadow
+
+  static const boxShadow = BoxShadow(
+    color: Color(0xFFE0E0E0),
+    blurRadius: 5,
+    offset: Offset(0, 4),
+  );
 }

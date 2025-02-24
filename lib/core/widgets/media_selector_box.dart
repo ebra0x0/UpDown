@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/widgets/custom_animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -24,7 +26,7 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
 
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickImage() async {
+  Future<void> pickMedia() async {
     final XFile? media = await _picker.pickMedia();
     _image = null;
     _video = null;
@@ -43,31 +45,31 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _pickImage,
-      child: Container(
-        width: double.infinity,
-        height: 200,
-        decoration: BoxDecoration(
-          image: _image != null
-              ? DecorationImage(
-                  image: Image.file(_image!).image, fit: BoxFit.cover)
-              : null,
-          color: Pallete.primary,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: _video != null
-            ? Center(
-                child: Text(
-                "تم تأكيد الفيديو",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ))
-            : Icon(
-                Icons.add_rounded,
-                size: 46,
-                color: Colors.white,
-              ),
-      ),
-    );
+    return CustomAnimatedButton(
+        action: pickMedia,
+        child: Container(
+          width: 125,
+          height: 125,
+          decoration: BoxDecoration(
+            image: _image != null
+                ? DecorationImage(
+                    image: Image.file(_image!).image, fit: BoxFit.cover)
+                : null,
+            color: Pallete.containerLight,
+            borderRadius: Styles.borderRadius8,
+            boxShadow: [Styles.boxShadow],
+          ),
+          child: _video != null
+              ? Center(
+                  child: Text(
+                  "تم تأكيد الفيديو",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ))
+              : Icon(
+                  Icons.add_photo_alternate_outlined,
+                  size: 46,
+                  color: Pallete.textSecondary,
+                ),
+        ));
   }
 }

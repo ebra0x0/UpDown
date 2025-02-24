@@ -17,6 +17,8 @@ abstract class Pallete {
   static const Color backgroundDark = Color(0xFF073B4C);
   static const Color backgroundLight = Color(0xFFFEF7FF);
 
+  // Widget colors
+  static const Color containerLight = Color(0xFFFFFFFF);
   // Text colors
   static const Color textPrimary = Color(0xFF3A3A3A);
   static const Color textSecondary = Color(0xFF757575);

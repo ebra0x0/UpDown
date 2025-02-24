@@ -1,3 +1,4 @@
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
@@ -11,14 +12,8 @@ class CustomCard extends StatelessWidget {
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade300,
-            blurRadius: 4,
-            offset: const Offset(0, 4),
-          )
-        ],
+        borderRadius: Styles.borderRadius8,
+        boxShadow: [Styles.boxShadow],
       ),
       child: child,
     );

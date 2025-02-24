@@ -23,7 +23,7 @@ class CustomButton extends StatelessWidget {
           onPressed: isLoading ? null : onPress,
           style: ButtonStyle(
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: Styles.borderRadius8,
             )),
             backgroundColor: WidgetStatePropertyAll(Pallete.primary),
           ),
