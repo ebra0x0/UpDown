@@ -9,22 +9,32 @@ class ElevatorCubit extends Cubit<ElevatorState> {
 
   ElevatorModel? elevator;
 
-  void getElevatorDetails({required String elevatorId}) async {
-    if (elevator?.elevatorId == elevatorId && elevator != null) {
+  Future<void> getElevatorDetails({required String elevatorId}) async {
+    if (elevatorId.isEmpty) {
+      emit(ElevatorError(error: "معرّف المصعد غير صالح"));
+      return;
+    }
+
+    if (elevator?.elevatorId == elevatorId) {
       emit(ElevatorLoaded(elevator: elevator!));
       return;
     }
+
     try {
       emit(ElevatorLoading());
 
-      final ElevatorModel response =
+      final result =
           await ApiService.fetchElevatorDetails(elevatorId: elevatorId);
 
-      elevator = response;
-
-      emit(ElevatorLoaded(elevator: response));
+      result.fold(
+        (errMsg) => emit(ElevatorError(error: errMsg)),
+        (response) {
+          elevator = response;
+          emit(ElevatorLoaded(elevator: response));
+        },
+      );
     } catch (e) {
-      emit(ElevatorError(error: e.toString()));
+      emit(ElevatorError(error: "حدث خطأ غير متوقع"));
     }
   }
 }

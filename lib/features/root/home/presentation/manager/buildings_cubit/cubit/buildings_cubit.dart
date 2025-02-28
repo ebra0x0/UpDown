@@ -10,21 +10,31 @@ class BuildingsCubit extends Cubit<BuildingsState> {
   BuildingModel? buildingDetails;
 
   Future<void> getBuildingDetails({required String buildingId}) async {
-    if (buildingDetails?.buildingId == buildingId && buildingDetails != null) {
+    if (buildingId.isEmpty) {
+      emit(BuildingsError(error: "معرّف المبنى غير صالح"));
+      return;
+    }
+
+    if (buildingDetails?.buildingId == buildingId) {
       emit(BuildingsLoaded(building: buildingDetails!));
       return;
     }
+
     try {
       emit(BuildingsLoading());
 
-      final BuildingModel response =
+      final result =
           await ApiService.fetchBuildingDetails(buildingId: buildingId);
 
-      buildingDetails = response;
-
-      emit(BuildingsLoaded(building: response));
+      result.fold(
+        (errMsg) => emit(BuildingsError(error: errMsg)),
+        (response) {
+          buildingDetails = response;
+          emit(BuildingsLoaded(building: response));
+        },
+      );
     } catch (e) {
-      emit(BuildingsError(error: e.toString()));
+      emit(BuildingsError(error: "حدث خطأ غير متوقع : ${e.toString()}"));
     }
   }
 }

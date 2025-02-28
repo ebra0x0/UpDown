@@ -31,11 +31,13 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
         "elevator_id": selectedElevator?.elevatorId,
       });
 
-      await ApiService.createIssue(issueModel);
+      final result = await ApiService.createIssue(issueModel);
 
-      emit(CreateIssueSuccess());
+      result.fold(
+        (errMsg) => emit(CreateIssueError(error: errMsg)),
+        (response) => emit(CreateIssueSuccess()),
+      );
     } catch (e) {
-      print(e);
       emit(CreateIssueError(error: e.toString()));
     }
   }

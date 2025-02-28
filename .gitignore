@@ -11,8 +11,8 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-devtools_options.yaml/
-easycode.ignore/
+devtools_options.yaml
+easycode.ignore
 
 # IntelliJ related
 *.iml

@@ -1,6 +1,6 @@
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/function/api_initialization.dart';
-import 'package:UpDown/core/utils/manager/cubit/auth_cubit.dart';
+import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
 import 'package:UpDown/core/utils/pallete.dart';
 import 'package:flutter/material.dart';

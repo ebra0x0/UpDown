@@ -12,14 +12,23 @@ class UserDataCubit extends Cubit<UserDataState> {
   Future<void> loadUserData({required User user}) async {
     try {
       emit(UserDataLoading());
-      final response = await ApiService.getUserData(user: user);
 
-      if (response == null) throw Exception("User data not found");
+      if (user.id.isEmpty) {
+        emit(UserDataError(error: "المستخدم غير صالح"));
+        return;
+      }
 
-      userData = response;
-      emit(UserDataSuccess(response));
-    } on Exception catch (e) {
-      emit(UserDataError(error: e.toString()));
+      final result = await ApiService.getUserData(user: user);
+
+      result.fold(
+        (errMsg) => emit(UserDataError(error: errMsg)),
+        (response) {
+          userData = response;
+          emit(UserDataSuccess(response));
+        },
+      );
+    } catch (e) {
+      emit(UserDataError(error: "حدث خطأ غير متوقع : $e"));
     }
   }
 }

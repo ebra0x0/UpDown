@@ -12,22 +12,27 @@ class HomeCubit extends Cubit<HomeState> {
   List<BuildingSummaryModel> buildingsSummary = [];
 
   Future<void> fetchBuildingsSummary(BuildContext context) async {
-    final List<BuildingSummaryModel>? userBuildings =
-        BlocProvider.of<UserDataCubit>(context).userData?.buildings;
-    if (userBuildings != null) {
-      emit(HomeLoaded(buildingsSummary: userBuildings));
-      return;
-    }
     try {
+      final List<BuildingSummaryModel>? userBuildings =
+          BlocProvider.of<UserDataCubit>(context).userData?.buildings;
+
+      if (userBuildings != null && userBuildings.isNotEmpty) {
+        emit(HomeLoaded(buildingsSummary: userBuildings));
+        return;
+      }
+
       emit(HomeLoading());
-      List<BuildingSummaryModel> response =
-          await ApiService.fetchBuildingsSummary();
 
-      buildingsSummary = response;
-
-      emit(HomeLoaded(buildingsSummary: response));
+      final result = await ApiService.fetchBuildingsSummary();
+      result.fold(
+        (errMsg) => emit(HomeError(error: errMsg)),
+        (response) {
+          buildingsSummary = response;
+          emit(HomeLoaded(buildingsSummary: response));
+        },
+      );
     } catch (e) {
-      emit(HomeError(error: e.toString()));
+      emit(HomeError(error: "حدث خطأ غير متوقع"));
     }
   }
 }
