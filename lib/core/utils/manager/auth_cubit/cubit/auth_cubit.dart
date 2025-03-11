@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:UpDown/core/utils/api_service.dart';
 import 'package:UpDown/core/utils/secure_storage.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
+import 'package:UpDown/features/auth/data/model/auth_user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -38,6 +39,27 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthStateUnAuthenticated());
       }
     });
+  }
+
+  void signOut() async {
+    final signOut = await gitIt.get<ApiService>().signOut();
+    signOut.fold(
+        (failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
+        (success) => emit(AuthStateUnAuthenticated()));
+  }
+
+  void signIn(AuthUserModel user) async {
+    emit(AuthStateLoading());
+    final signIn = await gitIt.get<ApiService>().signInWithPassword(user);
+    signIn.fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
+        (session) => emit(AuthStateAuthenticated(user: session.user)));
+  }
+
+  void signUp(AuthUserModel user) async {
+    emit(AuthStateLoading());
+    final signUp = await gitIt.get<ApiService>().signUp(user);
+    signUp.fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
+        (session) => emit(AuthStateAuthenticated(user: session.user)));
   }
 
   @override

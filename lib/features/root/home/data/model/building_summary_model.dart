@@ -20,7 +20,7 @@ class BuildingSummaryModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'building_id': buildingId,
       'name': name,

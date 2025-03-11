@@ -1,5 +1,6 @@
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/function/api_initialization.dart';
+import 'package:UpDown/core/utils/function/toast.dart';
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
 import 'package:UpDown/core/utils/pallete.dart';
@@ -75,6 +76,8 @@ class AppBuilder extends StatelessWidget {
               .loadUserData(user: state.user);
 
           router.go(AppRouter.khomeView);
+        } else if (state is AuthStateError) {
+          showToast(context, state.errorMsg);
         } else {
           BlocProvider.of<UserDataCubit>(context).reset();
           router.go(AppRouter.kloginView);

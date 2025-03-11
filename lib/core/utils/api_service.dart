@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:UpDown/core/errors/failures.dart';
 import 'package:UpDown/core/utils/secure_storage.dart';
@@ -9,9 +10,7 @@ import 'package:UpDown/features/root/home/data/model/building_summary_model.dart
 import 'package:UpDown/features/root/home/data/model/elevator_model.dart';
 import 'package:UpDown/core/utils/model/user_model.dart';
 import 'package:UpDown/features/auth/data/model/auth_user_model.dart';
-import 'package:UpDown/features/root/create_issue/data/model/report_model.dart';
 import 'package:UpDown/features/root/home/data/model/elevator_summary_model.dart';
-import 'package:UpDown/features/root/home/data/model/floor_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -25,32 +24,25 @@ class ApiService {
   Stream<Session?> get onAuthStateChange => _authStateController.stream;
 
   // Auth Functions
-  Future<Either<Failure, void>> signUp(AuthUserModel user) async {
+  Future<Either<Failure, Session>> signUp(AuthUserModel user) async {
     try {
       if (user.email.isEmpty || user.password.isEmpty) {
         return Left(
             CustomException("يرجى إدخال البريد الإلكتروني وكلمة المرور"));
       }
 
-      final response = await _supabase.auth.signUp(
+      final AuthResponse res = await _supabase.auth.signUp(
         email: user.email,
         password: user.password,
       );
 
-      final userId = response.user?.id;
-      if (userId == null) {
-        return Left(CustomException("حدث خطأ أثناء إنشاء الحساب"));
-      }
+      gitIt.get<SecureStorage>().addAll({
+        "access_token": res.session!.accessToken,
+        "refresh_token": res.session!.refreshToken!,
+        "user_id": res.session!.user.id,
+      });
 
-      final Map<String, dynamic> newUser = {
-        "user_id": userId,
-        "name": "Ibrahim",
-        "email": response.user?.email,
-        "phone": "01205262745"
-      };
-
-      await createUserData(newUser);
-      return const Right(null);
+      return Right(res.session!);
     } on AuthException catch (e) {
       return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
@@ -58,23 +50,24 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, void>> signInWithPassword(AuthUserModel user) async {
+  Future<Either<Failure, Session>> signInWithPassword(
+      AuthUserModel user) async {
     try {
       if (user.email.isEmpty || user.password.isEmpty) {
         return Left(
             CustomException("يرجى إدخال البريد الإلكتروني وكلمة المرور"));
       }
 
-      await _supabase.auth
-          .signInWithPassword(
-            email: user.email,
-            password: user.password,
-          )
-          .then((res) => gitIt
-              .get<SecureStorage>()
-              .add("refresh_token", res.session!.refreshToken!));
-
-      return const Right(null);
+      final AuthResponse res = await _supabase.auth.signInWithPassword(
+        email: user.email,
+        password: user.password,
+      );
+      gitIt.get<SecureStorage>().addAll({
+        "access_token": res.session!.accessToken,
+        "refresh_token": res.session!.refreshToken!,
+        "user_id": res.session!.user.id,
+      });
+      return Right(res.session!);
     } on AuthException catch (e) {
       return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
@@ -127,14 +120,9 @@ class ApiService {
         _authStateController.add(isLoggedIn ? session : null);
       });
   // User Functions
-  Future<Either<Failure, void>> createUserData(
-      Map<String, dynamic> user) async {
+  Future<Either<Failure, void>> createUserData(UserModel user) async {
     try {
-      if (!user.containsKey("user_id")) {
-        return Left(CustomException("يبدو أن المستخدم غير مسجل"));
-      }
-
-      await _supabase.from('Users').insert(user);
+      await _supabase.from('Users').insert(user.toJson());
       return const Right(null);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
@@ -152,22 +140,20 @@ class ApiService {
         return Left(CustomException("بيانات المستخدم غير موجودة"));
       }
 
-      List<BuildingSummaryModel> buildings =
-          (response["buildings"] as List<dynamic>?)
-                  ?.map((b) =>
-                      BuildingSummaryModel.fromJson(b as Map<String, dynamic>))
-                  .toList() ??
-              [];
+      final UserModel userData = UserModel.fromJson({
+        ...response,
+        "buildings": response["buildings"],
+        "elevators": response["elevators"]
+      });
 
-      List<ElevatorSummaryModel> elevators =
-          (response["elevators"] as List<dynamic>?)
-                  ?.map((e) =>
-                      ElevatorSummaryModel.fromJson(e as Map<String, dynamic>))
-                  .toList() ??
-              [];
-
-      return Right(UserModel.fromJson(
-          {...response, "buildings": buildings, "elevators": elevators}));
+      gitIt.get<SecureStorage>().addAll({
+        "user_data": jsonEncode({
+          ...response,
+          "buildings": response["buildings"],
+          "elevators": response["elevators"]
+        }),
+      });
+      return Right(userData);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
@@ -215,47 +201,7 @@ class ApiService {
         return Left(CustomException("المبنى غير موجود"));
       }
 
-      List<ElevatorSummaryModel> elevators =
-          (response["elevators"] as List<dynamic>?)
-                  ?.map((e) => ElevatorSummaryModel.fromJson({
-                        ...e as Map<String, dynamic>,
-                        "issue_type":
-                            (e["active_issue"] is Map<String, dynamic>)
-                                ? e["active_issue"]["issue_type"]
-                                : null
-                      }))
-                  .toList() ??
-              [];
-
-      List<ReportModel> reports = (response["reports"] as List<dynamic>?)
-              ?.map((r) => ReportModel.fromJson(r as Map<String, dynamic>))
-              .toList() ??
-          [];
-
-      List<FloorModel> floors = (response["floors"] as List<dynamic>?)
-              ?.map((f) => FloorModel.fromJson(f as Map<String, dynamic>))
-              .toList() ??
-          [];
-
-      List<FloorModel> closedFloors =
-          (response["closed_floors"] as List<dynamic>?)
-                  ?.map((cf) => FloorModel.fromJson(cf as Map<String, dynamic>))
-                  .toList() ??
-              [];
-
-      ReportModel? activeReport =
-          (response["active_report"] is Map<String, dynamic>)
-              ? ReportModel.fromJson(response["active_report"])
-              : null;
-
-      return Right(BuildingModel.fromJson({
-        ...response,
-        "elevators": elevators,
-        "reports": reports,
-        "floors": floors,
-        "closed_floors": closedFloors,
-        "active_report": activeReport
-      }));
+      return Right(BuildingModel.fromJson(response));
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
@@ -276,15 +222,7 @@ class ApiService {
       }
 
       final List<ElevatorSummaryModel> elevators = response.map((e) {
-        final issueData = e["active_issue"];
-        final String? issueType = (issueData is Map<String, dynamic>)
-            ? issueData["issue_type"] as String?
-            : null;
-
-        return ElevatorSummaryModel.fromJson({
-          ...e,
-          "issue_type": issueType,
-        });
+        return ElevatorSummaryModel.fromJson(e);
       }).toList();
 
       return Right(elevators);
@@ -306,18 +244,7 @@ class ApiService {
         return Left(CustomException("المصعد غير موجود"));
       }
 
-      final List<IssueModel> issues = (response["issues"] as List<dynamic>?)
-              ?.map((i) => IssueModel.fromJson(i as Map<String, dynamic>))
-              .toList() ??
-          [];
-
-      final IssueModel? activeIssue =
-          (response["active_issue"] is Map<String, dynamic>)
-              ? IssueModel.fromJson(response["active_issue"])
-              : null;
-
-      return Right(ElevatorModel.fromJson(
-          {...response, "issues": issues, "active_issue": activeIssue}));
+      return Right(ElevatorModel.fromJson(response));
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
@@ -359,9 +286,7 @@ class ApiService {
       if (issueModel.buildingId == null) {
         return Left(CustomException("يجب تحديد المبنى"));
       }
-
       final reportId = await createReport(buildingId: issueModel.buildingId!);
-
       reportId.fold(
         (errMsg) {
           Left(errMsg);
@@ -369,7 +294,6 @@ class ApiService {
         },
         (reportId) => reportId,
       );
-
       await _supabase
           .from('Issues')
           .insert(issueModel.copyWith(reportId: reportId.right).toJson());

@@ -1,11 +1,10 @@
 import 'package:UpDown/core/utils/app_router.dart';
+import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/widgets/custom_button.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/core/widgets/password_field.dart';
 import 'package:UpDown/features/auth/data/model/auth_user_model.dart';
 import 'package:UpDown/core/utils/model/form_field_model.dart';
-import 'package:UpDown/features/auth/presentaion/manager/login_cubit/login_cubit.dart';
-import 'package:UpDown/features/auth/presentaion/manager/login_cubit/login_cubit_state.dart';
 import 'package:UpDown/features/auth/validators/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,7 +52,7 @@ class _LoginFormState extends State<LoginForm> {
         password: _passwordField.controller.text,
       );
 
-      BlocProvider.of<LoginCubit>(context).login(user);
+      BlocProvider.of<AuthCubit>(context).signIn(user);
     } else {
       setState(() {
         _autoValidateMode = AutovalidateMode.always;
@@ -94,74 +93,69 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginCubitState>(
-      listener: (context, state) {
-        if (state is LoginCubitSuccess) {
-          context.go(AppRouter.khomeView);
-        }
-      },
-      child: Form(
-        key: formKey,
-        autovalidateMode: _autoValidateMode,
-        child: Column(
-          children: [
-            CustomTextFormField(
-              formKey: formKey,
-              textDirection: _emailTextDirection,
-              keyType: TextInputType.emailAddress,
-              labelText: "البريد الالكتروني",
-              controller: _emailField.controller,
-              validator: _emailField.validator,
-              onChanged: _updateEmailTextDirection,
-            ),
-            SizedBox(height: 16),
-            PasswordField(
-              labelText: "كلمة المرور",
-              textDirection: _passTextDirection,
-              controller: _passwordField.controller,
-              validator: _passwordField.validator,
-              obscureText: _passwordField.isSecure,
-              toggleVisibility: () {
-                setState(() {
-                  _passwordField.isSecure = !_passwordField.isSecure;
-                });
-              },
-              onChanged: _updatePassTextDirection,
-            ),
-            SizedBox(height: 16),
-            Row(
+    return Form(
+      key: formKey,
+      autovalidateMode: _autoValidateMode,
+      child: Column(
+        children: [
+          CustomTextFormField(
+            formKey: formKey,
+            textDirection: _emailTextDirection,
+            keyType: TextInputType.emailAddress,
+            labelText: "البريد الالكتروني",
+            controller: _emailField.controller,
+            validator: _emailField.validator,
+            onChanged: _updateEmailTextDirection,
+          ),
+          SizedBox(height: 16),
+          PasswordField(
+            labelText: "كلمة المرور",
+            textDirection: _passTextDirection,
+            controller: _passwordField.controller,
+            validator: _passwordField.validator,
+            obscureText: _passwordField.isSecure,
+            toggleVisibility: () {
+              setState(() {
+                _passwordField.isSecure = !_passwordField.isSecure;
+              });
+            },
+            onChanged: _updatePassTextDirection,
+          ),
+          SizedBox(height: 16),
+          Row(
+            children: [
+              Text("ليس لديك حساب؟"),
+              TextButton(
+                onPressed: () {
+                  GoRouter.of(context).push(AppRouter.kregistrationView);
+                },
+                style: ButtonStyle(
+                    overlayColor: WidgetStatePropertyAll(Colors.transparent)),
+                child: Text("انشاء حساب"),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+            return Column(
               children: [
-                Text("ليس لديك حساب؟"),
-                TextButton(
-                  onPressed: () {
-                    GoRouter.of(context).push(AppRouter.kregistrationView);
-                  },
-                  style: ButtonStyle(
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent)),
-                  child: Text("انشاء حساب"),
+                Text(
+                  state is AuthStateError ? state.errorMsg : "",
+                  style: TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 100),
+                CustomButton(
+                  title: "تسجيل الدخول",
+                  onPress: _submit,
+                  isLoading: state is AuthStateLoading,
                 )
               ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            BlocBuilder<LoginCubit, LoginCubitState>(builder: (context, state) {
-              return Text(
-                state is LoginCubitError ? state.error : "",
-                style: TextStyle(color: Colors.red),
-                textAlign: TextAlign.center,
-              );
-            }),
-            SizedBox(height: 100),
-            BlocBuilder<LoginCubit, LoginCubitState>(builder: (context, state) {
-              return CustomButton(
-                title: "تسجيل الدخول",
-                onPress: _submit,
-                isLoading: state is LoginCubitLoading,
-              );
-            }),
-          ],
-        ),
+            );
+          }),
+        ],
       ),
     );
   }

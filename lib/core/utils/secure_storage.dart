@@ -10,4 +10,8 @@ class SecureStorage {
   void delete(String key) => storage.delete(key: key);
 
   void deleteAll() => storage.deleteAll();
+
+  void addAll(Map<String, String> map) {
+    map.forEach((key, value) => add(key, value));
+  }
 }

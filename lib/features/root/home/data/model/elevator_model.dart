@@ -34,8 +34,13 @@ class ElevatorModel {
       buildingId: json['building_id'],
       elevatorNumber: json['elevator_number'],
       maxLoad: json['max_load'],
-      issues: json['issues'],
-      activeIssue: json['active_issue'],
+      issues: (json['issues'] as List<dynamic>?)
+              ?.map((i) => IssueModel.fromJson(i as Map<String, dynamic>))
+              .toList() ??
+          [],
+      activeIssue: json['active_issue'] != null
+          ? IssueModel.fromJson(json['active_issue'])
+          : null,
       status: json['status'],
       lastMaintenanceDate: json['last_maintenance_date'] != null
           ? DateFormat("yyyy-MM-dd").parse(json['last_maintenance_date'])

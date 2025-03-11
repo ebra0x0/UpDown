@@ -32,9 +32,17 @@ class UserModel {
         phone: json['phone'],
         createdAt: DateTime.parse(json['created_at']),
         updatedAt: DateTime.parse(json['updated_at']),
-        elevators: json['elevators'],
+        elevators: (json['elevators'] as List<dynamic>)
+            .map(
+              (e) => ElevatorSummaryModel.fromJson(e),
+            )
+            .toList(),
         reports: [],
-        buildings: json['buildings'],
+        buildings: (json['buildings'] as List<dynamic>)
+            .map(
+              (b) => BuildingSummaryModel.fromJson(b),
+            )
+            .toList(),
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{

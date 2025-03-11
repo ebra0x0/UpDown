@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:UpDown/core/utils/api_service.dart';
 import 'package:UpDown/core/utils/model/user_model.dart';
+import 'package:UpDown/core/utils/secure_storage.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,6 +24,13 @@ class UserDataCubit extends Cubit<UserDataState> {
     }
 
     emit(UserDataLoading());
+
+    final storedUser = await gitIt.get<SecureStorage>().get("user_data");
+    if (storedUser != null) {
+      userData = UserModel.fromJson(jsonDecode(storedUser));
+      emit(UserDataSuccess(userData!));
+      return;
+    }
 
     final result = await gitIt.get<ApiService>().getUserData(user: user);
 

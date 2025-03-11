@@ -1,6 +1,5 @@
-import 'package:UpDown/core/utils/api_service.dart';
+import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
-import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:UpDown/features/root/home/presentation/views/widgets/home_widgets/home_view_body.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +30,7 @@ class HomeView extends StatelessWidget {
             },
           ),
           IconButton(
-              onPressed: () => gitIt.get<ApiService>().signOut(),
+              onPressed: () => BlocProvider.of<AuthCubit>(context).signOut(),
               icon: const Icon(Icons.logout))
         ],
       )),

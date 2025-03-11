@@ -31,15 +31,27 @@ class BuildingModel {
 
   factory BuildingModel.fromJson(Map<String, dynamic> json) {
     return BuildingModel(
-      reports: json['reports'],
-      activeReport: json['active_report'],
-      elevators: json['elevators'],
+      reports: (json['reports'] as List<dynamic>?)
+          ?.map((dynamic r) => ReportModel.fromJson(r as Map<String, dynamic>))
+          .toList(),
+      activeReport: (json['active_report'] as Map<String, dynamic>?) != null
+          ? ReportModel.fromJson(json['active_report'] as Map<String, dynamic>)
+          : null,
+      elevators: (json['elevators'] as List<dynamic>)
+          .map(
+            (e) => ElevatorSummaryModel.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
       buildingId: json['building_id'],
       name: json['building_name'],
       address: json['address'],
       ownerId: json['owner_id'],
-      floors: json['floors'],
-      closedFloors: json['closed_floors'],
+      floors: (json['floors'] as List<dynamic>)
+          .map((f) => FloorModel.fromJson(f as Map<String, dynamic>))
+          .toList(),
+      closedFloors: (json['closed_floors'] as List<dynamic>)
+          .map((cf) => FloorModel.fromJson(cf as Map<String, dynamic>))
+          .toList(),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
