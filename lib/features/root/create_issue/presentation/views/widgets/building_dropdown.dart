@@ -30,7 +30,8 @@ class BuildingDropdown extends StatelessWidget {
                   Text("إختر المبنى"),
                 ],
               ),
-              value: state is SelectSuccess ? state.building : null,
+              value:
+                  BlocProvider.of<CreateIssueCubit>(context).selectedBuilding,
               onChanged: (value) {
                 if (value != null) {
                   BlocProvider.of<CreateIssueCubit>(context)

@@ -10,4 +10,9 @@ final class AuthStateAuthenticated extends AuthState {
   AuthStateAuthenticated({required this.user});
 }
 
+final class AuthStateError extends AuthState {
+  AuthStateError({required this.errorMsg});
+  final String errorMsg;
+}
+
 final class AuthStateUnAuthenticated extends AuthState {}

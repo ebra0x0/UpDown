@@ -3,6 +3,7 @@ import 'package:UpDown/core/utils/function/api_initialization.dart';
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
 import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await apiInitialization();
+  setupServiceLocator();
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (context) => AuthCubit()..authMonitor()),
     BlocProvider(create: (context) => UserDataCubit()),
@@ -35,17 +37,8 @@ class UpDown extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: router,
       debugShowCheckedModeBanner: false,
-      builder: (context, child) => BlocListener<AuthCubit, AuthState>(
-        listener: (context, state) async {
-          if (state is AuthStateAuthenticated) {
-            await BlocProvider.of<UserDataCubit>(context)
-                .loadUserData(user: state.user);
-
-            router.go(AppRouter.khomeView);
-          } else {
-            router.go(AppRouter.kloginView);
-          }
-        },
+      builder: (context, child) => AppBuilder(
+        router: router,
         child: child,
       ),
       supportedLocales: [
@@ -63,6 +56,31 @@ class UpDown extends StatelessWidget {
         primaryColor: Pallete.primary,
         textTheme: GoogleFonts.notoKufiArabicTextTheme(),
       ),
+    );
+  }
+}
+
+class AppBuilder extends StatelessWidget {
+  const AppBuilder({super.key, required this.router, required this.child});
+
+  final GoRouter router;
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) async {
+        if (state is AuthStateAuthenticated) {
+          await BlocProvider.of<UserDataCubit>(context)
+              .loadUserData(user: state.user);
+
+          router.go(AppRouter.khomeView);
+        } else {
+          BlocProvider.of<UserDataCubit>(context).reset();
+          router.go(AppRouter.kloginView);
+        }
+      },
+      child: child,
     );
   }
 }

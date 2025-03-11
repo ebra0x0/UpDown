@@ -31,7 +31,8 @@ class ElevatorDropdown extends StatelessWidget {
                   Text("إختر المصعد"),
                 ],
               ),
-              value: state is SelectSuccess ? state.elevator : null,
+              value:
+                  BlocProvider.of<CreateIssueCubit>(context).selectedElevator,
               onChanged: (value) {
                 if (value != null) {
                   BlocProvider.of<CreateIssueCubit>(context)

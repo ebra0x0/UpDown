@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:UpDown/core/errors/failures.dart';
+import 'package:UpDown/core/utils/secure_storage.dart';
+import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/root/create_issue/data/model/issue_model.dart';
 import 'package:UpDown/features/root/home/data/model/building_model.dart';
 import 'package:UpDown/features/root/home/data/model/building_summary_model.dart';
@@ -11,24 +15,31 @@ import 'package:UpDown/features/root/home/data/model/floor_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-abstract class ApiService {
-  static final supabase = Supabase.instance.client;
+class ApiService {
+  ApiService(this._supabase);
+  final SupabaseClient _supabase;
+
+  final StreamController<Session?> _authStateController =
+      StreamController<Session?>.broadcast();
+
+  Stream<Session?> get onAuthStateChange => _authStateController.stream;
 
   // Auth Functions
-  static Future<Either<String, void>> signUp(AuthUserModel user) async {
+  Future<Either<Failure, void>> signUp(AuthUserModel user) async {
     try {
       if (user.email.isEmpty || user.password.isEmpty) {
-        return Left("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+        return Left(
+            CustomException("يرجى إدخال البريد الإلكتروني وكلمة المرور"));
       }
 
-      final response = await supabase.auth.signUp(
+      final response = await _supabase.auth.signUp(
         email: user.email,
         password: user.password,
       );
 
       final userId = response.user?.id;
       if (userId == null) {
-        return Left("حدث خطأ أثناء إنشاء الحساب");
+        return Left(CustomException("حدث خطأ أثناء إنشاء الحساب"));
       }
 
       final Map<String, dynamic> newUser = {
@@ -41,89 +52,104 @@ abstract class ApiService {
       await createUserData(newUser);
       return const Right(null);
     } on AuthException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء إنشاء الحساب: ${e.toString()}");
+      return Left(CustomException("حدث خطأ أثناء إنشاء الحساب"));
     }
   }
 
-  static Future<Either<String, void>> signInWithPassword(
-      AuthUserModel user) async {
+  Future<Either<Failure, void>> signInWithPassword(AuthUserModel user) async {
     try {
       if (user.email.isEmpty || user.password.isEmpty) {
-        return Left("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+        return Left(
+            CustomException("يرجى إدخال البريد الإلكتروني وكلمة المرور"));
       }
 
-      await supabase.auth.signInWithPassword(
-        email: user.email,
-        password: user.password,
-      );
+      await _supabase.auth
+          .signInWithPassword(
+            email: user.email,
+            password: user.password,
+          )
+          .then((res) => gitIt
+              .get<SecureStorage>()
+              .add("refresh_token", res.session!.refreshToken!));
 
       return const Right(null);
     } on AuthException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء تسجيل الدخول: ${e.toString()}");
+      return Left(CustomException("حدث خطأ أثناء تسجيل الدخول"));
     }
   }
 
-  static Future<Either<String, void>> signOut() async {
+  Future<Either<Failure, void>> signOut() async {
     try {
-      await supabase.auth.signOut();
+      await _supabase.auth.signOut();
       return const Right(null);
     } on AuthException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء تسجيل الخروج: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناء تسجيل الخروج"));
     }
   }
 
-  static Future<Either<String, void>> resetPassword(
-      {required String email}) async {
+  Future<Either<Failure, Session?>> refreshToken(String refreshToken) async {
+    try {
+      final newSession = await _supabase.auth.refreshSession(refreshToken);
+
+      return Right(newSession.session);
+    } on AuthException catch (e) {
+      return Left(SupabaseFailure.fromAuth(e));
+    } catch (e) {
+      return Left(CustomException("حدث خطاء اثناء تحديث الجلسة"));
+    }
+  }
+
+  Future<Either<Failure, void>> resetPassword({required String email}) async {
     try {
       if (email.isEmpty) {
-        return Left("يرجى إدخال البريد الإلكتروني");
+        return Left(CustomException("يرجى إدخال البريد الإلكتروني"));
       }
 
-      await supabase.auth.resetPasswordForEmail(email);
+      await _supabase.auth.resetPasswordForEmail(email);
       return const Right(null);
     } on AuthException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء إعادة تعيين كلمة المرور: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناء استعادة كلمة المرور"));
     }
   }
 
+  void sessionMonitor() => _supabase.auth.onAuthStateChange.listen((event) {
+        final session = event.session;
+        final isLoggedIn = session != null;
+
+        _authStateController.add(isLoggedIn ? session : null);
+      });
   // User Functions
-  static Future<Either<String, void>> createUserData(
+  Future<Either<Failure, void>> createUserData(
       Map<String, dynamic> user) async {
     try {
       if (!user.containsKey("user_id")) {
-        return Left("يجب أن تحتوي بيانات المستخدم على معرف المستخدم ");
+        return Left(CustomException("يبدو أن المستخدم غير مسجل"));
       }
 
-      await supabase.from('Users').insert(user);
+      await _supabase.from('Users').insert(user);
       return const Right(null);
     } on PostgrestException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء إنشاء بيانات المستخدم: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناء استعادة كلمة المرور"));
     }
   }
 
-  static Future<Either<String, UserModel>> getUserData(
-      {required User user}) async {
+  Future<Either<Failure, UserModel>> getUserData({required User user}) async {
     try {
-      final Map<String, dynamic>? response = await supabase
+      final Map<String, dynamic>? response = await _supabase
           .rpc("get_user_assets", params: {"u_id": user.id}).maybeSingle();
 
       if (response == null || response.isEmpty) {
-        return Left("بيانات المستخدم غير موجودة");
+        return Left(CustomException("بيانات المستخدم غير موجودة"));
       }
 
       List<BuildingSummaryModel> buildings =
@@ -143,30 +169,28 @@ abstract class ApiService {
       return Right(UserModel.fromJson(
           {...response, "buildings": buildings, "elevators": elevators}));
     } on PostgrestException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء جلب بيانات المستخدم: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناء جلب بيانات المستخدم"));
     }
   }
 
   // App Functions
-  static Future<Either<String, List<BuildingSummaryModel>>>
+  Future<Either<Failure, List<BuildingSummaryModel>>>
       fetchBuildingsSummary() async {
     try {
-      final user = supabase.auth.currentUser;
+      final user = _supabase.auth.currentUser;
       if (user == null) {
-        return Left("لم يتم تسجيل الدخول");
+        return Left(CustomException("يرجى تسجيل الدخول"));
       }
 
       final String userId = user.id;
 
-      final List<Map<String, dynamic>> response = await supabase
-              .rpc("get_user_buildings_summary", params: {"user_id": userId}) ??
-          [];
+      final List<dynamic>? response = await _supabase
+          .rpc("get_user_buildings_summary", params: {"user_id": userId});
 
-      if (response.isEmpty) {
-        return Left("لا يوجد أبنية مسجلة للمستخدم");
+      if (response == null || response.isEmpty) {
+        return Left(CustomException("لا يوجد أبنية مسجلة للمستخدم"));
       }
 
       final List<BuildingSummaryModel> buildings =
@@ -174,22 +198,21 @@ abstract class ApiService {
 
       return Right(buildings);
     } on PostgrestException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء جلب بيانات الأبنية: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناء جلب بيانات الأبنية"));
     }
   }
 
-  static Future<Either<String, BuildingModel>> fetchBuildingDetails(
+  Future<Either<Failure, BuildingModel>> fetchBuildingDetails(
       {required String buildingId}) async {
     try {
-      final Map<String, dynamic>? response = await supabase.rpc(
+      final Map<String, dynamic>? response = await _supabase.rpc(
           'get_building_by_id',
           params: {"b_id": buildingId}).maybeSingle();
 
       if (response == null || response.isEmpty) {
-        return Left("المبنى غير موجود");
+        return Left(CustomException("المبنى غير موجود"));
       }
 
       List<ElevatorSummaryModel> elevators =
@@ -234,24 +257,22 @@ abstract class ApiService {
         "active_report": activeReport
       }));
     } on PostgrestException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء جلب بيانات المبنى: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناء جلب بيانات المبنى"));
     }
   }
 
-  static Future<Either<String, List<ElevatorSummaryModel>>>
-      fetchElevatorsSummary({required String buildingId}) async {
+  Future<Either<Failure, List<ElevatorSummaryModel>>> fetchElevatorsSummary(
+      {required String buildingId}) async {
     try {
-      final List<Map<String, dynamic>> response = await supabase.rpc(
-            "get_building_elevators_summary",
-            params: {"b_id": buildingId},
-          ) ??
-          [];
+      final List<Map<String, dynamic>>? response = await _supabase.rpc(
+        "get_building_elevators_summary",
+        params: {"b_id": buildingId},
+      );
 
-      if (response.isEmpty) {
-        return Left("لا توجد مصاعد مسجلة في هذا المبنى");
+      if (response == null || response.isEmpty) {
+        return Left(CustomException("لا يوجد مصاعد مسجلة للمبنى"));
       }
 
       final List<ElevatorSummaryModel> elevators = response.map((e) {
@@ -268,22 +289,21 @@ abstract class ApiService {
 
       return Right(elevators);
     } on PostgrestException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء جلب بيانات المصاعد: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناء جلب بيانات المصاعد"));
     }
   }
 
-  static Future<Either<String, ElevatorModel>> fetchElevatorDetails(
+  Future<Either<Failure, ElevatorModel>> fetchElevatorDetails(
       {required String elevatorId}) async {
     try {
-      final Map<String, dynamic>? response = await supabase.rpc(
+      final Map<String, dynamic>? response = await _supabase.rpc(
           "get_elevator_by_id",
           params: {"e_id": elevatorId}).maybeSingle();
 
       if (response == null || response.isEmpty) {
-        return Left("المصعد غير موجود");
+        return Left(CustomException("المصعد غير موجود"));
       }
 
       final List<IssueModel> issues = (response["issues"] as List<dynamic>?)
@@ -299,19 +319,18 @@ abstract class ApiService {
       return Right(ElevatorModel.fromJson(
           {...response, "issues": issues, "active_issue": activeIssue}));
     } on PostgrestException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء جلب بيانات المصعد: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناء جلب بيانات المصعد"));
     }
   }
 
-  static Future<Either<String, String>> createReport(
+  Future<Either<Failure, String>> createReport(
       {required String buildingId}) async {
     try {
-      final user = supabase.auth.currentUser;
+      final user = _supabase.auth.currentUser;
       if (user == null) {
-        return Left("يجب تسجيل الدخول لإنشاء تقرير");
+        return Left(CustomException("يجب تسجيل الدخول لإنشاء تقرير"));
       }
 
       final Map<String, dynamic> reportData = {
@@ -319,27 +338,26 @@ abstract class ApiService {
         "building_id": buildingId,
       };
 
-      final Map<String, dynamic>? report = await supabase.rpc(
+      final Map<String, dynamic>? report = await _supabase.rpc(
           "create_and_get_report",
           params: {"report_data": reportData}).maybeSingle();
 
       if (report == null || report.isEmpty) {
-        return Left("لم يتم إنشاء التقرير");
+        return Left(CustomException("لم يتم إنشاء التقرير"));
       }
 
       return Right(report["report_id"]);
     } on PostgrestException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء إنشاء التقرير: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناءإنشاء التقرير"));
     }
   }
 
-  static Future<Either<String, void>> createIssue(IssueModel issueModel) async {
+  Future<Either<Failure, void>> createIssue(IssueModel issueModel) async {
     try {
       if (issueModel.buildingId == null) {
-        return Left("يجب تحديد المبنى");
+        return Left(CustomException("يجب تحديد المبنى"));
       }
 
       final reportId = await createReport(buildingId: issueModel.buildingId!);
@@ -352,16 +370,15 @@ abstract class ApiService {
         (reportId) => reportId,
       );
 
-      await supabase
+      await _supabase
           .from('Issues')
           .insert(issueModel.copyWith(reportId: reportId.right).toJson());
 
       return const Right(null);
     } on PostgrestException catch (e) {
-      return Left(
-          SupabaseFailure(e.toString()).handleSupabaseError(e.code ?? ""));
+      return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left("حدث خطأ أثناء إنشاء المشكلة: ${e.toString()}");
+      return Left(CustomException("حدث خطاء اثناءإنشاء المشكلة"));
     }
   }
 }

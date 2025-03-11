@@ -6,6 +6,7 @@ class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
     super.key,
     this.keyType,
+    this.textDirection,
     this.labelText,
     this.hintText,
     this.controller,
@@ -17,7 +18,7 @@ class CustomTextFormField extends StatelessWidget {
     this.maxLines = 1,
     this.formKey,
   });
-
+  final TextDirection? textDirection;
   final String? labelText;
   final String? hintText;
   final TextInputType? keyType;
@@ -33,6 +34,8 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyType,
+      textDirection: textDirection,
+      textAlign: TextAlign.start,
       obscureText: obscureText,
       minLines: 1,
       maxLines: maxLines,
@@ -44,7 +47,6 @@ class CustomTextFormField extends StatelessWidget {
       decoration: InputDecoration(
           fillColor: Pallete.containerLight,
           filled: true,
-          focusColor: Pallete.primary.withValues(alpha: 0.2),
           labelText: labelText,
           hintText: hintText,
           suffixIcon: suffixIcon,
@@ -65,5 +67,11 @@ class CustomTextFormField extends StatelessWidget {
             borderSide: const BorderSide(color: Pallete.error),
           )),
     );
+  }
+
+  TextDirection getTextDirection(String text) {
+    final bool isEnglish = RegExp(r'^[a-zA-Z]').hasMatch(text);
+    print(isEnglish);
+    return isEnglish ? TextDirection.ltr : TextDirection.rtl;
   }
 }

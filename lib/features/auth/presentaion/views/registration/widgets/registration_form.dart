@@ -55,6 +55,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   void _submit() {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
+      FocusScope.of(context).unfocus();
       final newUser = AuthUserModel(
         email: _emailField.controller.text,
         password: _passwordField.controller.text,

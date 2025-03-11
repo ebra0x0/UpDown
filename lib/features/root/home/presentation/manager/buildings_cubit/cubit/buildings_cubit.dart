@@ -1,40 +1,30 @@
-import 'package:UpDown/core/utils/api_service.dart';
 import 'package:UpDown/features/root/home/data/model/building_model.dart';
+import 'package:UpDown/features/root/home/data/repos/building_repo/building_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'buildings_state.dart';
 
 class BuildingsCubit extends Cubit<BuildingsState> {
-  BuildingsCubit() : super(BuildingsInitial());
-
-  BuildingModel? buildingDetails;
+  BuildingsCubit(this._repo) : super(BuildingsInitial());
+  final BuildingRepo _repo;
 
   Future<void> getBuildingDetails({required String buildingId}) async {
     if (buildingId.isEmpty) {
-      emit(BuildingsError(error: "معرّف المبنى غير صالح"));
+      emit(BuildingsError(error: "يبدو أن هذا المبنى قد حذف."));
       return;
     }
 
-    if (buildingDetails?.buildingId == buildingId) {
-      emit(BuildingsLoaded(building: buildingDetails!));
-      return;
-    }
+    emit(BuildingsLoading());
 
-    try {
-      emit(BuildingsLoading());
+    final result = await _repo.fetchBuildingDetails(
+      buildingId: buildingId,
+    );
 
-      final result =
-          await ApiService.fetchBuildingDetails(buildingId: buildingId);
-
-      result.fold(
-        (errMsg) => emit(BuildingsError(error: errMsg)),
-        (response) {
-          buildingDetails = response;
-          emit(BuildingsLoaded(building: response));
-        },
-      );
-    } catch (e) {
-      emit(BuildingsError(error: "حدث خطأ غير متوقع : ${e.toString()}"));
-    }
+    result.fold(
+      (errMsg) => emit(BuildingsError(error: errMsg.errMessage)),
+      (response) {
+        emit(BuildingsLoaded(building: response));
+      },
+    );
   }
 }

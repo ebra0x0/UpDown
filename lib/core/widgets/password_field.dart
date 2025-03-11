@@ -9,12 +9,14 @@ class PasswordField extends StatelessWidget {
   final VoidCallback toggleVisibility;
   final String? Function(String?)? validator;
   final ValueChanged<String?>? onChanged;
+  final TextDirection? textDirection;
 
   const PasswordField({
     this.labelText,
     required this.controller,
     required this.obscureText,
     required this.toggleVisibility,
+    this.textDirection,
     this.validator,
     this.onChanged,
     super.key,
@@ -24,6 +26,7 @@ class PasswordField extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomTextFormField(
       controller: controller,
+      textDirection: textDirection,
       labelText: labelText,
       toggleVisibility: toggleVisibility,
       obscureText: obscureText,

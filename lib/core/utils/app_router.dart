@@ -1,20 +1,24 @@
 import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
+import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/auth/presentaion/views/login/login_view.dart';
 import 'package:UpDown/features/auth/presentaion/views/registration/registration_view.dart';
+import 'package:UpDown/features/root/create_issue/data/repos/create_issue_repo_imp.dart';
 import 'package:UpDown/features/root/create_issue/presentation/manager/cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/root/create_issue/presentation/views/create_issue_view.dart';
+import 'package:UpDown/features/root/home/data/repos/building_repo/building_repo_imp.dart';
+import 'package:UpDown/features/root/home/data/repos/elevator_repo/elevator_repo_imp.dart';
+import 'package:UpDown/features/root/home/data/repos/home_repo/home_repo_imp.dart';
 import 'package:UpDown/features/root/home/presentation/manager/buildings_cubit/cubit/buildings_cubit.dart';
 import 'package:UpDown/features/root/home/presentation/manager/elevator_cubit/cubit/elevator_cubit.dart';
 import 'package:UpDown/features/root/home/presentation/manager/home_cubit/cubit/home_cubit.dart';
 import 'package:UpDown/features/root/home/presentation/views/building_details_view.dart';
 import 'package:UpDown/features/root/home/presentation/views/elevator_details_view.dart';
+import 'package:UpDown/features/root/home/presentation/views/home_view.dart';
 import 'package:UpDown/features/root/root_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../features/root/home/presentation/views/home_view.dart';
 
 abstract class AppRouter {
   static const String kregistrationView = '/registrationView';
@@ -47,39 +51,24 @@ abstract class AppRouter {
         builder: (context, state) => const LoginView(),
       ),
       ShellRoute(
-          builder: (context, state, child) => MultiBlocProvider(providers: [
-                BlocProvider<BuildingsCubit>(
-                    create: (context) => BuildingsCubit()),
-                BlocProvider<ElevatorCubit>(
-                    create: (context) => ElevatorCubit()),
-                BlocProvider<CreateIssueCubit>(
-                    create: (context) => CreateIssueCubit(
-                          buildings: BlocProvider.of<UserDataCubit>(context)
-                              .userData!
-                              .buildings,
-                          elevators: BlocProvider.of<UserDataCubit>(context)
-                              .userData!
-                              .elevators,
-                        )),
-                BlocProvider<HomeCubit>(
-                    create: (context) =>
-                        HomeCubit()..fetchBuildingsSummary(context)),
-              ], child: RootView(child: child)),
+          builder: (context, state, child) => RootView(child: child),
           routes: [
             GoRoute(
                 path: khomeView,
-                builder: (context, state) => const HomeView(),
+                builder: (context, state) => BlocProvider(
+                    create: (context) => HomeCubit(gitIt.get<HomeRepoImp>())
+                      ..fetchBuildingsSummary(context),
+                    child: const HomeView()),
                 routes: [
                   GoRoute(
                     path: kbuildingDetails,
                     builder: (context, state) {
                       final String buildingId =
                           state.pathParameters['buildingId']!;
-                      final cubit = BlocProvider.of<BuildingsCubit>(context);
-
-                      return BlocProvider.value(
-                        value: cubit
-                          ..getBuildingDetails(buildingId: buildingId),
+                      return BlocProvider(
+                        create: (context) =>
+                            BuildingsCubit(gitIt.get<BuildingRepoImp>())
+                              ..getBuildingDetails(buildingId: buildingId),
                         child: BuildingDetailsView(),
                       );
                     },
@@ -89,23 +78,30 @@ abstract class AppRouter {
                     builder: (context, state) {
                       final String elevatorId =
                           state.pathParameters['elevatorId']!;
-                      final cubit = BlocProvider.of<ElevatorCubit>(context);
 
-                      return BlocProvider.value(
-                        value: cubit
-                          ..getElevatorDetails(elevatorId: elevatorId),
-                        child: ElevatorDetailsView(),
-                      );
+                      return BlocProvider(
+                          create: (context) =>
+                              ElevatorCubit(gitIt.get<ElevatorRepoImp>())
+                                ..getElevatorDetails(elevatorId: elevatorId),
+                          child: ElevatorDetailsView());
                     },
                   ),
                 ]),
             GoRoute(
               path: kcreateIssueView,
-              builder: (context, state) => BlocProvider.value(
-                value: BlocProvider.of<CreateIssueCubit>(context),
-                child: CreateIssueView(),
+              builder: (context, state) => BlocProvider(
+                create: (context) => CreateIssueCubit(
+                  gitIt.get<CreateIssueRepoImp>(),
+                  buildings: BlocProvider.of<UserDataCubit>(context)
+                      .userData!
+                      .buildings,
+                  elevators: BlocProvider.of<UserDataCubit>(context)
+                      .userData!
+                      .elevators,
+                ),
+                child: const CreateIssueView(),
               ),
-            ),
+            )
           ]),
     ]);
   }

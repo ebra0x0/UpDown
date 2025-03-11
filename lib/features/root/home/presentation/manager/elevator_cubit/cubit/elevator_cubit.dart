@@ -1,40 +1,28 @@
-import 'package:UpDown/core/utils/api_service.dart';
 import 'package:UpDown/features/root/home/data/model/elevator_model.dart';
+import 'package:UpDown/features/root/home/data/repos/elevator_repo/elevator_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'elevator_state.dart';
 
 class ElevatorCubit extends Cubit<ElevatorState> {
-  ElevatorCubit() : super(ElevatorInitial());
-
-  ElevatorModel? elevator;
+  ElevatorCubit(this._repo) : super(ElevatorInitial());
+  final ElevatorRepo _repo;
 
   Future<void> getElevatorDetails({required String elevatorId}) async {
     if (elevatorId.isEmpty) {
-      emit(ElevatorError(error: "معرّف المصعد غير صالح"));
+      emit(ElevatorError(error: "يبدو أن هذا المصعد قد حذف."));
       return;
     }
 
-    if (elevator?.elevatorId == elevatorId) {
-      emit(ElevatorLoaded(elevator: elevator!));
-      return;
-    }
+    emit(ElevatorLoading());
 
-    try {
-      emit(ElevatorLoading());
+    final result = await _repo.fetchElevatorDetails(elevatorId: elevatorId);
 
-      final result =
-          await ApiService.fetchElevatorDetails(elevatorId: elevatorId);
-
-      result.fold(
-        (errMsg) => emit(ElevatorError(error: errMsg)),
-        (response) {
-          elevator = response;
-          emit(ElevatorLoaded(elevator: response));
-        },
-      );
-    } catch (e) {
-      emit(ElevatorError(error: "حدث خطأ غير متوقع"));
-    }
+    result.fold(
+      (errMsg) => emit(ElevatorError(error: errMsg.errMessage)),
+      (response) {
+        emit(ElevatorLoaded(elevator: response));
+      },
+    );
   }
 }

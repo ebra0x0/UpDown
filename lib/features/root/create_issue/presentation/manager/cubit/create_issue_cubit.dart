@@ -1,5 +1,4 @@
-import 'package:UpDown/core/utils/api_service.dart';
-import 'package:UpDown/features/root/create_issue/data/model/issue_model.dart';
+import 'package:UpDown/features/root/create_issue/data/repos/create_issue_repo_imp.dart';
 import 'package:UpDown/features/root/home/data/model/building_summary_model.dart';
 import 'package:UpDown/features/root/home/data/model/elevator_summary_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,10 +6,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'create_issue_state.dart';
 
 class CreateIssueCubit extends Cubit<CreateIssueState> {
-  CreateIssueCubit({
+  CreateIssueCubit(
+    this._repo, {
     required this.buildings,
     required this.elevators,
-  }) : super(CreateIssueInitial());
+  }) : super(CreateIssueInitial()) {
+    selectedBuilding = _repo.selectedBuilding;
+    selectedElevator = _repo.selectedElevator;
+    issueType = _repo.issueType;
+    description = _repo.description;
+  }
+  final CreateIssueRepoImp _repo;
 
   final List<BuildingSummaryModel> buildings;
   final List<ElevatorSummaryModel> elevators;
@@ -21,29 +27,21 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   String? description;
 
   Future<void> createIssue() async {
-    try {
-      emit(CreateIssueLoading());
+    emit(CreateIssueLoading());
 
-      IssueModel issueModel = IssueModel.fromJson({
-        "issue_type": issueType,
-        "description": description,
-        "building_id": selectedBuilding?.buildingId,
-        "elevator_id": selectedElevator?.elevatorId,
-      });
+    final result = await _repo.createIssue();
 
-      final result = await ApiService.createIssue(issueModel);
-
-      result.fold(
-        (errMsg) => emit(CreateIssueError(error: errMsg)),
-        (response) => emit(CreateIssueSuccess()),
-      );
-    } catch (e) {
-      emit(CreateIssueError(error: e.toString()));
-    }
+    result.fold((errMsg) => emit(CreateIssueError(error: errMsg.errMessage)),
+        (response) {
+      emit(CreateIssueSuccess());
+      _repo.reset();
+      emit(CreateIssueInitial());
+    });
   }
 
   void selectBuilding(BuildingSummaryModel building) {
     final currentState = state is SelectSuccess ? state as SelectSuccess : null;
+    _repo.selectedBuilding = building;
     selectedBuilding = building;
     emit(SelectSuccess(
       building: building,
@@ -55,6 +53,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   void selectElevator(ElevatorSummaryModel elevator) {
     final currentState = state is SelectSuccess ? state as SelectSuccess : null;
     selectedElevator = elevator;
+    _repo.selectedElevator = elevator;
     emit(SelectSuccess(
       building: currentState?.building,
       issueType: currentState?.issueType,
@@ -65,6 +64,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   void selectIssueType(String value) {
     final currentState = state is SelectSuccess ? state as SelectSuccess : null;
     issueType = value;
+    _repo.issueType = value;
     emit(SelectSuccess(
         building: currentState?.building,
         elevator: currentState?.elevator,
@@ -72,12 +72,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   }
 
   void updateDescription(String value) {
-    final currentState = state is SelectSuccess ? state as SelectSuccess : null;
     description = value;
-    emit(SelectSuccess(
-        building: currentState?.building,
-        elevator: currentState?.elevator,
-        issueType: currentState?.issueType,
-        description: value));
+    _repo.description = value;
   }
 }

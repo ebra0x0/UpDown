@@ -20,6 +20,8 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
+  TextDirection? _emailTextDirection;
+  TextDirection? _passTextDirection;
 
   AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
 
@@ -45,6 +47,7 @@ class _LoginFormState extends State<LoginForm> {
   void _submit() {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
+      FocusScope.of(context).unfocus();
       final AuthUserModel user = AuthUserModel(
         email: _emailField.controller.text,
         password: _passwordField.controller.text,
@@ -55,6 +58,37 @@ class _LoginFormState extends State<LoginForm> {
       setState(() {
         _autoValidateMode = AutovalidateMode.always;
       });
+    }
+  }
+
+  void _updateEmailTextDirection(String? text) {
+    if (text == null || text.trim().isEmpty) {
+      setState(() => _emailTextDirection = null);
+      return;
+    }
+
+    final hasArabic = RegExp(r'[\u0600-\u06FF]').hasMatch(text);
+    final hasEnglish = RegExp(r'[a-zA-Z]').hasMatch(text);
+
+    if (hasArabic) {
+      setState(() => _emailTextDirection = TextDirection.rtl);
+    } else if (hasEnglish) {
+      setState(() => _emailTextDirection = TextDirection.ltr);
+    }
+  }
+
+  void _updatePassTextDirection(String? text) {
+    if (text == null || text.trim().isEmpty) {
+      setState(() => _passTextDirection = null);
+      return;
+    }
+    final hasArabic = RegExp(r'[\u0600-\u06FF]').hasMatch(text);
+    final hasEnglish = RegExp(r'[a-zA-Z]').hasMatch(text);
+
+    if (hasArabic) {
+      setState(() => _passTextDirection = TextDirection.rtl);
+    } else if (hasEnglish) {
+      setState(() => _passTextDirection = TextDirection.ltr);
     }
   }
 
@@ -73,14 +107,17 @@ class _LoginFormState extends State<LoginForm> {
           children: [
             CustomTextFormField(
               formKey: formKey,
+              textDirection: _emailTextDirection,
               keyType: TextInputType.emailAddress,
               labelText: "البريد الالكتروني",
               controller: _emailField.controller,
               validator: _emailField.validator,
+              onChanged: _updateEmailTextDirection,
             ),
             SizedBox(height: 16),
             PasswordField(
               labelText: "كلمة المرور",
+              textDirection: _passTextDirection,
               controller: _passwordField.controller,
               validator: _passwordField.validator,
               obscureText: _passwordField.isSecure,
@@ -89,6 +126,7 @@ class _LoginFormState extends State<LoginForm> {
                   _passwordField.isSecure = !_passwordField.isSecure;
                 });
               },
+              onChanged: _updatePassTextDirection,
             ),
             SizedBox(height: 16),
             Row(
