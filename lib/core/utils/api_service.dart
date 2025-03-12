@@ -305,4 +305,25 @@ class ApiService {
       return Left(CustomException("حدث خطاء اثناءإنشاء المشكلة"));
     }
   }
+
+  Future<Either<Failure, List<IssueModel>>> fetchActiveIssues() async {
+    try {
+      final List<Map<String, dynamic>> response =
+          await _supabase.from("active_issues").select();
+
+      if (response.isEmpty) {
+        return Left(CustomException("لا يوجد أعطال نشطة"));
+      }
+
+      final List<IssueModel> issues = response.map((e) {
+        return IssueModel.fromJson(e);
+      }).toList();
+
+      return Right(issues);
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomException("حدث حطأ اثناء جلب بيانات الأعطال النشطة"));
+    }
+  }
 }

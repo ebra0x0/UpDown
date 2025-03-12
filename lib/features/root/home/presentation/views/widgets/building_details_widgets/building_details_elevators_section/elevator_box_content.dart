@@ -86,10 +86,11 @@ class ElevatorBoxBody extends StatelessWidget {
     return Expanded(
       child: Center(
         child: Text(
-            StatusHandler.getStatusDescription(
-                status: elevatorStatus,
-                issueType: issueType,
-                nextMaintenanceDate: nextMaintenanceDate),
+            StatusHandler.fromElevatorStatus(
+                    status: elevatorStatus,
+                    issueType: issueType,
+                    nextMaintenanceDate: nextMaintenanceDate)
+                .description!,
             textAlign: TextAlign.center,
             style: Styles.textStyle14.copyWith(
                 fontWeight: FontWeight.bold, color: Pallete.textPrimary)),

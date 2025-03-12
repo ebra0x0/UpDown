@@ -1,5 +1,5 @@
 import 'package:UpDown/core/widgets/loading_indicator.dart';
-import 'package:UpDown/features/root/home/presentation/manager/buildings_cubit/cubit/buildings_cubit.dart';
+import 'package:UpDown/features/root/home/presentation/manager/building_details_cubit/cubit/building_details_cubit.dart';
 import 'package:UpDown/features/root/home/presentation/views/widgets/building_details_widgets/building_details_elevators_section/building_elevators_box.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,9 +9,9 @@ class BuildingDetailsElevatorsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BuildingsCubit, BuildingsState>(
+    return BlocBuilder<BuildingDetailsCubit, BuildingDetailsState>(
         builder: (context, state) {
-      if (state is BuildingsLoaded) {
+      if (state is BuildingDetailsLoaded) {
         return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -26,11 +26,11 @@ class BuildingDetailsElevatorsSection extends StatelessWidget {
             );
           },
         );
-      } else if (state is BuildingsError) {
+      } else if (state is BuildingDetailsError) {
         return Center(
           child: Text(state.error),
         );
-      } else if (state is BuildingsLoading) {
+      } else if (state is BuildingDetailsLoading) {
         return Center(
           child: DataLoadingIndicator(),
         );

@@ -2,26 +2,26 @@ import 'package:UpDown/features/root/home/data/model/elevator_model.dart';
 import 'package:UpDown/features/root/home/data/repos/elevator_repo/elevator_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'elevator_state.dart';
+part 'elevator_details_state.dart';
 
-class ElevatorCubit extends Cubit<ElevatorState> {
-  ElevatorCubit(this._repo) : super(ElevatorInitial());
+class ElevatorDetailsCubit extends Cubit<ElevatorDetailsState> {
+  ElevatorDetailsCubit(this._repo) : super(ElevatorDetailsInitial());
   final ElevatorRepo _repo;
 
   Future<void> getElevatorDetails({required String elevatorId}) async {
     if (elevatorId.isEmpty) {
-      emit(ElevatorError(error: "يبدو أن هذا المصعد قد حذف."));
+      emit(ElevatorDetailsError(error: "يبدو أن هذا المصعد قد حذف."));
       return;
     }
 
-    emit(ElevatorLoading());
+    emit(ElevatorDetailsLoading());
 
     final result = await _repo.fetchElevatorDetails(elevatorId: elevatorId);
 
     result.fold(
-      (errMsg) => emit(ElevatorError(error: errMsg.errMessage)),
+      (errMsg) => emit(ElevatorDetailsError(error: errMsg.errMessage)),
       (response) {
-        emit(ElevatorLoaded(elevator: response));
+        emit(ElevatorDetailsLoaded(elevator: response));
       },
     );
   }

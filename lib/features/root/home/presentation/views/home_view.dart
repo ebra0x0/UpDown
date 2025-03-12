@@ -11,39 +11,53 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-          child: Column(
-        children: [
-          BlocBuilder<UserDataCubit, UserDataState>(
-            builder: (context, state) {
-              if (state is UserDataLoading) {
-                return const DataLoadingIndicator();
-              } else if (state is UserDataSuccess) {
-                return UserAccountsDrawerHeader(
-                  accountName: Text(state.userDataModel!.name),
-                  accountEmail: Text(state.userDataModel!.email),
-                );
-              } else if (state is UserDataError) {
-                return Text(state.error);
-              }
-              return Container();
-            },
-          ),
-          IconButton(
-              onPressed: () => BlocProvider.of<AuthCubit>(context).signOut(),
-              icon: const Icon(Icons.logout))
-        ],
-      )),
+      drawer: AppDrawer(),
       appBar: AppBar(
-        title: const Text(
-          'أنت تدير',
-          style: TextStyle(
-            color: Color.fromARGB(221, 34, 34, 34),
-            fontWeight: FontWeight.bold,
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: const Text(
+            'أنت تدير',
+            style: TextStyle(
+              color: Color.fromARGB(221, 34, 34, 34),
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
       body: const HomeViewBody(),
     );
+  }
+}
+
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+        child: Column(
+      children: [
+        BlocBuilder<UserDataCubit, UserDataState>(
+          builder: (context, state) {
+            if (state is UserDataLoading) {
+              return const DataLoadingIndicator();
+            } else if (state is UserDataSuccess) {
+              return UserAccountsDrawerHeader(
+                accountName: Text(state.userDataModel!.name),
+                accountEmail: Text(state.userDataModel!.email),
+              );
+            } else if (state is UserDataError) {
+              return Text(state.error);
+            }
+            return Container();
+          },
+        ),
+        IconButton(
+            onPressed: () => BlocProvider.of<AuthCubit>(context).signOut(),
+            icon: const Icon(Icons.logout))
+      ],
+    ));
   }
 }

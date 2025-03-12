@@ -8,9 +8,10 @@ import 'package:UpDown/features/root/create_issue/presentation/views/create_issu
 import 'package:UpDown/features/root/home/data/repos/building_repo/building_repo_imp.dart';
 import 'package:UpDown/features/root/home/data/repos/elevator_repo/elevator_repo_imp.dart';
 import 'package:UpDown/features/root/home/data/repos/home_repo/home_repo_imp.dart';
-import 'package:UpDown/features/root/home/presentation/manager/buildings_cubit/cubit/buildings_cubit.dart';
-import 'package:UpDown/features/root/home/presentation/manager/elevator_cubit/cubit/elevator_cubit.dart';
-import 'package:UpDown/features/root/home/presentation/manager/home_cubit/cubit/home_cubit.dart';
+import 'package:UpDown/features/root/home/presentation/manager/active_issues_cubit/cubit/active_issues_cubit.dart';
+import 'package:UpDown/features/root/home/presentation/manager/building_details_cubit/cubit/building_details_cubit.dart';
+import 'package:UpDown/features/root/home/presentation/manager/elevator_details_cubit/cubit/elevator_details_cubit.dart';
+import 'package:UpDown/features/root/home/presentation/manager/buildings_summary_cubit/cubit/buildings_summary_cubit.dart';
 import 'package:UpDown/features/root/home/presentation/views/building_details_view.dart';
 import 'package:UpDown/features/root/home/presentation/views/elevator_details_view.dart';
 import 'package:UpDown/features/root/home/presentation/views/home_view.dart';
@@ -41,6 +42,7 @@ abstract class AppRouter {
       GoRoute(
         path: '/',
         builder: (context, state) => const SplashView(),
+        // builder: (context, state) => const HomeView(),
       ),
       GoRoute(
         path: kregistrationView,
@@ -55,10 +57,18 @@ abstract class AppRouter {
           routes: [
             GoRoute(
                 path: khomeView,
-                builder: (context, state) => BlocProvider(
-                    create: (context) => HomeCubit(gitIt.get<HomeRepoImp>())
-                      ..fetchBuildingsSummary(context),
-                    child: const HomeView()),
+                builder: (context, state) => MultiBlocProvider(providers: [
+                      BlocProvider(
+                        create: (context) =>
+                            BuildingsSummaryCubit(gitIt.get<HomeRepoImp>())
+                              ..fetchBuildingsSummary(context),
+                      ),
+                      BlocProvider(
+                        create: (context) =>
+                            ActiveIssuesCubit(gitIt.get<HomeRepoImp>())
+                              ..fetchActiveIssues(),
+                      )
+                    ], child: HomeView()),
                 routes: [
                   GoRoute(
                     path: kbuildingDetails,
@@ -67,7 +77,7 @@ abstract class AppRouter {
                           state.pathParameters['buildingId']!;
                       return BlocProvider(
                         create: (context) =>
-                            BuildingsCubit(gitIt.get<BuildingRepoImp>())
+                            BuildingDetailsCubit(gitIt.get<BuildingRepoImp>())
                               ..getBuildingDetails(buildingId: buildingId),
                         child: BuildingDetailsView(),
                       );
@@ -81,7 +91,7 @@ abstract class AppRouter {
 
                       return BlocProvider(
                           create: (context) =>
-                              ElevatorCubit(gitIt.get<ElevatorRepoImp>())
+                              ElevatorDetailsCubit(gitIt.get<ElevatorRepoImp>())
                                 ..getElevatorDetails(elevatorId: elevatorId),
                           child: ElevatorDetailsView());
                     },

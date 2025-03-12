@@ -4,10 +4,10 @@ import 'package:UpDown/features/root/home/data/repos/home_repo/home_repo.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'home_state.dart';
+part 'buildings_summary_state.dart';
 
-class HomeCubit extends Cubit<HomeState> {
-  HomeCubit(this._repo) : super(HomeInitial());
+class BuildingsSummaryCubit extends Cubit<BuildingsSummaryState> {
+  BuildingsSummaryCubit(this._repo) : super(BuildingsSummaryInitial());
   final HomeRepo _repo;
 
   Future<void> fetchBuildingsSummary(BuildContext context) async {
@@ -15,17 +15,17 @@ class HomeCubit extends Cubit<HomeState> {
         BlocProvider.of<UserDataCubit>(context).userData?.buildings;
 
     if (userBuildings != null && userBuildings.isNotEmpty) {
-      emit(HomeLoaded(buildingsSummary: userBuildings));
+      emit(BuildingsSummaryLoaded(buildingsSummary: userBuildings));
       return;
     }
 
-    emit(HomeLoading());
+    emit(BuildingsSummaryLoading());
 
     final result = await _repo.fetchBuildingsSummary();
     result.fold(
-      (errMsg) => emit(HomeError(error: errMsg.errMessage)),
+      (errMsg) => emit(BuildingsSummaryError(error: errMsg.errMessage)),
       (response) {
-        emit(HomeLoaded(buildingsSummary: response));
+        emit(BuildingsSummaryLoaded(buildingsSummary: response));
       },
     );
   }

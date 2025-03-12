@@ -71,7 +71,7 @@ class CustomTextFormField extends StatelessWidget {
 
   TextDirection getTextDirection(String text) {
     final bool isEnglish = RegExp(r'^[a-zA-Z]').hasMatch(text);
-    print(isEnglish);
+
     return isEnglish ? TextDirection.ltr : TextDirection.rtl;
   }
 }
