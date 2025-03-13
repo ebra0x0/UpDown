@@ -23,6 +23,8 @@ class CreateIssueRepoImp implements CreateIssueRepo {
   @override
   Future<Either<Failure, void>> createIssue() async {
     IssueModel issueModel = IssueModel.fromJson({
+      "building_name": selectedBuilding?.name,
+      "elevator_number": selectedElevator?.elevatorNumber,
       "issue_type": issueType,
       "description": description,
       "building_id": selectedBuilding?.buildingId,

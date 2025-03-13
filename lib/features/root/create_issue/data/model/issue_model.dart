@@ -3,6 +3,8 @@ class IssueModel {
   final String? reportId;
   final String elevatorId;
   final String? buildingId;
+  final String buildingName;
+  final String elevatorNumber;
   final String description;
   final String? status;
   final String issueType;
@@ -14,6 +16,8 @@ class IssueModel {
     this.reportId,
     required this.elevatorId,
     this.buildingId,
+    required this.buildingName,
+    required this.elevatorNumber,
     required this.description,
     required this.issueType,
     this.status,
@@ -28,7 +32,9 @@ class IssueModel {
       issueType: json['issue_type'],
       description: json['description'],
       elevatorId: json['elevator_id'],
+      elevatorNumber: json['elevator_number'],
       buildingId: json['building_id'],
+      buildingName: json['building_name'],
       createdAt: json['created_at'] == null
           ? null
           : DateTime.parse(json['created_at']),
@@ -51,6 +57,8 @@ class IssueModel {
     DateTime? updatedAt,
   }) {
     return IssueModel(
+      buildingName: buildingName,
+      elevatorNumber: elevatorNumber,
       issueId: issueId ?? this.issueId,
       reportId: reportId ?? this.reportId,
       elevatorId: elevatorId ?? this.elevatorId,
@@ -69,6 +77,8 @@ class IssueModel {
       'elevator_id': elevatorId,
       'description': description,
       'issue_type': issueType,
+      'building_name': buildingName,
+      'elevator_number': elevatorNumber
     };
   }
 }

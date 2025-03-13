@@ -10,14 +10,15 @@ class HomeRepoImp implements HomeRepo {
   final ApiService apiService;
 
   @override
-  List<BuildingSummaryModel>? buildingsCash;
-  List<IssueModel>? issuesCash;
+  List<BuildingSummaryModel> buildingsCash = [];
+  @override
+  List<IssueModel> issuesCash = [];
 
   @override
   Future<Either<Failure, List<BuildingSummaryModel>>>
       fetchBuildingsSummary() async {
-    if (buildingsCash != null) {
-      return Right(buildingsCash!);
+    if (buildingsCash.isNotEmpty) {
+      return Right(buildingsCash);
     }
     final result = await apiService.fetchBuildingsSummary();
     result.fold(
@@ -34,8 +35,8 @@ class HomeRepoImp implements HomeRepo {
 
   @override
   Future<Either<Failure, List<IssueModel>>> fetchActiveIssues() async {
-    if (issuesCash != null) {
-      return Right(issuesCash!);
+    if (issuesCash.isNotEmpty) {
+      return Right(issuesCash);
     }
     final result = await apiService.fetchActiveIssues();
     result.fold(

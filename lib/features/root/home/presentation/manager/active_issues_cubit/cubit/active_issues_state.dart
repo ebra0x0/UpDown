@@ -8,6 +8,7 @@ final class ActiveIssuesLoading extends ActiveIssuesState {}
 
 final class ActiveIssuesLoaded extends ActiveIssuesState {
   final List<IssueModel> activeIssues;
+
   ActiveIssuesLoaded({required this.activeIssues});
 }
 

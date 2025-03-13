@@ -9,9 +9,12 @@ class DataLoadingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        constraints: BoxConstraints(
+          minHeight: 100,
+        ),
         decoration: BoxDecoration(
           borderRadius: Styles.borderRadius8,
-          color: Pallete.secondary.withValues(alpha: 0.1),
+          color: Pallete.primary.withValues(alpha: 0.2),
         ),
       ),
     );

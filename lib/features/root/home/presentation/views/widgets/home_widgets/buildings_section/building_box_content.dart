@@ -78,7 +78,7 @@ class BuildingBoxFooter extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          hasActiveReport ? "توجد مشكلة" : "لا توجد مشاكل",
+          hasActiveReport ? "يوجد عطل" : "لا توجد أعطال",
           style: Styles.textStyle14
               .copyWith(color: hasActiveReport ? Colors.red : Colors.grey),
         ),

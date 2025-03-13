@@ -2,6 +2,7 @@ import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart'
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/auth/presentaion/views/login/login_view.dart';
 import 'package:UpDown/features/auth/presentaion/views/registration/registration_view.dart';
+import 'package:UpDown/features/root/create_issue/data/model/issue_model.dart';
 import 'package:UpDown/features/root/create_issue/data/repos/create_issue_repo_imp.dart';
 import 'package:UpDown/features/root/create_issue/presentation/manager/cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/root/create_issue/presentation/views/create_issue_view.dart';
@@ -15,6 +16,7 @@ import 'package:UpDown/features/root/home/presentation/manager/buildings_summary
 import 'package:UpDown/features/root/home/presentation/views/building_details_view.dart';
 import 'package:UpDown/features/root/home/presentation/views/elevator_details_view.dart';
 import 'package:UpDown/features/root/home/presentation/views/home_view.dart';
+import 'package:UpDown/features/root/home/presentation/views/issue_view.dart';
 import 'package:UpDown/features/root/root_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,7 @@ abstract class AppRouter {
   static const String kregistrationView = '/registrationView';
   static const String kloginView = '/loginView';
   static const String khomeView = '/homeView';
+  static const String kissueView = 'issueView';
   static const String kcreateIssueView = '/createReportView';
   static const String kbuildingDetails = 'buildingDetails/:buildingId';
   static const String kelevatorDetails = '/elevatorDetails/:elevatorId';
@@ -42,7 +45,6 @@ abstract class AppRouter {
       GoRoute(
         path: '/',
         builder: (context, state) => const SplashView(),
-        // builder: (context, state) => const HomeView(),
       ),
       GoRoute(
         path: kregistrationView,
@@ -94,6 +96,13 @@ abstract class AppRouter {
                               ElevatorDetailsCubit(gitIt.get<ElevatorRepoImp>())
                                 ..getElevatorDetails(elevatorId: elevatorId),
                           child: ElevatorDetailsView());
+                    },
+                  ),
+                  GoRoute(
+                    path: kissueView,
+                    builder: (context, state) {
+                      final issue = state.extra as IssueModel;
+                      return IssueView(issue: issue);
                     },
                   ),
                 ]),

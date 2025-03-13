@@ -4,7 +4,8 @@ import 'package:UpDown/features/root/home/data/model/building_summary_model.dart
 import 'package:either_dart/either.dart';
 
 abstract class HomeRepo {
-  List<BuildingSummaryModel>? buildingsCash;
+  List<BuildingSummaryModel> buildingsCash = [];
+  List<IssueModel> issuesCash = [];
   Future<Either<Failure, List<BuildingSummaryModel>>> fetchBuildingsSummary();
   Future<Either<Failure, List<IssueModel>>> fetchActiveIssues();
 }

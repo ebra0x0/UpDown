@@ -34,12 +34,11 @@ class UpDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GoRouter router = AppRouter.router;
     return MaterialApp.router(
-      routerConfig: router,
+      routerConfig: gitIt.get<GoRouter>(),
       debugShowCheckedModeBanner: false,
       builder: (context, child) => AppBuilder(
-        router: router,
+        router: gitIt.get<GoRouter>(),
         child: child,
       ),
       supportedLocales: [
