@@ -23,8 +23,3 @@ An application that helps customers monitor the condition of buildings and their
 
 If you have any feedback, please reach out to us at ebra0x0@gmail.com
 
-
-# Up Down
-
-An application that helps customers monitor the condition of buildings and their elevators, with the ability to send faults to the company, follow up on the status of repairs, and schedule maintenance appointments.
-
