@@ -19,7 +19,7 @@ class CustomDrobDown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            color: Pallete.containerLight,
+            color: Pallete.lightCard,
             borderRadius: Styles.borderRadius8,
             boxShadow: [Styles.boxShadow]),
         child: DropdownButtonHideUnderline(

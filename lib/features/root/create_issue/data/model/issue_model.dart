@@ -1,13 +1,16 @@
+import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+
 class IssueModel {
   final String? issueId;
   final String? reportId;
   final String elevatorId;
   final String? buildingId;
   final String buildingName;
-  final String elevatorNumber;
+  final String elevatorName;
   final String description;
-  final String? status;
-  final String issueType;
+  final IssueStatus status;
+  final IssueType issueType;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -17,10 +20,10 @@ class IssueModel {
     required this.elevatorId,
     this.buildingId,
     required this.buildingName,
-    required this.elevatorNumber,
+    required this.elevatorName,
     required this.description,
     required this.issueType,
-    this.status,
+    required this.status,
     this.createdAt,
     this.updatedAt,
   });
@@ -29,10 +32,10 @@ class IssueModel {
     return IssueModel(
       issueId: json['issue_id'],
       reportId: json['report_id'],
-      issueType: json['issue_type'],
+      issueType: IssueTypeExtension.fromString(json['issue_type']),
       description: json['description'],
       elevatorId: json['elevator_id'],
-      elevatorNumber: json['elevator_number'],
+      elevatorName: json['elevator_name'],
       buildingId: json['building_id'],
       buildingName: json['building_name'],
       createdAt: json['created_at'] == null
@@ -41,7 +44,7 @@ class IssueModel {
       updatedAt: json['updated_at'] == null
           ? null
           : DateTime.parse(json['updated_at']),
-      status: json['status'],
+      status: IssueStatusExtension.fromString(json['status']),
     );
   }
 
@@ -51,14 +54,14 @@ class IssueModel {
     String? elevatorId,
     String? buildingId,
     String? description,
-    String? issueType,
-    String? status,
+    IssueType? issueType,
+    IssueStatus? status,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return IssueModel(
       buildingName: buildingName,
-      elevatorNumber: elevatorNumber,
+      elevatorName: elevatorName,
       issueId: issueId ?? this.issueId,
       reportId: reportId ?? this.reportId,
       elevatorId: elevatorId ?? this.elevatorId,
@@ -78,7 +81,7 @@ class IssueModel {
       'description': description,
       'issue_type': issueType,
       'building_name': buildingName,
-      'elevator_number': elevatorNumber
+      'elevator_name': elevatorName
     };
   }
 }

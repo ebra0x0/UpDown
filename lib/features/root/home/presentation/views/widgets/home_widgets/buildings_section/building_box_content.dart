@@ -41,18 +41,22 @@ class BuildingBoxHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              buildingName,
-              style: Styles.textStyle18,
-            ),
-            Text(
-              "$elevatorsCount مصعد",
-              style: Styles.textStyle14.copyWith(color: Colors.grey),
-            ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                buildingName,
+                style: Styles.textStyle18,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                "$elevatorsCount مصعد",
+                style: Styles.textStyle14.copyWith(color: Colors.grey),
+              ),
+            ],
+          ),
         ),
         Icon(
           Icons.apartment_rounded,

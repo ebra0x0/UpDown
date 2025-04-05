@@ -16,7 +16,7 @@ class ElevatorDropdown extends StatelessWidget {
       aspectRatio: 2.4 / 1,
       child: Container(
         decoration: BoxDecoration(
-          color: Pallete.containerLight,
+          color: Pallete.lightCard,
           borderRadius: Styles.borderRadius8,
           boxShadow: [Styles.boxShadow],
         ),
@@ -47,7 +47,7 @@ class ElevatorDropdown extends StatelessWidget {
                     children: [
                       Icon(Icons.elevator_outlined, color: Colors.grey),
                       Text(
-                        e.elevatorNumber.toString(),
+                        e.name.toString(),
                       ),
                     ],
                   ),

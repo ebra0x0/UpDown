@@ -4,16 +4,16 @@ import '../pallete.dart';
 Color getStatusColor(String status) {
   switch (status) {
     case "Working":
-      return Pallete.success;
+      return Pallete.lightSuccess;
     case "Broken":
-      return Pallete.error;
+      return Pallete.lightError;
     case "Maintenance":
-      return Pallete.warning;
+      return Pallete.lightWarning;
     case "Repair":
-      return Pallete.info;
+      return Pallete.lightInfo;
     case "Disabled":
-      return Pallete.secondary;
+      return Pallete.lightSecondary;
     default:
-      return Pallete.secondary;
+      return Pallete.lightSecondary;
   }
 }

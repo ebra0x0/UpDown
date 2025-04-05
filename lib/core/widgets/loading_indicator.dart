@@ -14,7 +14,7 @@ class DataLoadingIndicator extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: Styles.borderRadius8,
-          color: Pallete.primary.withValues(alpha: 0.2),
+          color: Pallete.lightPrimary.withValues(alpha: 0.2),
         ),
       ),
     );

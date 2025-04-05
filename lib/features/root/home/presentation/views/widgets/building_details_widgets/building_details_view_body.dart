@@ -43,7 +43,7 @@ class AlertBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(8),
       alignment: Alignment.center,
-      color: color ?? Pallete.secondary,
+      color: color ?? Pallete.lightSecondary,
       child: Text(
         title ?? "تم الإبلاغ عن عطل وسيتم حله قريباً",
         style: Styles.textStyle14.copyWith(color: Colors.white),

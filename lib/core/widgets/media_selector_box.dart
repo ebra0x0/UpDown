@@ -55,7 +55,7 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
                 ? DecorationImage(
                     image: Image.file(_image!).image, fit: BoxFit.cover)
                 : null,
-            color: Pallete.containerLight,
+            color: Pallete.lightCard,
             borderRadius: Styles.borderRadius8,
             boxShadow: [Styles.boxShadow],
           ),
@@ -68,7 +68,7 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
               : Icon(
                   Icons.add_photo_alternate_outlined,
                   size: 46,
-                  color: Pallete.textSecondary,
+                  color: Pallete.lightSecondary,
                 ),
         ));
   }

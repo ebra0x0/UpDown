@@ -1,3 +1,6 @@
+import 'package:UpDown/core/utils/auth_notifier.dart';
+import 'package:UpDown/core/utils/function/toast.dart';
+import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/auth/presentaion/views/login/login_view.dart';
@@ -23,7 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-abstract class AppRouter {
+class AppRouter {
   static const String kregistrationView = '/registrationView';
   static const String kloginView = '/loginView';
   static const String khomeView = '/homeView';
@@ -40,88 +43,124 @@ abstract class AppRouter {
     context.push('$khomeView/elevatorDetails/$elevatorId');
   }
 
-  static GoRouter get router {
-    return GoRouter(routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const SplashView(),
-      ),
-      GoRoute(
-        path: kregistrationView,
-        builder: (context, state) => const RegistrationView(),
-      ),
-      GoRoute(
-        path: kloginView,
-        builder: (context, state) => const LoginView(),
-      ),
-      ShellRoute(
-          builder: (context, state, child) => RootView(child: child),
-          routes: [
-            GoRoute(
-                path: khomeView,
-                builder: (context, state) => MultiBlocProvider(providers: [
-                      BlocProvider(
-                        create: (context) =>
-                            BuildingsSummaryCubit(gitIt.get<HomeRepoImp>())
-                              ..fetchBuildingsSummary(context),
-                      ),
-                      BlocProvider(
-                        create: (context) =>
-                            ActiveIssuesCubit(gitIt.get<HomeRepoImp>())
-                              ..fetchActiveIssues(),
-                      )
-                    ], child: HomeView()),
-                routes: [
-                  GoRoute(
-                    path: kbuildingDetails,
-                    builder: (context, state) {
-                      final String buildingId =
-                          state.pathParameters['buildingId']!;
-                      return BlocProvider(
-                        create: (context) =>
-                            BuildingDetailsCubit(gitIt.get<BuildingRepoImp>())
-                              ..getBuildingDetails(buildingId: buildingId),
-                        child: BuildingDetailsView(),
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    path: kelevatorDetails,
-                    builder: (context, state) {
-                      final String elevatorId =
-                          state.pathParameters['elevatorId']!;
+  GoRouter router(AuthCubit authCubit) {
+    return GoRouter(
+        refreshListenable: AuthNotifier(authCubit),
+        redirect: (context, state) async {
+          final authState = authCubit.state;
 
-                      return BlocProvider(
-                          create: (context) =>
-                              ElevatorDetailsCubit(gitIt.get<ElevatorRepoImp>())
+          // If the session error.
+          if (authState is AuthStateError) {
+            showToast(context, authState.errorMsg);
+            return kloginView;
+          }
+
+          // If the session loading.
+          if (authState is AuthStateInitial) {
+            return null;
+          }
+
+          final bool isAuthenticated = authState is AuthStateAuthenticated;
+          final bool isInAuth = state.matchedLocation == kloginView ||
+              state.matchedLocation == kregistrationView;
+          final bool isSplashing = state.matchedLocation == '/';
+
+          // if user is not authenticated and he is not in the auth screens.
+          if (!isAuthenticated && !isInAuth) {
+            BlocProvider.of<UserDataCubit>(context).reset();
+            return kloginView;
+          }
+
+          // if user is authenticated and he is in the auth screens
+          if (isAuthenticated && (isInAuth || isSplashing)) {
+            await BlocProvider.of<UserDataCubit>(context)
+                .loadUserData(user: authState.user);
+            return khomeView;
+          }
+
+          return null;
+        },
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => const SplashView(),
+          ),
+          GoRoute(
+            path: kregistrationView,
+            builder: (context, state) => const RegistrationView(),
+          ),
+          GoRoute(
+            path: kloginView,
+            builder: (context, state) => const LoginView(),
+          ),
+          ShellRoute(
+              builder: (context, state, child) => RootView(child: child),
+              routes: [
+                GoRoute(
+                    path: khomeView,
+                    builder: (context, state) => MultiBlocProvider(providers: [
+                          BlocProvider(
+                            create: (context) =>
+                                BuildingsSummaryCubit(gitIt.get<HomeRepoImp>())
+                                  ..fetchBuildingsSummary(context),
+                          ),
+                          BlocProvider(
+                            create: (context) =>
+                                ActiveIssuesCubit(gitIt.get<HomeRepoImp>())
+                                  ..fetchActiveIssues(),
+                          )
+                        ], child: HomeView()),
+                    routes: [
+                      GoRoute(
+                        path: kbuildingDetails,
+                        builder: (context, state) {
+                          final String buildingId =
+                              state.pathParameters['buildingId']!;
+                          return BlocProvider(
+                            create: (context) => BuildingDetailsCubit(
+                                gitIt.get<BuildingRepoImp>())
+                              ..getBuildingDetails(buildingId: buildingId),
+                            child: BuildingDetailsView(),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: kelevatorDetails,
+                        builder: (context, state) {
+                          final String elevatorId =
+                              state.pathParameters['elevatorId']!;
+
+                          return BlocProvider(
+                              create: (context) => ElevatorDetailsCubit(
+                                  gitIt.get<ElevatorRepoImp>())
                                 ..getElevatorDetails(elevatorId: elevatorId),
-                          child: ElevatorDetailsView());
-                    },
+                              child: ElevatorDetailsView());
+                        },
+                      ),
+                      GoRoute(
+                        path: kissueView,
+                        builder: (context, state) {
+                          final issue = state.extra as IssueModel;
+                          return IssueView(issue: issue);
+                        },
+                      ),
+                    ]),
+                GoRoute(
+                  path: kcreateIssueView,
+                  builder: (context, state) => BlocProvider(
+                    create: (context) => CreateIssueCubit(
+                      gitIt.get<CreateIssueRepoImp>(),
+                      buildings: BlocProvider.of<UserDataCubit>(context)
+                          .userData!
+                          .buildings,
+                      elevators: BlocProvider.of<UserDataCubit>(context)
+                          .userData!
+                          .elevators,
+                    ),
+                    child: const CreateIssueView(),
                   ),
-                  GoRoute(
-                    path: kissueView,
-                    builder: (context, state) {
-                      final issue = state.extra as IssueModel;
-                      return IssueView(issue: issue);
-                    },
-                  ),
-                ]),
-            GoRoute(
-              path: kcreateIssueView,
-              builder: (context, state) => BlocProvider(
-                create: (context) => CreateIssueCubit(
-                  gitIt.get<CreateIssueRepoImp>(),
-                  buildings: BlocProvider.of<UserDataCubit>(context)
-                      .userData!
-                      .buildings,
-                  elevators: BlocProvider.of<UserDataCubit>(context)
-                      .userData!
-                      .elevators,
-                ),
-                child: const CreateIssueView(),
-              ),
-            )
-          ]),
-    ]);
+                )
+              ]),
+        ]);
   }
 }

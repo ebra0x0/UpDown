@@ -161,7 +161,9 @@ class ApiService {
     }
   }
 
-  // App Functions
+  // App Endpoints
+
+  // Buildings
   Future<Either<Failure, List<BuildingSummaryModel>>>
       fetchBuildingsSummary() async {
     try {
@@ -209,6 +211,7 @@ class ApiService {
     }
   }
 
+  // Elevators
   Future<Either<Failure, List<ElevatorSummaryModel>>> fetchElevatorsSummary(
       {required String buildingId}) async {
     try {

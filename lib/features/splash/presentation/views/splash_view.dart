@@ -9,7 +9,7 @@ class SplashView extends StatelessWidget {
     return const Scaffold(
       body: Center(
           child: CircularProgressIndicator(
-        color: Pallete.info,
+        color: Pallete.lightInfo,
       )),
     );
   }

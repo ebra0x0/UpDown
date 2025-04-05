@@ -34,11 +34,11 @@ class PasswordField extends StatelessWidget {
         icon: obscureText
             ? Icon(
                 Icons.visibility_off_outlined,
-                color: Pallete.textSecondary,
+                color: Pallete.lightSecondary,
               )
             : Icon(
                 Icons.visibility_outlined,
-                color: Pallete.textSecondary,
+                color: Pallete.lightSecondary,
               ),
         onPressed: toggleVisibility,
       ),

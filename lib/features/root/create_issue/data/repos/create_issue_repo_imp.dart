@@ -24,11 +24,11 @@ class CreateIssueRepoImp implements CreateIssueRepo {
   Future<Either<Failure, void>> createIssue() async {
     IssueModel issueModel = IssueModel.fromJson({
       "building_name": selectedBuilding?.name,
-      "elevator_number": selectedElevator?.elevatorNumber,
+      "elevator_name": selectedElevator?.name,
       "issue_type": issueType,
       "description": description,
       "building_id": selectedBuilding?.buildingId,
-      "elevator_id": selectedElevator?.elevatorId,
+      "elevator_id": selectedElevator?.id,
     });
 
     final result = await gitIt.get<ApiService>().createIssue(issueModel);

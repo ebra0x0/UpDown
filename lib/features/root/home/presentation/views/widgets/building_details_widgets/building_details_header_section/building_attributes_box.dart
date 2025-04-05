@@ -19,7 +19,7 @@ class BuildingAttributesBox extends StatelessWidget {
       child: Column(spacing: 6, children: [
         Icon(
           icon,
-          color: Pallete.textSecondary,
+          color: Pallete.lightSecondary,
         ),
         Text(
           text,

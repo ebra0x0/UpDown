@@ -1,5 +1,6 @@
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
+import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/widgets/custom_button.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/core/widgets/password_field.dart';
@@ -127,7 +128,7 @@ class _LoginFormState extends State<LoginForm> {
               Text("ليس لديك حساب؟"),
               TextButton(
                 onPressed: () {
-                  GoRouter.of(context).push(AppRouter.kregistrationView);
+                  context.push(AppRouter.kregistrationView);
                 },
                 style: ButtonStyle(
                     overlayColor: WidgetStatePropertyAll(Colors.transparent)),
@@ -143,7 +144,7 @@ class _LoginFormState extends State<LoginForm> {
               children: [
                 Text(
                   state is AuthStateError ? state.errorMsg : "",
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: Pallete.lightError),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 100),

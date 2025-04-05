@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 
 abstract class Pallete {
-  // Primary color
-  static const Color primary = Color(0xFF8FE7DA);
+  // Light theme colors
+  static const Color lightPrimary = Color(0xFF96D0FF);
+  static const Color lightAccent = Color(0xFFEB1555);
+  static const Color lightScaffoldBackground = Color(0xFFFFFFFF);
+  static const Color lightCard = Color(0xFFF8F9FA);
+  static const Color lightText = Color(0xFF000000);
+  static const Color lightSecondary = Color(0xFF8D8E98);
+  static const Color lightWarning = Color(0xFFFFD166);
+  static const Color lightSuccess = Color(0xFF07CFB1);
+  static const Color lightError = Color(0xFFEF476F);
+  static const Color lightInfo = Color(0xFF2F80ED);
 
-  // Secondary color
-  static const Color secondary = Color(0xFF7C7C7C);
-
-  // status color
-  static const Color warning = Color(0xFFFFD166);
-  static const Color success = Color(0xFF07CFB1);
-  static const Color error = Color(0xFFEF476F);
-  static const Color info = Color(0xFF2F80ED);
-
-  // Background colors
-  static const Color backgroundDark = Color(0xFF073B4C);
-  static const Color backgroundLight = Color(0xFFFEF7FF);
-
-  // Widget colors
-  static const Color containerLight = Color(0xFFFFFFFF);
-  // Text colors
-  static const Color textPrimary = Color(0xFF3A3A3A);
-  static const Color textSecondary = Color(0xFF757575);
+  // Dark theme colors
+  static const Color darkPrimary = Color(0xFF1C4363);
+  static const Color darkAccent = Color(0xFFEB1555);
+  static const Color darkScaffoldBackground = Color(0xFF0A0E21);
+  static const Color darkCard = Color(0xFF1D1E33);
+  static const Color darkText = Color(0xFFFFFFFF);
+  static const Color darkSecondary = Color(0xFF8D8E98);
+  static const Color darkWarning = Color(0xFFFFD166);
+  static const Color darkSuccess = Color(0xFF07CFB1);
+  static const Color darkError = Color(0xFFEF476F);
+  static const Color darkInfo = Color(0xFF2F80ED);
 }

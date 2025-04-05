@@ -16,7 +16,7 @@ class BuildingDropdown extends StatelessWidget {
       aspectRatio: 2.4 / 1,
       child: Container(
         decoration: BoxDecoration(
-            color: Pallete.containerLight,
+            color: Pallete.lightCard,
             borderRadius: Styles.borderRadius8,
             boxShadow: [Styles.boxShadow]),
         child: BlocBuilder<CreateIssueCubit, CreateIssueState>(

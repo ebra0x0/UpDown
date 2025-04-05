@@ -25,7 +25,7 @@ class CustomButton extends StatelessWidget {
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
               borderRadius: Styles.borderRadius8,
             )),
-            backgroundColor: WidgetStatePropertyAll(Pallete.primary),
+            backgroundColor: WidgetStatePropertyAll(Pallete.lightPrimary),
           ),
           child: isLoading
               ? SizedBox(

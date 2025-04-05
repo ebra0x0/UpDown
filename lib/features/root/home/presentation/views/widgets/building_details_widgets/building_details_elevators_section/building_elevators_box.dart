@@ -16,7 +16,7 @@ class BuildingElevatorsBox extends StatelessWidget {
         elevator: elevator,
       ),
       action: () {
-        AppRouter.goToElevatorDetails(context, elevator.elevatorId);
+        AppRouter.goToElevatorDetails(context, elevator.id);
       },
     );
   }
