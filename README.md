@@ -1,17 +1,25 @@
-# UpDown
 
-A new Flutter project.
+# Up Down
 
-## Getting Started
+An application that helps customers monitor the condition of buildings and their elevators, with the ability to send faults to the company, follow up on the status of repairs, and schedule maintenance appointments.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
--   [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
--   [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Display the real-time status of elevators for each building.
+- Sending automatic notifications about breakdowns and important appointments.
+- A fault ticket system to enable customers to follow the progress of resolving the problem.
+- Managing and scheduling periodic maintenance appointments for elevators.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# UpDown"  git init git add README.md git commit -m "first commit" git branch -M main git remote add origin https://github.com/ebra0x0/UpDown.git git push -u origin main
+
+## Tech Stack
+
+**Client:** Flutter, Cubit, Clean Architecture
+
+**Server:** Supabase
+
+
+## Feedback
+
+If you have any feedback, please reach out to us at ebra0x0@gmail.com
+
