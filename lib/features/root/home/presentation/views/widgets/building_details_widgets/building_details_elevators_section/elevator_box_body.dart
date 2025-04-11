@@ -5,15 +5,20 @@ import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class ElevatorBoxBody extends StatelessWidget {
-  const ElevatorBoxBody({super.key, required this.status});
+  const ElevatorBoxBody(
+      {super.key, required this.status, required this.issueType});
 
   final ElevatorStatus status;
+  final IssueType? issueType;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Center(
-        child: Text(status.description(context),
+        child: Text(
+            issueType == null
+                ? status.title(context)
+                : issueType!.title(context),
             textAlign: TextAlign.center,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,

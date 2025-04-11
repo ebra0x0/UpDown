@@ -23,6 +23,7 @@ class ElevatorBoxContent extends StatelessWidget {
           ),
           ElevatorBoxBody(
             status: elevator.status,
+            issueType: elevator.issueType,
           ),
         ],
       ),

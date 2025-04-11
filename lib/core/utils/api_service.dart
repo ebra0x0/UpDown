@@ -9,7 +9,7 @@ import 'package:UpDown/features/root/home/data/model/building_model.dart';
 import 'package:UpDown/features/root/home/data/model/building_summary_model.dart';
 import 'package:UpDown/features/root/home/data/model/elevator_model.dart';
 import 'package:UpDown/core/utils/model/user_model.dart';
-import 'package:UpDown/features/auth/data/model/auth_user_model.dart';
+import 'package:UpDown/features/auth/data/model/user_credentials_model.dart';
 import 'package:UpDown/features/root/home/data/model/elevator_summary_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,13 +18,13 @@ class ApiService {
   ApiService(this._supabase);
   final SupabaseClient _supabase;
 
-  final StreamController<Session?> _authStateController =
-      StreamController<Session?>.broadcast();
+  // final StreamController<Session?> _authStateController =
+  //     StreamController<Session?>.broadcast();
 
-  Stream<Session?> get onAuthStateChange => _authStateController.stream;
+  // Stream<Session?> get onAuthStateChange => _authStateController.stream;
 
   // Auth Functions
-  Future<Either<Failure, Session>> signUp(AuthUserModel user) async {
+  Future<Either<Failure, Session>> signUp(UserCredentialsModel user) async {
     try {
       if (user.email.isEmpty || user.password.isEmpty) {
         return Left(
@@ -51,7 +51,7 @@ class ApiService {
   }
 
   Future<Either<Failure, Session>> signInWithPassword(
-      AuthUserModel user) async {
+      UserCredentialsModel user) async {
     try {
       if (user.email.isEmpty || user.password.isEmpty) {
         return Left(
@@ -113,12 +113,16 @@ class ApiService {
     }
   }
 
-  void sessionMonitor() => _supabase.auth.onAuthStateChange.listen((event) {
-        final session = event.session;
-        final isLoggedIn = session != null;
+  // void sessionMonitor() => _supabase.auth.onAuthStateChange.listen((event) {
+  //       final session = event.session;
+  //       final isLoggedIn = session != null;
 
-        _authStateController.add(isLoggedIn ? session : null);
-      });
+  //       _authStateController.add(isLoggedIn ? session : null);
+  //     });
+
+  Stream<Session?> get onAuthStateChanged =>
+      _supabase.auth.onAuthStateChange.map((event) => event.session);
+
   // User Functions
   Future<Either<Failure, void>> createUserData(UserModel user) async {
     try {

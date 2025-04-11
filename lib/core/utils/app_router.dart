@@ -1,5 +1,4 @@
-import 'package:UpDown/core/utils/auth_notifier.dart';
-import 'package:UpDown/core/utils/function/toast.dart';
+import 'package:UpDown/core/utils/go_router_refresh_stream.dart';
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
@@ -11,11 +10,8 @@ import 'package:UpDown/features/root/create_issue/presentation/manager/cubit/cre
 import 'package:UpDown/features/root/create_issue/presentation/views/create_issue_view.dart';
 import 'package:UpDown/features/root/home/data/repos/building_repo/building_repo_imp.dart';
 import 'package:UpDown/features/root/home/data/repos/elevator_repo/elevator_repo_imp.dart';
-import 'package:UpDown/features/root/home/data/repos/home_repo/home_repo_imp.dart';
-import 'package:UpDown/features/root/home/presentation/manager/active_issues_cubit/cubit/active_issues_cubit.dart';
 import 'package:UpDown/features/root/home/presentation/manager/building_details_cubit/cubit/building_details_cubit.dart';
 import 'package:UpDown/features/root/home/presentation/manager/elevator_details_cubit/cubit/elevator_details_cubit.dart';
-import 'package:UpDown/features/root/home/presentation/manager/buildings_summary_cubit/cubit/buildings_summary_cubit.dart';
 import 'package:UpDown/features/root/home/presentation/views/building_details_view.dart';
 import 'package:UpDown/features/root/home/presentation/views/elevator_details_view.dart';
 import 'package:UpDown/features/root/home/presentation/views/home_view.dart';
@@ -30,54 +26,52 @@ class AppRouter {
   static const String kregistrationView = '/registrationView';
   static const String kloginView = '/loginView';
   static const String khomeView = '/homeView';
-  static const String kissueView = 'issueView';
   static const String kcreateIssueView = '/createReportView';
   static const String kbuildingDetails = 'buildingDetails/:buildingId';
   static const String kelevatorDetails = '/elevatorDetails/:elevatorId';
+  static const String kissueView = 'issueView';
 
   static void goToBuildingDetails(BuildContext context, String buildingId) {
-    context.push('$khomeView/buildingDetails/$buildingId');
+    context.go("$khomeView/buildingDetails/$buildingId");
   }
 
   static void goToElevatorDetails(BuildContext context, String elevatorId) {
-    context.push('$khomeView/elevatorDetails/$elevatorId');
+    context.push("$khomeView/elevatorDetails/$elevatorId");
   }
 
-  GoRouter router(AuthCubit authCubit) {
+  static void goToIssueView(BuildContext context, IssueModel issue) {
+    context.go("$khomeView/issueView", extra: issue);
+  }
+
+  GoRouter router(BuildContext context) {
     return GoRouter(
-        refreshListenable: AuthNotifier(authCubit),
+        refreshListenable:
+            GoRouterRefreshStream(context.read<AuthCubit>().stream),
         redirect: (context, state) async {
-          final authState = authCubit.state;
+          final authState = context.read<AuthCubit>().state;
 
-          // If the session error.
-          if (authState is AuthStateError) {
-            showToast(context, authState.errorMsg);
-            return kloginView;
+          final isGoingToLogin = state.fullPath == kloginView;
+          final isGoingToRegister = state.fullPath == kregistrationView;
+          final isGoingToSplash = state.fullPath == '/';
+          final isGoingToAuthPages =
+              isGoingToLogin || isGoingToRegister || isGoingToSplash;
+
+          if (authState is AuthStateAuthenticated) {
+            if (isGoingToAuthPages) {
+              loadUserData(context, authState);
+              return khomeView;
+            }
+          } else if (authState is AuthStateUnAuthenticated) {
+            if (isGoingToAuthPages) {
+              resetUserData(context);
+              if (isGoingToSplash) {
+                return kloginView;
+              }
+            } else {
+              resetUserData(context);
+              return kloginView;
+            }
           }
-
-          // If the session loading.
-          if (authState is AuthStateInitial) {
-            return null;
-          }
-
-          final bool isAuthenticated = authState is AuthStateAuthenticated;
-          final bool isInAuth = state.matchedLocation == kloginView ||
-              state.matchedLocation == kregistrationView;
-          final bool isSplashing = state.matchedLocation == '/';
-
-          // if user is not authenticated and he is not in the auth screens.
-          if (!isAuthenticated && !isInAuth) {
-            BlocProvider.of<UserDataCubit>(context).reset();
-            return kloginView;
-          }
-
-          // if user is authenticated and he is in the auth screens
-          if (isAuthenticated && (isInAuth || isSplashing)) {
-            await BlocProvider.of<UserDataCubit>(context)
-                .loadUserData(user: authState.user);
-            return khomeView;
-          }
-
           return null;
         },
         routes: [
@@ -98,18 +92,7 @@ class AppRouter {
               routes: [
                 GoRoute(
                     path: khomeView,
-                    builder: (context, state) => MultiBlocProvider(providers: [
-                          BlocProvider(
-                            create: (context) =>
-                                BuildingsSummaryCubit(gitIt.get<HomeRepoImp>())
-                                  ..fetchBuildingsSummary(context),
-                          ),
-                          BlocProvider(
-                            create: (context) =>
-                                ActiveIssuesCubit(gitIt.get<HomeRepoImp>())
-                                  ..fetchActiveIssues(),
-                          )
-                        ], child: HomeView()),
+                    builder: (context, state) => HomeView(),
                     routes: [
                       GoRoute(
                         path: kbuildingDetails,
@@ -162,5 +145,18 @@ class AppRouter {
                 )
               ]),
         ]);
+  }
+
+  void resetUserData(BuildContext context) {
+    if (BlocProvider.of<UserDataCubit>(context).userData != null) {
+      BlocProvider.of<UserDataCubit>(context).reset();
+    }
+  }
+
+  void loadUserData(BuildContext context, AuthStateAuthenticated authState) {
+    if (BlocProvider.of<UserDataCubit>(context).userData == null) {
+      BlocProvider.of<UserDataCubit>(context)
+          .loadUserData(user: authState.user);
+    }
   }
 }

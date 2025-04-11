@@ -1,5 +1,5 @@
-class AuthUserModel {
-  const AuthUserModel({
+class UserCredentialsModel {
+  const UserCredentialsModel({
     required this.email,
     required this.password,
   });

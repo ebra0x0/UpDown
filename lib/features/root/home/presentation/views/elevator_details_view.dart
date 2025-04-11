@@ -21,7 +21,7 @@ class ElevatorDetailsView extends StatelessWidget {
         } else if (state is ElevatorDetailsError) {
           return TextError(errorMessage: state.error);
         } else {
-          return DataLoadingIndicator();
+          return const DataLoadingIndicator();
         }
       }),
       Positioned(top: 16, right: 16, child: BackButtonNavigation()),

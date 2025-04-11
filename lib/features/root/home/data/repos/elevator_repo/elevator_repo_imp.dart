@@ -1,11 +1,13 @@
 import 'package:UpDown/core/errors/failures.dart';
 import 'package:UpDown/core/utils/api_service.dart';
-import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/root/home/data/model/elevator_model.dart';
 import 'package:UpDown/features/root/home/data/repos/elevator_repo/elevator_repo.dart';
 import 'package:either_dart/either.dart';
 
 class ElevatorRepoImp implements ElevatorRepo {
+  final ApiService _api;
+
+  ElevatorRepoImp(this._api);
   @override
   ElevatorModel? cash;
 
@@ -15,9 +17,7 @@ class ElevatorRepoImp implements ElevatorRepo {
     if (cash != null) {
       return Right(cash!);
     }
-    final result = await gitIt
-        .get<ApiService>()
-        .fetchElevatorDetails(elevatorId: elevatorId);
+    final result = await _api.fetchElevatorDetails(elevatorId: elevatorId);
 
     result.fold(
       (errMsg) => errMsg,

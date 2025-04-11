@@ -1,11 +1,11 @@
 class BuildingSummaryModel {
-  final String buildingId;
+  final String id;
   final String name;
   final int elevatorsCount;
   final bool hasActiveReport;
 
   BuildingSummaryModel({
-    required this.buildingId,
+    required this.id,
     required this.name,
     required this.elevatorsCount,
     required this.hasActiveReport,
@@ -13,7 +13,7 @@ class BuildingSummaryModel {
 
   factory BuildingSummaryModel.fromJson(Map<String, dynamic> json) {
     return BuildingSummaryModel(
-      buildingId: json['building_id'],
+      id: json['building_id'],
       name: json['building_name'],
       elevatorsCount: json['elevators_count'],
       hasActiveReport: json['has_active_report'],
@@ -22,7 +22,7 @@ class BuildingSummaryModel {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      'building_id': buildingId,
+      'building_id': id,
       'name': name,
       'elevator_count': elevatorsCount,
       'active_report': hasActiveReport,

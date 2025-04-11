@@ -8,25 +8,27 @@ class LoginViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 30),
-          const HeaderText(
-            title: "أهلاً من جديد",
-            textStyle: Styles.textStyle26,
-          ),
-          const HeaderText(
-            title: "هيا نسجل الدخول لحسابك",
-            textStyle: Styles.textStyle16,
-          ),
-          const SizedBox(height: 50),
-          LoginForm(),
-        ],
-      ),
-    ));
+    return Center(
+      child: SingleChildScrollView(
+          child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 30),
+            const HeaderText(
+              title: "أهلاً من جديد",
+              textStyle: Styles.textStyle26,
+            ),
+            const HeaderText(
+              title: "هيا نسجل الدخول لحسابك",
+              textStyle: Styles.textStyle16,
+            ),
+            const SizedBox(height: 50),
+            LoginForm(),
+          ],
+        ),
+      )),
+    );
   }
 }

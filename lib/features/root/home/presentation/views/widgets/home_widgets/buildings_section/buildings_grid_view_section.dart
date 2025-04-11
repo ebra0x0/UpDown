@@ -14,9 +14,12 @@ class BuildingsGridViewSection extends StatelessWidget {
     return BlocBuilder<BuildingsSummaryCubit, BuildingsSummaryState>(
       builder: (context, state) {
         return state is BuildingsSummaryEmpty
-            ? PlaceholderPanel(message: "لا يوجد عقارات مسجلة")
+            ? SliverToBoxAdapter(
+                child: PlaceholderPanel(message: "لا يوجد عقارات مسجلة"))
             : state is BuildingsSummaryError
-                ? PlaceholderPanel(message: "حدث خطأ ما وجاري حل المشكلة")
+                ? SliverToBoxAdapter(
+                    child: PlaceholderPanel(
+                        message: "حدث خطأ ما وجاري حل المشكلة"))
                 : state is BuildingsSummaryLoaded
                     ? SliverGrid.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -29,7 +32,7 @@ class BuildingsGridViewSection extends StatelessWidget {
                           return BuildingsGridViewBox(
                               building: state.buildingsSummary[index]);
                         })
-                    : DataLoadingIndicator();
+                    : SliverToBoxAdapter(child: DataLoadingIndicator());
       },
     );
   }

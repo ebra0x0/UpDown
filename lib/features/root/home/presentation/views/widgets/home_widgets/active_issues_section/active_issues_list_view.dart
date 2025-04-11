@@ -1,9 +1,9 @@
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_status.dart';
 import 'package:UpDown/features/root/home/presentation/manager/active_issues_cubit/cubit/active_issues_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ActiveIssuesListView extends StatelessWidget {
   const ActiveIssuesListView({
@@ -20,8 +20,8 @@ class ActiveIssuesListView extends StatelessWidget {
       itemBuilder: (context, index) {
         final issue = state.activeIssues[index];
         return ListTile(
-          onTap: () =>
-              context.push('${AppRouter.khomeView}/issueView', extra: issue),
+          shape: RoundedRectangleBorder(borderRadius: Styles.borderRadius8),
+          onTap: () => AppRouter.goToIssueView(context, issue),
           title: Text(
             issue.issueType.title(context),
             overflow: TextOverflow.ellipsis,

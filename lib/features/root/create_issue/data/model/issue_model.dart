@@ -2,7 +2,7 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 
 class IssueModel {
-  final String? issueId;
+  final String? id;
   final String? reportId;
   final String elevatorId;
   final String? buildingId;
@@ -15,7 +15,7 @@ class IssueModel {
   final DateTime? updatedAt;
 
   IssueModel({
-    this.issueId,
+    this.id,
     this.reportId,
     required this.elevatorId,
     this.buildingId,
@@ -30,7 +30,7 @@ class IssueModel {
 
   factory IssueModel.fromJson(Map<String, dynamic> json) {
     return IssueModel(
-      issueId: json['issue_id'],
+      id: json['issue_id'],
       reportId: json['report_id'],
       issueType: IssueTypeExtension.fromString(json['issue_type']),
       description: json['description'],
@@ -62,7 +62,7 @@ class IssueModel {
     return IssueModel(
       buildingName: buildingName,
       elevatorName: elevatorName,
-      issueId: issueId ?? this.issueId,
+      id: issueId ?? id,
       reportId: reportId ?? this.reportId,
       elevatorId: elevatorId ?? this.elevatorId,
       buildingId: buildingId ?? this.buildingId,

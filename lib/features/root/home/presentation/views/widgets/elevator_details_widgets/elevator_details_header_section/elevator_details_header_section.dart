@@ -3,7 +3,7 @@ import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/widgets/attributes_section.dart';
 import 'package:UpDown/features/root/home/data/model/attribute_model.dart';
 import 'package:UpDown/features/root/home/presentation/manager/elevator_details_cubit/cubit/elevator_details_cubit.dart';
-import 'package:UpDown/features/root/home/presentation/views/widgets/building_details_widgets/building_details_view_body.dart';
+import 'package:UpDown/features/root/home/presentation/views/widgets/elevator_details_widgets/elevator_details_header_section/alert_banner_issue.dart';
 import 'package:UpDown/features/root/home/presentation/views/widgets/elevator_details_widgets/elevator_details_header_section/elevator_details_header_title.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +23,7 @@ class ElevatorDetailsHeaderSection extends StatelessWidget {
     return Column(
       children: [
         if (state.elevator.activeIssue != null)
-          AlertBanner(
+          AlertBannerIssue(
             title: status.description(context),
             color: status.color,
           ),
