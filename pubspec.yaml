@@ -70,7 +70,7 @@ flutter:
     #   - images/a_dot_ham.jpeg
     # An image asset can refer to one or more resolution-specific "variants", see
 
-#Localization-specific configuration
+# Localization-specific configuration
 l10n:
     arb-dir: lib/l10n
     template-arb-file: app_en.arb
