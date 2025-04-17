@@ -18,60 +18,39 @@ class ApiService {
   ApiService(this._supabase);
   final SupabaseClient _supabase;
 
-  // final StreamController<Session?> _authStateController =
-  //     StreamController<Session?>.broadcast();
-
-  // Stream<Session?> get onAuthStateChange => _authStateController.stream;
-
   // Auth Functions
-  Future<Either<Failure, Session>> signUp(UserCredentialsModel user) async {
+  Future<Either<Failure, Session?>> signUp(UserCredentialsModel user) async {
     try {
-      if (user.email.isEmpty || user.password.isEmpty) {
-        return Left(
-            CustomException("يرجى إدخال البريد الإلكتروني وكلمة المرور"));
-      }
-
       final AuthResponse res = await _supabase.auth.signUp(
         email: user.email,
         password: user.password,
       );
 
-      gitIt.get<SecureStorage>().addAll({
-        "access_token": res.session!.accessToken,
-        "refresh_token": res.session!.refreshToken!,
-        "user_id": res.session!.user.id,
-      });
-
-      return Right(res.session!);
+      return Right(res.session);
     } on AuthException catch (e) {
       return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left(CustomException("حدث خطأ أثناء إنشاء الحساب"));
+      return Left(CustomFailure("حدث خطاء اثناء التسجيل"));
     }
   }
 
   Future<Either<Failure, Session>> signInWithPassword(
       UserCredentialsModel user) async {
     try {
-      if (user.email.isEmpty || user.password.isEmpty) {
-        return Left(
-            CustomException("يرجى إدخال البريد الإلكتروني وكلمة المرور"));
-      }
-
       final AuthResponse res = await _supabase.auth.signInWithPassword(
         email: user.email,
         password: user.password,
       );
-      gitIt.get<SecureStorage>().addAll({
-        "access_token": res.session!.accessToken,
-        "refresh_token": res.session!.refreshToken!,
-        "user_id": res.session!.user.id,
-      });
+
+      if (res.session == null) {
+        return Left(CustomFailure("حدث خطاء اثناء تسجيل الدخول"));
+      }
+
       return Right(res.session!);
     } on AuthException catch (e) {
       return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left(CustomException("حدث خطأ أثناء تسجيل الدخول"));
+      return Left(CustomFailure("حدث خطأ أثناء تسجيل الدخول"));
     }
   }
 
@@ -82,11 +61,11 @@ class ApiService {
     } on AuthException catch (e) {
       return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء تسجيل الخروج"));
+      return Left(CustomFailure("حدث خطاء اثناء تسجيل الخروج"));
     }
   }
 
-  Future<Either<Failure, Session?>> refreshToken(String refreshToken) async {
+  Future<Either<Failure, Session?>> refreshToken({String? refreshToken}) async {
     try {
       final newSession = await _supabase.auth.refreshSession(refreshToken);
 
@@ -94,14 +73,14 @@ class ApiService {
     } on AuthException catch (e) {
       return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء تحديث الجلسة"));
+      return Left(CustomFailure("حدث خطاء اثناء تحديث الجلسة"));
     }
   }
 
   Future<Either<Failure, void>> resetPassword({required String email}) async {
     try {
       if (email.isEmpty) {
-        return Left(CustomException("يرجى إدخال البريد الإلكتروني"));
+        return Left(CustomFailure("يرجى إدخال البريد الإلكتروني"));
       }
 
       await _supabase.auth.resetPasswordForEmail(email);
@@ -109,7 +88,7 @@ class ApiService {
     } on AuthException catch (e) {
       return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء استعادة كلمة المرور"));
+      return Left(CustomFailure("حدث خطاء اثناء استعادة كلمة المرور"));
     }
   }
 
@@ -131,7 +110,7 @@ class ApiService {
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء استعادة كلمة المرور"));
+      return Left(CustomFailure("حدث خطاء اثناء استعادة كلمة المرور"));
     }
   }
 
@@ -141,7 +120,7 @@ class ApiService {
           .rpc("get_user_assets", params: {"u_id": user.id}).maybeSingle();
 
       if (response == null || response.isEmpty) {
-        return Left(CustomException("بيانات المستخدم غير موجودة"));
+        return Left(CustomFailure("بيانات المستخدم غير موجودة"));
       }
 
       final UserModel userData = UserModel.fromJson({
@@ -161,7 +140,7 @@ class ApiService {
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء جلب بيانات المستخدم"));
+      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المستخدم"));
     }
   }
 
@@ -173,7 +152,7 @@ class ApiService {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) {
-        return Left(CustomException("يرجى تسجيل الدخول"));
+        return Left(CustomFailure("يرجى تسجيل الدخول"));
       }
 
       final String userId = user.id;
@@ -182,7 +161,7 @@ class ApiService {
           .rpc("get_user_buildings_summary", params: {"user_id": userId});
 
       if (response == null || response.isEmpty) {
-        return Left(CustomException("لا يوجد أبنية مسجلة للمستخدم"));
+        return Left(CustomFailure("لا يوجد أبنية مسجلة للمستخدم"));
       }
 
       final List<BuildingSummaryModel> buildings =
@@ -192,7 +171,7 @@ class ApiService {
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء جلب بيانات الأبنية"));
+      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات الأبنية"));
     }
   }
 
@@ -204,14 +183,14 @@ class ApiService {
           params: {"b_id": buildingId}).maybeSingle();
 
       if (response == null || response.isEmpty) {
-        return Left(CustomException("المبنى غير موجود"));
+        return Left(CustomFailure("المبنى غير موجود"));
       }
 
       return Right(BuildingModel.fromJson(response));
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء جلب بيانات المبنى"));
+      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المبنى"));
     }
   }
 
@@ -225,7 +204,7 @@ class ApiService {
       );
 
       if (response == null || response.isEmpty) {
-        return Left(CustomException("لا يوجد مصاعد مسجلة للمبنى"));
+        return Left(CustomFailure("لا يوجد مصاعد مسجلة للمبنى"));
       }
 
       final List<ElevatorSummaryModel> elevators = response.map((e) {
@@ -236,7 +215,7 @@ class ApiService {
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء جلب بيانات المصاعد"));
+      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
     }
   }
 
@@ -248,14 +227,14 @@ class ApiService {
           params: {"e_id": elevatorId}).maybeSingle();
 
       if (response == null || response.isEmpty) {
-        return Left(CustomException("المصعد غير موجود"));
+        return Left(CustomFailure("المصعد غير موجود"));
       }
 
       return Right(ElevatorModel.fromJson(response));
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناء جلب بيانات المصعد"));
+      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصعد"));
     }
   }
 
@@ -264,7 +243,7 @@ class ApiService {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) {
-        return Left(CustomException("يجب تسجيل الدخول لإنشاء تقرير"));
+        return Left(CustomFailure("يجب تسجيل الدخول لإنشاء تقرير"));
       }
 
       final Map<String, dynamic> reportData = {
@@ -277,21 +256,21 @@ class ApiService {
           params: {"report_data": reportData}).maybeSingle();
 
       if (report == null || report.isEmpty) {
-        return Left(CustomException("لم يتم إنشاء التقرير"));
+        return Left(CustomFailure("لم يتم إنشاء التقرير"));
       }
 
       return Right(report["report_id"]);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناءإنشاء التقرير"));
+      return Left(CustomFailure("حدث خطاء اثناءإنشاء التقرير"));
     }
   }
 
   Future<Either<Failure, void>> createIssue(IssueModel issueModel) async {
     try {
       if (issueModel.buildingId == null) {
-        return Left(CustomException("يجب تحديد المبنى"));
+        return Left(CustomFailure("يجب تحديد المبنى"));
       }
       final reportId = await createReport(buildingId: issueModel.buildingId!);
       reportId.fold(
@@ -309,7 +288,7 @@ class ApiService {
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث خطاء اثناءإنشاء المشكلة"));
+      return Left(CustomFailure("حدث خطاء اثناءإنشاء المشكلة"));
     }
   }
 
@@ -319,7 +298,7 @@ class ApiService {
           await _supabase.from("active_issues").select();
 
       if (response.isEmpty) {
-        return Left(CustomException("لا يوجد أعطال نشطة"));
+        return Left(CustomFailure("لا يوجد أعطال نشطة"));
       }
 
       final List<IssueModel> issues = response.map((e) {
@@ -330,7 +309,7 @@ class ApiService {
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomException("حدث حطأ اثناء جلب بيانات الأعطال النشطة"));
+      return Left(CustomFailure("حدث حطأ اثناء جلب بيانات الأعطال النشطة"));
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:UpDown/core/errors/error_codes.dart';
+import 'package:UpDown/core/errors/error_extension.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class Failure {
@@ -6,215 +8,163 @@ abstract class Failure {
   const Failure(this.errMessage);
 }
 
-enum SupabaseErrorCodes {
-  // Authentication Errors
-  invalidEmail,
-  emailExists,
-  emailNotConfirmed,
-  wrongPassword,
-  weakPassword,
-  samePassword,
-  phoneExists,
-  phoneNotConfirmed,
-  invalidCredentials,
-  sessionExpired,
-  userAlreadyExists,
-  userNotFound,
-  userBanned,
-  userDisabled,
-
-  // Database Errors (PostgreSQL)
-  requestTimeout,
-  uniqueViolation,
-  foreignKeyViolation,
-  notNullViolation,
-  undefinedTable,
-  undefinedColumn,
-  syntaxError,
-  undefinedFunction,
-
-  // Storage Errors
-  objectNotFound,
-  bucketNotFound,
-  storageUnauthorized,
-
-  // Realtime Errors
-  realtimeDisconnected,
-  realtimeUnauthorized,
-  realtimeLimitExceeded,
-
-  // Unknown Error (default fallback)
-  unknown;
-}
-
-// Extension to Map Error Codes
-extension SupabaseErrorExtension on SupabaseErrorCodes {
-  String get code {
-    switch (this) {
-      case SupabaseErrorCodes.invalidEmail:
-        return "invalid-email";
-      case SupabaseErrorCodes.emailExists:
-        return "email_exists";
-      case SupabaseErrorCodes.emailNotConfirmed:
-        return "email_not_confirmed";
-      case SupabaseErrorCodes.wrongPassword:
-        return "wrong-password";
-      case SupabaseErrorCodes.weakPassword:
-        return "weak-password";
-      case SupabaseErrorCodes.samePassword:
-        return "same_password";
-      case SupabaseErrorCodes.phoneExists:
-        return "phone_exists";
-      case SupabaseErrorCodes.phoneNotConfirmed:
-        return "phone_not_confirmed";
-      case SupabaseErrorCodes.invalidCredentials:
-        return "invalid_credentials";
-      case SupabaseErrorCodes.sessionExpired:
-        return "session-expired";
-      case SupabaseErrorCodes.userAlreadyExists:
-        return "user_already_exists";
-      case SupabaseErrorCodes.userNotFound:
-        return "user-not-found";
-      case SupabaseErrorCodes.userBanned:
-        return "user-banned";
-      case SupabaseErrorCodes.userDisabled:
-        return "user-disabled";
-      case SupabaseErrorCodes.uniqueViolation:
-        return "23505";
-      case SupabaseErrorCodes.foreignKeyViolation:
-        return "23503";
-      case SupabaseErrorCodes.notNullViolation:
-        return "23502";
-      case SupabaseErrorCodes.undefinedTable:
-        return "42P01";
-      case SupabaseErrorCodes.undefinedColumn:
-        return "42703";
-      case SupabaseErrorCodes.syntaxError:
-        return "42601";
-      case SupabaseErrorCodes.undefinedFunction:
-        return "42883";
-      case SupabaseErrorCodes.objectNotFound:
-        return "object-not-found";
-      case SupabaseErrorCodes.bucketNotFound:
-        return "bucket-not-found";
-      case SupabaseErrorCodes.storageUnauthorized:
-        return "unauthorized";
-      case SupabaseErrorCodes.realtimeDisconnected:
-        return "disconnected";
-      case SupabaseErrorCodes.realtimeUnauthorized:
-        return "unauthorized";
-      case SupabaseErrorCodes.realtimeLimitExceeded:
-        return "limit-exceeded";
-      case SupabaseErrorCodes.unknown:
-        return "unknown";
-      case SupabaseErrorCodes.requestTimeout:
-        return "request-timeout";
-    }
-  }
-
-  static SupabaseErrorCodes fromCode(String errorCode) {
-    for (var error in SupabaseErrorCodes.values) {
-      if (error.code == errorCode) return error;
-    }
-    return SupabaseErrorCodes.unknown;
-  }
-}
-
 class SupabaseFailure extends Failure {
   SupabaseFailure(super.errMessage);
 
   factory SupabaseFailure.fromAuth(AuthException e) {
-    final error = SupabaseErrorExtension.fromCode(
-        e.code ?? SupabaseErrorCodes.unknown.code);
+    final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
+        e.code ?? SupabaseErrorCode.unknown.code);
 
-    switch (error) {
-      case SupabaseErrorCodes.userBanned:
-        return SupabaseFailure("حسابك محظور يرجى التواصل مع الادارة.");
-      case SupabaseErrorCodes.userDisabled:
-        return SupabaseFailure("حسابك معطل يرجى التواصل مع الادارة.");
-      case SupabaseErrorCodes.userNotFound:
-        return SupabaseFailure("حسابك غير موجود يرجى التواصل مع الادارة.");
-      case SupabaseErrorCodes.userAlreadyExists:
-        return SupabaseFailure("حسابك موجود بالفعل, يمكنك تسجيل الدخول.");
-      case SupabaseErrorCodes.emailExists:
-        return SupabaseFailure("البريد الالكتروني متسجل بالفعل.");
-      case SupabaseErrorCodes.emailNotConfirmed:
-        return SupabaseFailure("راجع رسايلك لتفعيل البريد الالكتروني.");
-      case SupabaseErrorCodes.invalidEmail:
-        return SupabaseFailure("يرجى استخدام بريد الكتروني صحيح.");
-      case SupabaseErrorCodes.samePassword:
-        return SupabaseFailure("جرب كلمة سر جديدة.");
-      case SupabaseErrorCodes.weakPassword:
-        return SupabaseFailure("يرجى استخدام كلمة سر قوية.");
-      case SupabaseErrorCodes.wrongPassword:
-        return SupabaseFailure("كلمة المرور غير صحيحة.");
-      case SupabaseErrorCodes.phoneExists:
-        return SupabaseFailure("رقم تليفونك متسجل بالفعل.");
-      case SupabaseErrorCodes.phoneNotConfirmed:
-        return SupabaseFailure("راجع رسايلك لتفعيل رقم التليفون.");
-      case SupabaseErrorCodes.invalidCredentials:
-        return SupabaseFailure("البريد الالكتروني او كلمة المرور غير صحيحة.");
-      case SupabaseErrorCodes.sessionExpired:
-        return SupabaseFailure("انتهت صلاحية الجلسة.");
+    switch (code) {
+      case SupabaseErrorCode.userBanned:
+        return SupabaseFailure("حسابك محظور. يرجى التواصل مع الإدارة.");
+      case SupabaseErrorCode.userNotFound:
+        return SupabaseFailure(
+            "حسابك غير موجود أو تم حذفه. يرجى التواصل مع الإدارة.");
+      case SupabaseErrorCode.userAlreadyExists:
+        return SupabaseFailure(
+            "البريد الإلكتروني أو رقم الهاتف مستخدم بالفعل. يمكنك تسجيل الدخول.");
+      case SupabaseErrorCode.emailExists:
+        return SupabaseFailure(
+            "البريد الإلكتروني متسجل بالفعل. حاول استخدام بريد آخر.");
+      case SupabaseErrorCode.emailNotConfirmed:
+        return SupabaseFailure("راجع رسائل البريد الإلكتروني لتفعيل الحساب.");
+      case SupabaseErrorCode.emailAddressInvalid:
+        return SupabaseFailure("يرجى استخدام بريد إلكتروني صالح.");
+      case SupabaseErrorCode.samePassword:
+        return SupabaseFailure("يرجى استخدام كلمة مرور جديدة.");
+      case SupabaseErrorCode.weakPassword:
+        return SupabaseFailure(
+            "كلمة المرور ضعيفة. يرجى اختيار كلمة مرور قوية.");
+      case SupabaseErrorCode.phoneExists:
+        return SupabaseFailure("رقم الهاتف مسجل بالفعل.");
+      case SupabaseErrorCode.phoneNotConfirmed:
+        return SupabaseFailure("راجع رسائل الهاتف لتفعيل الرقم.");
+      case SupabaseErrorCode.invalidCredentials:
+        return SupabaseFailure("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+      case SupabaseErrorCode.sessionExpired:
+        return SupabaseFailure(
+            "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.");
+      case SupabaseErrorCode.signupDisabled:
+        return SupabaseFailure("التسجيل غير مفعل حاليًا.");
+      case SupabaseErrorCode.refreshTokenNotFound:
+        return SupabaseFailure("لم يتم العثور على رمز التحديث.");
+      case SupabaseErrorCode.otpExpired:
+        return SupabaseFailure("انتهت صلاحية رمز OTP. حاول من جديد.");
+      case SupabaseErrorCode.mfaVerificationFailed:
+        return SupabaseFailure("فشل التحقق من MFA.");
       default:
-        return SupabaseFailure("حدث خطأ غير متوقع وسيتم حله في أسرع وقت.");
+        return SupabaseFailure(
+            "حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى لاحقًا.");
     }
   }
 
   factory SupabaseFailure.fromDatabase(PostgrestException e) {
-    final error = SupabaseErrorExtension.fromCode(
-        e.code ?? SupabaseErrorCodes.unknown.code);
+    final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
+        e.code ?? SupabaseErrorCode.unknown.code);
 
-    switch (error) {
-      case SupabaseErrorCodes.requestTimeout:
-        return SupabaseFailure("الطلب أخد وقت كتير للأستجابة.");
-      case SupabaseErrorCodes.uniqueViolation:
-        return SupabaseFailure("لا يمكن ادخال بيانات مكررة.");
-      case SupabaseErrorCodes.undefinedColumn:
-        return SupabaseFailure("العمود غير موجود.");
-      case SupabaseErrorCodes.foreignKeyViolation:
-        return SupabaseFailure(
-            "لا يمكن الحذف أو التحديث بسبب وجود بيانات مرتبطة");
-      case SupabaseErrorCodes.notNullViolation:
-        return SupabaseFailure("لا يمكن ادخال بيانات فارغة.");
-      case SupabaseErrorCodes.undefinedFunction:
-        return SupabaseFailure("الدالة غير موجودة.");
-      case SupabaseErrorCodes.syntaxError:
-        return SupabaseFailure("خطاء في صيغة البيانات.");
-      case SupabaseErrorCodes.undefinedTable:
-        return SupabaseFailure("الجدول غير موجود.");
+    switch (code) {
+      case SupabaseErrorCode.syntaxError:
+        return SupabaseFailure("هناك خطأ في صيغة البيانات المدخلة.");
+      case SupabaseErrorCode.permissionDenied ||
+            SupabaseErrorCode.noPermissionForTable:
+        return SupabaseFailure("ليس لديك صلاحيات كافية.");
+      case SupabaseErrorCode.roleDoesNotExist:
+        return SupabaseFailure("الدور غير موجود.");
+      case SupabaseErrorCode.relationDoesNotExist:
+        return SupabaseFailure("العلاقة غير موجودة.");
+      case SupabaseErrorCode.connectionFailed:
+        return SupabaseFailure("فشل الاتصال بالخادم.");
+      case SupabaseErrorCode.invalidInputSyntax:
+        return SupabaseFailure("صيغة البيانات المدخلة غير صحيحة.");
+      case SupabaseErrorCode.columnDoesNotExist:
+        return SupabaseFailure("هذا الطلب غير موجود.");
+      case SupabaseErrorCode.databaseDoesNotExist || SupabaseErrorCode.diskFull:
+        return SupabaseFailure("هناك مشكلة في السيرفر، يرجى المحاولة لاحقًا.");
       default:
-        return SupabaseFailure("حدث خطأ غير متوقع وسيتم حله في أسرع وقت.");
+        return SupabaseFailure("حدث خطأ غير متوقع، يرجى المحاولة لاحقاً.");
     }
   }
 
   factory SupabaseFailure.fromStorage(StorageException e) {
-    switch (e.statusCode) {
-      case "404":
-        return SupabaseFailure("الملف أو الحاوية غير موجود");
-      case "401":
-      case "403":
-        return SupabaseFailure("غير مصرح لك بالوصول");
-      case "413":
-        return SupabaseFailure("حجم الملف يتجاوز الحد المسموح");
-      case "400":
-        return SupabaseFailure("مسار أو نوع ملف غير صالح");
-      case "507":
-        return SupabaseFailure("تم تجاوز سعة التخزين");
-      case "429":
-        return SupabaseFailure("عدد الطلبات كبير جدًا");
-      case "500":
-        return SupabaseFailure("حدث خطاء في الخادم");
+    final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
+        e.statusCode ?? SupabaseErrorCode.unknown.code);
+    switch (code) {
+      case SupabaseErrorCode.noSuchBucket:
+        return SupabaseFailure("الحاوية غير موجودة.");
+      case SupabaseErrorCode.noSuchKey:
+        return SupabaseFailure("المفتاح غير موجود.");
+      case SupabaseErrorCode.noSuchUpload:
+        return SupabaseFailure("عملية الرفع غير موجودة.");
+      case SupabaseErrorCode.invalidJwt:
+        return SupabaseFailure("رمز التوثيق (JWT) غير صالح.");
+      case SupabaseErrorCode.invalidRequest:
+        return SupabaseFailure("الطلب غير صحيح.");
+      case SupabaseErrorCode.tenantNotFound:
+        return SupabaseFailure("العميل غير موجود.");
+      case SupabaseErrorCode.entityTooLarge:
+        return SupabaseFailure("حجم الملف كبير جدًا.");
+      case SupabaseErrorCode.internalError:
+        return SupabaseFailure("حدث خطأ داخلي في النظام.");
+      case SupabaseErrorCode.resourceAlreadyExists:
+        return SupabaseFailure("المورد موجود بالفعل.");
+      case SupabaseErrorCode.invalidBucketName:
+        return SupabaseFailure("اسم الحاوية غير صالح.");
+      case SupabaseErrorCode.invalidKey:
+        return SupabaseFailure("المفتاح غير صالح.");
+      case SupabaseErrorCode.invalidRange:
+        return SupabaseFailure("النطاق المحدد غير صالح.");
+      case SupabaseErrorCode.invalidMimeType:
+        return SupabaseFailure("نوع الملف غير صالح.");
+      case SupabaseErrorCode.invalidUploadId:
+        return SupabaseFailure("رقم التعريف الخاص بالرفع غير صالح.");
+      case SupabaseErrorCode.keyAlreadyExists:
+        return SupabaseFailure("المفتاح موجود بالفعل.");
+      case SupabaseErrorCode.bucketAlreadyExists:
+        return SupabaseFailure("الحاوية موجودة بالفعل.");
+      case SupabaseErrorCode.databaseTimeout:
+        return SupabaseFailure("انتهت مدة الاتصال بقاعدة البيانات.");
+      case SupabaseErrorCode.invalidSignature:
+        return SupabaseFailure("التوقيع غير صالح.");
+      case SupabaseErrorCode.signatureDoesNotMatch:
+        return SupabaseFailure("التوقيع لا يتطابق مع التوقيع المحسوب.");
+      case SupabaseErrorCode.accessDenied:
+        return SupabaseFailure("تم رفض الوصول.");
+      case SupabaseErrorCode.resourceLocked:
+        return SupabaseFailure("المورد محجوز ولا يمكن التعديل عليه الآن.");
+      case SupabaseErrorCode.databaseError:
+        return SupabaseFailure("حدث خطأ أثناء الوصول إلى قاعدة البيانات.");
+      case SupabaseErrorCode.missingContentLength:
+        return SupabaseFailure("الحجم المطلوب مفقود.");
+      case SupabaseErrorCode.missingParameter:
+        return SupabaseFailure("معامل مفقود في الطلب.");
+      case SupabaseErrorCode.invalidUploadSignature:
+        return SupabaseFailure("التوقيع الخاص بالرفع غير صالح.");
+      case SupabaseErrorCode.lockTimeout:
+        return SupabaseFailure("تأخير في الحصول على القفل.");
+      case SupabaseErrorCode.s3Error:
+        return SupabaseFailure("حدث خطأ متصل بـ S3.");
+      case SupabaseErrorCode.s3InvalidAccessKeyId:
+        return SupabaseFailure("معرف الوصول إلى S3 غير صالح.");
+      case SupabaseErrorCode.s3MaximumCredentialsLimit:
+        return SupabaseFailure(
+            "تم الوصول إلى الحد الأقصى لعدد بيانات الاعتماد.");
+      case SupabaseErrorCode.invalidChecksum:
+        return SupabaseFailure("التحقق من صحة البيانات غير صحيح.");
+      case SupabaseErrorCode.missingPart:
+        return SupabaseFailure("جزء مفقود من البيانات.");
+      case SupabaseErrorCode.slowDown:
+        return SupabaseFailure("يرجى المحاولة لاحقًا.");
       default:
-        return SupabaseFailure("حدث خطاء غير متوقع وسيتم حله في أسرع وقت.");
+        return SupabaseFailure("حدث خطأ غير متوقع.");
     }
   }
 }
 
-class CustomException extends Failure {
-  CustomException(super.errMessage);
+class CustomFailure extends Failure {
+  CustomFailure(super.errMessage);
 
-  CustomException.fromSocketException() : super("لا يوجد اتصال بالانترنت.");
+  CustomFailure.fromSocketException() : super("لا يوجد اتصال بالانترنت.");
 
-  CustomException.fromTimeoutException() : super("انتهت مهلة الاتصال.");
+  CustomFailure.fromTimeoutException() : super("انتهت مهلة الاتصال.");
 }

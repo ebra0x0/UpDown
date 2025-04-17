@@ -5,12 +5,14 @@ sealed class AuthState {}
 final class AuthStateInitial extends AuthState {}
 
 final class AuthStateAuthenticated extends AuthState {
-  final User user;
+  final Session session;
 
-  AuthStateAuthenticated({required this.user});
+  AuthStateAuthenticated({required this.session});
 }
 
 final class AuthStateLoading extends AuthState {}
+
+final class AuthStateUnconfirmed extends AuthState {}
 
 final class AuthStateError extends AuthState {
   AuthStateError({required this.errorMsg});

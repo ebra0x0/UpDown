@@ -12,8 +12,8 @@ class AuthRepoImp implements AuthRepo {
 
   AuthRepoImp(this._api);
   @override
-  Future<Either<Failure, Session?>> refreshToken(String refreshToken) async {
-    var session = await _api.refreshToken(refreshToken);
+  Future<Either<Failure, Session?>> refreshToken({String? refreshToken}) async {
+    var session = await _api.refreshToken(refreshToken: refreshToken);
 
     return session.fold(
       (failure) => Left(failure),
@@ -33,8 +33,23 @@ class AuthRepoImp implements AuthRepo {
 
   @override
   Stream<Session?> get sessionMonitor async* {
-    yield* _api.onAuthStateChanged.map((event) {
-      return event;
+    yield* _api.onAuthStateChanged.asyncMap((session) async {
+      if (session == null) {
+        return await refreshToken()
+            .fold((failure) => null, (session) => session);
+      }
+      if (session.isExpired) {
+        String? savedRefToken = await getRefreshToken();
+
+        return await refreshToken(refreshToken: savedRefToken)
+            .fold((failure) => null, (session) {
+          if (session != null) {
+            setRefreshToken(session.refreshToken!);
+          }
+          return session;
+        });
+      }
+      return session;
     });
   }
 
@@ -43,12 +58,16 @@ class AuthRepoImp implements AuthRepo {
       {required String email, required String password}) async {
     final UserCredentialsModel credentials =
         UserCredentialsModel(email: email, password: password);
-    var res = await _api.signInWithPassword(credentials);
+    var session = await _api.signInWithPassword(credentials);
 
-    return res.fold(
-      (failure) => Left(failure),
-      (session) => Right(session),
-    );
+    return session.fold((failure) => Left(failure), (session) {
+      gitIt.get<SecureStorage>().addAll({
+        "access_token": session.accessToken,
+        "refresh_token": session.refreshToken!,
+        "user_id": session.user.id,
+      });
+      return Right(session);
+    });
   }
 
   @override
@@ -62,16 +81,14 @@ class AuthRepoImp implements AuthRepo {
   }
 
   @override
-  Future<Either<Failure, Session>> signUp(
-      {required String email, required String password}) {
+  Future<Either<Failure, Session?>> signUp(
+      {required String email, required String password}) async {
     final UserCredentialsModel credentials =
         UserCredentialsModel(email: email, password: password);
-    var res = _api.signUp(credentials);
-
-    return res.fold(
-      (failure) => Left(failure),
-      (session) => Right(session),
-    );
+    return await _api.signUp(credentials).fold(
+          (failure) => Left(failure),
+          (session) => Right(session),
+        );
   }
 
   @override

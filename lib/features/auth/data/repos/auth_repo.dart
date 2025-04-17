@@ -10,10 +10,10 @@ abstract class AuthRepo {
   Future<Either<Failure, Session>> signInWithPassword(
       {required String email, required String password});
 
-  Future<Either<Failure, Session>> signUp(
+  Future<Either<Failure, Session?>> signUp(
       {required String email, required String password});
 
-  Future<Either<Failure, Session?>> refreshToken(String refreshToken);
+  Future<Either<Failure, Session?>> refreshToken({String? refreshToken});
 
   Future<Either<Failure, void>> resetPassword({required String email});
 

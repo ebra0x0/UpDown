@@ -156,7 +156,7 @@ class AppRouter {
   void loadUserData(BuildContext context, AuthStateAuthenticated authState) {
     if (BlocProvider.of<UserDataCubit>(context).userData == null) {
       BlocProvider.of<UserDataCubit>(context)
-          .loadUserData(user: authState.user);
+          .loadUserData(user: authState.session.user);
     }
   }
 }
