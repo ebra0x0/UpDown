@@ -12,10 +12,14 @@ class SupabaseFailure extends Failure {
   SupabaseFailure(super.errMessage);
 
   factory SupabaseFailure.fromAuth(AuthException e) {
+    print(e.code);
     final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
         e.code ?? SupabaseErrorCode.unknown.code);
 
     switch (code) {
+      case SupabaseErrorCode.overEmailSendRateLimit:
+        return SupabaseFailure(
+            "لقد ارسلت رموز كثيرة. يرجى المحاولة في وقت لاحق.");
       case SupabaseErrorCode.userBanned:
         return SupabaseFailure("حسابك محظور. يرجى التواصل مع الإدارة.");
       case SupabaseErrorCode.userNotFound:

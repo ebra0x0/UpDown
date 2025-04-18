@@ -15,9 +15,13 @@ class AuthCubit extends Cubit<AuthState> {
     authRepo.sessionMonitor.listen((session) async {
       if (session == null) {
         emit(AuthStateUnAuthenticated());
+        return;
+      } else if (session.user.email != null &&
+          session.user.emailConfirmedAt == null) {
+        emit(AuthStateUnconfirmed(email: session.user.email!));
+        return;
       }
-
-      emit(AuthStateAuthenticated(session: session!));
+      emit(AuthStateAuthenticated(session: session));
     });
   }
 
@@ -42,9 +46,19 @@ class AuthCubit extends Cubit<AuthState> {
     res.fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
         (session) {
       if (session == null) {
-        emit(AuthStateUnconfirmed());
+        emit(AuthStateUnconfirmed(email: email));
+        return;
       }
-      emit(AuthStateAuthenticated(session: session!));
+      emit(AuthStateAuthenticated(session: session));
     });
   }
+
+  Future<void> sendConfirmationEmail({required String email}) async {
+    emit(AuthStateLoading());
+    final res = await authRepo.sendConfirmationEmail(email);
+    res.fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
+        (success) => success);
+  }
+
+  void resetState() => emit(AuthStateInitial());
 }

@@ -2,6 +2,7 @@ import 'package:UpDown/core/utils/go_router_refresh_stream.dart';
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
+import 'package:UpDown/features/auth/presentaion/views/confirmation/confirmation_view.dart';
 import 'package:UpDown/features/auth/presentaion/views/login/login_view.dart';
 import 'package:UpDown/features/auth/presentaion/views/registration/registration_view.dart';
 import 'package:UpDown/features/root/create_issue/data/model/issue_model.dart';
@@ -25,6 +26,7 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   static const String kregistrationView = '/registrationView';
   static const String kloginView = '/loginView';
+  static const String kconfirmationView = '/confirmationView/:email';
   static const String khomeView = '/homeView';
   static const String kcreateIssueView = '/createReportView';
   static const String kbuildingDetails = 'buildingDetails/:buildingId';
@@ -71,6 +73,9 @@ class AppRouter {
               resetUserData(context);
               return kloginView;
             }
+          } else if (authState is AuthStateUnconfirmed) {
+            final email = authState.email;
+            return kconfirmationView.replaceAll(':email', email);
           }
           return null;
         },
@@ -86,6 +91,12 @@ class AppRouter {
           GoRoute(
             path: kloginView,
             builder: (context, state) => const LoginView(),
+          ),
+          GoRoute(
+            path: kconfirmationView,
+            builder: (context, state) => ConfirmationView(
+              email: state.pathParameters['email'] as String,
+            ),
           ),
           ShellRoute(
               builder: (context, state, child) => RootView(child: child),

@@ -17,6 +17,8 @@ abstract class AuthRepo {
 
   Future<Either<Failure, void>> resetPassword({required String email});
 
+  Future<Either<Failure, void>> sendConfirmationEmail(String email);
+
   Future<String?> getRefreshToken();
 
   void setRefreshToken(String refreshToken);

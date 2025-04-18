@@ -12,7 +12,11 @@ final class AuthStateAuthenticated extends AuthState {
 
 final class AuthStateLoading extends AuthState {}
 
-final class AuthStateUnconfirmed extends AuthState {}
+final class AuthStateUnconfirmed extends AuthState {
+  final String email;
+
+  AuthStateUnconfirmed({required this.email});
+}
 
 final class AuthStateError extends AuthState {
   AuthStateError({required this.errorMsg});

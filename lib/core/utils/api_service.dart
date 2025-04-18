@@ -67,6 +67,7 @@ class ApiService {
 
   Future<Either<Failure, Session?>> refreshToken({String? refreshToken}) async {
     try {
+      if (_supabase.auth.currentSession == null) return const Right(null);
       final newSession = await _supabase.auth.refreshSession(refreshToken);
 
       return Right(newSession.session);
@@ -74,6 +75,21 @@ class ApiService {
       return Left(SupabaseFailure.fromAuth(e));
     } catch (e) {
       return Left(CustomFailure("حدث خطاء اثناء تحديث الجلسة"));
+    }
+  }
+
+  Future<Either<Failure, void>> sendConfirmationEmail(String email) async {
+    try {
+      if (email.isEmpty) {
+        return Left(CustomFailure("يرجى إرفاق البريد الإلكتروني"));
+      }
+
+      await _supabase.auth.resend(type: OtpType.signup, email: email);
+      return const Right(null);
+    } on AuthException catch (e) {
+      return Left(SupabaseFailure.fromAuth(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطاء اثناء إرسال رمز التفعيل"));
     }
   }
 
@@ -92,15 +108,8 @@ class ApiService {
     }
   }
 
-  // void sessionMonitor() => _supabase.auth.onAuthStateChange.listen((event) {
-  //       final session = event.session;
-  //       final isLoggedIn = session != null;
-
-  //       _authStateController.add(isLoggedIn ? session : null);
-  //     });
-
   Stream<Session?> get onAuthStateChanged =>
-      _supabase.auth.onAuthStateChange.map((event) => event.session);
+      _supabase.auth.onAuthStateChange.map((data) => data.session);
 
   // User Functions
   Future<Either<Failure, void>> createUserData(UserModel user) async {

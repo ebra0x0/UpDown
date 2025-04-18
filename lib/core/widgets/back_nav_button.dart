@@ -5,12 +5,15 @@ import 'package:go_router/go_router.dart';
 class BackButtonNavigation extends StatelessWidget {
   const BackButtonNavigation({
     super.key,
+    this.route,
   });
+
+  final String? route;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pop(),
+      onTap: () => route != null ? context.go(route!) : context.pop(),
       child: Container(
         width: 42,
         height: 42,

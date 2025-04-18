@@ -92,6 +92,15 @@ class AuthRepoImp implements AuthRepo {
   }
 
   @override
+  Future<Either<Failure, void>> sendConfirmationEmail(String email) async {
+    var res = await _api.sendConfirmationEmail(email);
+    return res.fold(
+      (failure) => Left(failure),
+      (res) => Right(res),
+    );
+  }
+
+  @override
   Future<String?> getRefreshToken() async {
     return await gitIt.get<SecureStorage>().get("refresh_token");
   }
