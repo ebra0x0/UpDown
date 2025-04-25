@@ -1,5 +1,6 @@
 import 'package:UpDown/core/errors/failures.dart';
 import 'package:UpDown/core/utils/api_service.dart';
+import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:UpDown/core/utils/secure_storage.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/auth/data/model/user_credentials_model.dart';
@@ -11,6 +12,29 @@ class AuthRepoImp implements AuthRepo {
   final ApiService _api;
 
   AuthRepoImp(this._api);
+
+  @override
+  Stream<Session?> get sessionMonitor async* {
+    yield* _api.onAuthStateChanged.asyncMap((session) async {
+      if (session != null && session.isExpired) {
+        String? savedRefToken = await getRefreshToken();
+
+        final refreshedSession = await _refreshSession(savedRefToken);
+
+        if (refreshedSession != null) {
+          setRefreshToken(refreshedSession.refreshToken!);
+        }
+        return refreshedSession;
+      }
+      return session;
+    });
+  }
+
+  Future<Session?> _refreshSession(String? savedRefToken) async {
+    return await refreshToken(refreshToken: savedRefToken)
+        .fold((failure) => null, (session) => session);
+  }
+
   @override
   Future<Either<Failure, Session?>> refreshToken({String? refreshToken}) async {
     var session = await _api.refreshToken(refreshToken: refreshToken);
@@ -32,32 +56,11 @@ class AuthRepoImp implements AuthRepo {
   }
 
   @override
-  Stream<Session?> get sessionMonitor async* {
-    yield* _api.onAuthStateChanged.asyncMap((session) async {
-      if (session == null) {
-        return await refreshToken()
-            .fold((failure) => null, (session) => session);
-      }
-      if (session.isExpired) {
-        String? savedRefToken = await getRefreshToken();
-
-        return await refreshToken(refreshToken: savedRefToken)
-            .fold((failure) => null, (session) {
-          if (session != null) {
-            setRefreshToken(session.refreshToken!);
-          }
-          return session;
-        });
-      }
-      return session;
-    });
-  }
-
-  @override
   Future<Either<Failure, Session>> signInWithPassword(
       {required String email, required String password}) async {
     final UserCredentialsModel credentials =
         UserCredentialsModel(email: email, password: password);
+
     var session = await _api.signInWithPassword(credentials);
 
     return session.fold((failure) => Left(failure), (session) {
@@ -108,5 +111,13 @@ class AuthRepoImp implements AuthRepo {
   @override
   void setRefreshToken(String refreshToken) {
     gitIt.get<SecureStorage>().add("refresh_token", refreshToken);
+  }
+
+  @override
+  Future<Either<Failure, ProfileModel?>> fetchProfile(String id) async {
+    final newUser = await _api.fetchProfile(id);
+
+    return newUser.fold(
+        (failure) => Left(failure), (profile) => Right(profile));
   }
 }

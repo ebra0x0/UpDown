@@ -1,16 +1,17 @@
-import 'dart:async';
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:UpDown/core/errors/failures.dart';
+import 'package:UpDown/core/utils/function/build_storage_issue_path.dart';
+import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:UpDown/core/utils/secure_storage.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
-import 'package:UpDown/features/root/create_issue/data/model/issue_model.dart';
-import 'package:UpDown/features/root/home/data/model/building_model.dart';
-import 'package:UpDown/features/root/home/data/model/building_summary_model.dart';
-import 'package:UpDown/features/root/home/data/model/elevator_model.dart';
-import 'package:UpDown/core/utils/model/user_model.dart';
+import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/buildings/data/models/building_model.dart';
+import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
+import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
 import 'package:UpDown/features/auth/data/model/user_credentials_model.dart';
-import 'package:UpDown/features/root/home/data/model/elevator_summary_model.dart';
+import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
+import 'package:UpDown/features/issues/data/models/media_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -112,56 +113,47 @@ class ApiService {
       _supabase.auth.onAuthStateChange.map((data) => data.session);
 
   // User Functions
-  Future<Either<Failure, void>> createUserData(UserModel user) async {
+  Future<Either<Failure, void>> createProfile(ProfileModel user) async {
     try {
       await _supabase.from('Users').insert(user.toJson());
       return const Right(null);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomFailure("حدث خطاء اثناء استعادة كلمة المرور"));
+      return Left(CustomFailure("حدث خطاء اثناء انشاء بيانات المستخدم"));
     }
   }
 
-  Future<Either<Failure, UserModel>> getUserData({required User user}) async {
+  Future<Either<Failure, ProfileModel?>> fetchProfile(String id) async {
     try {
       final Map<String, dynamic>? response = await _supabase
-          .rpc("get_user_assets", params: {"u_id": user.id}).maybeSingle();
+          .rpc("get_user_assets", params: {"u_id": id}).maybeSingle();
 
       if (response == null || response.isEmpty) {
-        return Left(CustomFailure("بيانات المستخدم غير موجودة"));
+        return const Right(null);
       }
 
-      final UserModel userData = UserModel.fromJson({
-        ...response,
-        "buildings": response["buildings"],
-        "elevators": response["elevators"]
-      });
+      final ProfileModel profile = ProfileModel.fromJson(response);
 
       gitIt.get<SecureStorage>().addAll({
-        "user_data": jsonEncode({
-          ...response,
-          "buildings": response["buildings"],
-          "elevators": response["elevators"]
-        }),
+        "user_data": jsonEncode(profile.toJson()),
       });
-      return Right(userData);
+
+      return Right(profile);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
       return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المستخدم"));
     }
   }
-
   // App Endpoints
 
   // Buildings
-  Future<Either<Failure, List<BuildingSummaryModel>>>
-      fetchBuildingsSummary() async {
+  Future<Either<Failure, List<BuildingSummaryModel>?>> fetchBuildings() async {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) {
-        return Left(CustomFailure("يرجى تسجيل الدخول"));
+        return Left(CustomFailure("المستخدم غير مسجل"));
       }
 
       final String userId = user.id;
@@ -169,8 +161,8 @@ class ApiService {
       final List<dynamic>? response = await _supabase
           .rpc("get_user_buildings_summary", params: {"user_id": userId});
 
-      if (response == null || response.isEmpty) {
-        return Left(CustomFailure("لا يوجد أبنية مسجلة للمستخدم"));
+      if (response == null) {
+        return Right(null);
       }
 
       final List<BuildingSummaryModel> buildings =
@@ -184,15 +176,15 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, BuildingModel>> fetchBuildingDetails(
+  Future<Either<Failure, BuildingModel?>> fetchBuildingDetails(
       {required String buildingId}) async {
     try {
       final Map<String, dynamic>? response = await _supabase.rpc(
           'get_building_by_id',
           params: {"b_id": buildingId}).maybeSingle();
 
-      if (response == null || response.isEmpty) {
-        return Left(CustomFailure("المبنى غير موجود"));
+      if (response == null) {
+        return Right(null);
       }
 
       return Right(BuildingModel.fromJson(response));
@@ -204,16 +196,16 @@ class ApiService {
   }
 
   // Elevators
-  Future<Either<Failure, List<ElevatorSummaryModel>>> fetchElevatorsSummary(
+  Future<Either<Failure, List<ElevatorSummaryModel>?>> fetchElevators(
       {required String buildingId}) async {
     try {
-      final List<Map<String, dynamic>>? response = await _supabase.rpc(
+      final List<dynamic>? response = await _supabase.rpc(
         "get_building_elevators_summary",
         params: {"b_id": buildingId},
       );
 
-      if (response == null || response.isEmpty) {
-        return Left(CustomFailure("لا يوجد مصاعد مسجلة للمبنى"));
+      if (response == null) {
+        return Right(null);
       }
 
       final List<ElevatorSummaryModel> elevators = response.map((e) {
@@ -228,15 +220,15 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, ElevatorModel>> fetchElevatorDetails(
+  Future<Either<Failure, ElevatorModel?>> fetchElevatorDetails(
       {required String elevatorId}) async {
     try {
       final Map<String, dynamic>? response = await _supabase.rpc(
           "get_elevator_by_id",
           params: {"e_id": elevatorId}).maybeSingle();
 
-      if (response == null || response.isEmpty) {
-        return Left(CustomFailure("المصعد غير موجود"));
+      if (response == null) {
+        return Right(null);
       }
 
       return Right(ElevatorModel.fromJson(response));
@@ -247,12 +239,13 @@ class ApiService {
     }
   }
 
+  // Reports
   Future<Either<Failure, String>> createReport(
       {required String buildingId}) async {
     try {
       final user = _supabase.auth.currentUser;
       if (user == null) {
-        return Left(CustomFailure("يجب تسجيل الدخول لإنشاء تقرير"));
+        return Left(CustomFailure("المستخدم غير مسجل"));
       }
 
       final Map<String, dynamic> reportData = {
@@ -276,38 +269,81 @@ class ApiService {
     }
   }
 
+  // Issues
   Future<Either<Failure, void>> createIssue(IssueModel issueModel) async {
     try {
-      if (issueModel.buildingId == null) {
-        return Left(CustomFailure("يجب تحديد المبنى"));
-      }
-      final reportId = await createReport(buildingId: issueModel.buildingId!);
-      reportId.fold(
-        (errMsg) {
-          Left(errMsg);
-          return;
-        },
-        (reportId) => reportId,
-      );
-      await _supabase
-          .from('Issues')
-          .insert(issueModel.copyWith(reportId: reportId.right).toJson());
+      final media = issueModel.media;
 
-      return const Right(null);
+      // Create report
+      final reportIdResult =
+          await createReport(buildingId: issueModel.buildingId!);
+      final reportId = reportIdResult.fold((_) => null, (id) => id);
+      if (reportId == null) return Left(CustomFailure("تعذر إنشاء العطل"));
+
+      // Create issue
+      final issue = issueModel.copyWith(reportId: reportId);
+      final issueResponse = await _insertIssue(issue);
+      if (issueResponse == null) return Left(CustomFailure("تعذر إنشاء العطل"));
+
+      if (media == null) return const Right(null);
+
+      // Upload media
+      final issueId = issueResponse["issue_id"] as String;
+      final mediaWithIssueId = media.copyWith(issueId: issueId);
+      final filePath = buildStorageIssuePath(issueModel, media, issueId);
+
+      final uploadResult =
+          await uploadMedia(media: mediaWithIssueId, path: filePath);
+
+      return uploadResult.fold(
+        (failure) => Left(failure),
+        (_) => const Right(null),
+      );
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
-    } catch (e) {
-      return Left(CustomFailure("حدث خطاء اثناءإنشاء المشكلة"));
+    } catch (_) {
+      return Left(CustomFailure("حدث خطأ أثناء إنشاء العطل"));
     }
   }
 
-  Future<Either<Failure, List<IssueModel>>> fetchActiveIssues() async {
+  Future<Map<String, dynamic>?> _insertIssue(IssueModel issue) async {
+    return await _supabase
+        .from('Issues')
+        .insert(issue.toJson())
+        .select()
+        .maybeSingle();
+  }
+
+  Future<Either<Failure, void>> uploadMedia(
+      {required MediaModel media, required String path}) async {
+    try {
+      // Upload to bucket
+      final String url = await _supabase.storage.from('issues').upload(
+            path,
+            File(media.url),
+          );
+
+      // Create media in db
+
+      final uploadedMedia = media.copyWith(url: url);
+
+      await _supabase.from('Media').insert(uploadedMedia.toJson());
+
+      return Right(null);
+    } on StorageException catch (e) {
+      return Left(SupabaseFailure.fromStorage(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطاء اثناء حفظ الملف"));
+    }
+  }
+
+  Future<Either<Failure, List<IssueModel>?>> fetchActiveIssues() async {
     try {
       final List<Map<String, dynamic>> response =
           await _supabase.from("active_issues").select();
 
       if (response.isEmpty) {
-        return Left(CustomFailure("لا يوجد أعطال نشطة"));
+        return Right(null);
       }
 
       final List<IssueModel> issues = response.map((e) {

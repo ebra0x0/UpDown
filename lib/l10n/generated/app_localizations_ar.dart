@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -13,46 +15,46 @@ class AppLocalizationsAr extends AppLocalizations {
   String get elevator_broken => 'معطل';
 
   @override
-  String get elevator_repair => 'قيد الإصلاح';
+  String get elevator_repair => 'جاري الإصلاح';
 
   @override
-  String get elevator_maintenance => 'قيد الصيانة';
+  String get elevator_maintenance => 'تحت الصيانة';
 
   @override
   String get elevator_disabled => 'مغلق';
 
   @override
-  String get elevatorWorkingDescription => 'المصعد في حالة جيدة ويعمل بشكل طبيعي.';
+  String get elevatorWorkingDescription => 'المصعد في حالة جيدة';
 
   @override
-  String get elevatorBrokenDescription => 'المصعد معطل و سيتم اصلاحه في أقرب وقت.';
+  String get elevatorBrokenDescription => 'هناك عطل سيتم اصلاحه في أقرب وقت';
 
   @override
-  String get elevatorRepairDescription => 'جاري إصلاح العطل وسيعمل في أقرب وقت';
+  String get elevatorRepairDescription => 'جاري إصلاح العطل';
 
   @override
-  String get elevatorMaintenanceDescription => 'المصعد تحت الصيانة.';
+  String get elevatorMaintenanceDescription => 'تحت الصيانة';
 
   @override
-  String get elevatorDisabledDescription => 'المصعد غير متاح في الوقت الحالي.';
+  String get elevatorDisabledDescription => 'المصعد مغلق';
 
   @override
-  String get issueType_door_not_opening => 'هناك باب لا يفتح .';
+  String get issueType_door_not_opening => 'هناك باب لا يفتح ';
 
   @override
-  String get issueType_stuck_between_floors => 'المصعد متوقف بين طابقين.';
+  String get issueType_stuck_between_floors => 'المصعد متوقف بين طابقين';
 
   @override
-  String get issueType_noise => 'المصعد يصدر أصوات عالية .';
+  String get issueType_noise => 'المصعد يصدر أصوات عالية ';
 
   @override
-  String get issueType_not_responding => 'المصعد متوقف ولا يستجيب للطلبات .';
+  String get issueType_not_responding => 'المصعد متوقف ولا يستجيب للطلبات ';
 
   @override
-  String get issueType_button_not_responding => 'هناك زر لا يعمل .';
+  String get issueType_button_not_responding => 'هناك زر لا يعمل ';
 
   @override
-  String get issueType_above_floor => 'المصعد يتوقف أعلى الطابق المطلوب .';
+  String get issueType_above_floor => 'المصعد يتوقف أعلى الطابق المطلوب ';
 
   @override
   String get issueType_other => 'أخرى';
@@ -70,52 +72,52 @@ class AppLocalizationsAr extends AppLocalizations {
   String get issue_fixed => 'تم الإصلاح';
 
   @override
-  String get notFixedDescription => 'لم تُحل بعد.';
+  String get notFixedDescription => 'لم تُحل بعد';
 
   @override
-  String get needsPartsDescription => 'تحتاج إلى قطع غيار.';
+  String get needsPartsDescription => 'تحتاج إلى قطع غيار';
 
   @override
-  String get escalatedDescription => 'تم تصعيد المشكلة للمستوى الأعلى.';
+  String get escalatedDescription => 'تم تصعيد العطل لفني أخر';
 
   @override
-  String get fixedDescription => 'تم حل المشكلة.';
+  String get fixedDescription => 'تم إصلاح العطل';
 
   @override
-  String get report_pending => 'قيد الانتظار';
+  String get report_pending => 'قيد المراجعة';
 
   @override
   String get report_reported => 'تم الإبلاغ';
 
   @override
-  String get report_coming => 'الفني في الطريق .';
+  String get report_coming => 'الفني في الطريق';
 
   @override
-  String get report_arrived => 'لقد وصل الفني .';
+  String get report_arrived => 'لقد وصل الفني';
 
   @override
   String get report_in_progress => 'جاري إصلاح العطل';
 
   @override
-  String get report_resolved => 'تم إصلاح العطل .';
+  String get report_resolved => 'تم إصلاح العطل';
 
   @override
-  String get reportPendingDescription => 'التقرير في الانتظار ولم يتم التعامل معه بعد.';
+  String get reportPendingDescription => 'التقرير في الانتظار ولم يتم التعامل معه بعد';
 
   @override
-  String get reportReportedDescription => 'تم الإبلاغ عن العطل.';
+  String get reportReportedDescription => 'تم الإبلاغ عن العطل';
 
   @override
-  String get reportComingDescription => 'الفنيين في الطريق لحل العطل.';
+  String get reportComingDescription => 'الفني في الطريق';
 
   @override
-  String get reportArrivedDescription => 'وصل الفنيين إلى الموقع .';
+  String get reportArrivedDescription => 'وصل الفني إلى الموقع';
 
   @override
-  String get reportInProgressDescription => 'العطل قيد الإصلاح الآن .';
+  String get reportInProgressDescription => 'جاري إصلاح العطل';
 
   @override
-  String get reportResolvedDescription => 'تم إصلاح العطل والمصعد يعمل على أكمل وجه .';
+  String get reportResolvedDescription => 'تم إصلاح العطل';
 
   @override
   String get unit_active => 'نشط';

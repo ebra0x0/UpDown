@@ -51,6 +51,7 @@ enum SupabaseErrorCode {
   samlRelayStateExpired,
 
   // Postgres Errors
+  notFound,
   syntaxError,
   permissionDenied,
   roleDoesNotExist,
@@ -63,6 +64,7 @@ enum SupabaseErrorCode {
   diskFull,
 
   // Storage Errors
+  unauthorized,
   noSuchBucket,
   noSuchKey,
   noSuchUpload,

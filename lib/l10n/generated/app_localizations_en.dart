@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -22,19 +24,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get elevator_disabled => 'Disabled';
 
   @override
-  String get elevatorWorkingDescription => 'The elevator is in good condition and working normally.';
+  String get elevatorWorkingDescription => 'The elevator\'s working';
 
   @override
-  String get elevatorBrokenDescription => 'The elevator is broken and cannot be used.';
+  String get elevatorBrokenDescription => 'The elevator\'s broken and cannot be used';
 
   @override
-  String get elevatorRepairDescription => 'The elevator is under repair.';
+  String get elevatorRepairDescription => 'The elevator\'s under repair';
 
   @override
-  String get elevatorMaintenanceDescription => 'The elevator is under maintenance.';
+  String get elevatorMaintenanceDescription => 'The elevator\'s under maintenance';
 
   @override
-  String get elevatorDisabledDescription => 'The elevator is currently unavailable.';
+  String get elevatorDisabledDescription => 'The elevator\'s currently unavailable';
 
   @override
   String get issueType_door_not_opening => 'Door Not Opening';
@@ -70,16 +72,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get issue_fixed => 'Fixed';
 
   @override
-  String get notFixedDescription => 'The issue has not been fixed yet.';
+  String get notFixedDescription => 'The issue has not been fixed yet';
 
   @override
-  String get needsPartsDescription => 'The issue needs parts.';
+  String get needsPartsDescription => 'The issue needs parts';
 
   @override
-  String get escalatedDescription => 'The issue has been escalated to a higher level.';
+  String get escalatedDescription => 'The issue has been escalated to another technecian';
 
   @override
-  String get fixedDescription => 'The issue has been fixed.';
+  String get fixedDescription => 'The issue has been fixed';
 
   @override
   String get report_pending => 'Pending';
@@ -100,22 +102,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get report_resolved => 'Resolved';
 
   @override
-  String get reportPendingDescription => 'The report is pending and hasn\'t been handled yet.';
+  String get reportPendingDescription => 'The report is pending and hasn\'t been handled yet';
 
   @override
-  String get reportReportedDescription => 'The issue has been reported.';
+  String get reportReportedDescription => 'The issue has been reported';
 
   @override
-  String get reportComingDescription => 'The experts are on their way to solve the issue.';
+  String get reportComingDescription => 'The technecian\'s on the way';
 
   @override
-  String get reportArrivedDescription => 'The experts have arrived at the location.';
+  String get reportArrivedDescription => 'The technician has arrived';
 
   @override
-  String get reportInProgressDescription => 'The issue is being worked on.';
+  String get reportInProgressDescription => 'In progress';
 
   @override
-  String get reportResolvedDescription => 'The issue has been resolved.';
+  String get reportResolvedDescription => 'The issue has been resolved';
 
   @override
   String get unit_active => 'Active';

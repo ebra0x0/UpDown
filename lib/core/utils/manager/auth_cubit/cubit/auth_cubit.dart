@@ -5,13 +5,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit({required this.authRepo}) : super(AuthStateInitial()) {
-    authMonitor();
-  }
-
+  AuthCubit({required this.authRepo}) : super(AuthStateInitial());
   final AuthRepo authRepo;
 
-  void authMonitor() {
+  void sessionMonitor() {
     authRepo.sessionMonitor.listen((session) async {
       if (session == null) {
         emit(AuthStateUnAuthenticated());
@@ -21,26 +18,26 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthStateUnconfirmed(email: session.user.email!));
         return;
       }
-      emit(AuthStateAuthenticated(session: session));
+      checkUser(session: session);
     });
   }
 
-  void signOut() async {
+  Future<void> signOut() async {
     emit(AuthStateLoading());
     final res = await authRepo.signOut();
     res.fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
         (success) => emit(AuthStateUnAuthenticated()));
   }
 
-  void signIn({required String email, required String password}) async {
+  Future<void> signIn({required String email, required String password}) async {
     emit(AuthStateLoading());
     final res =
         await authRepo.signInWithPassword(email: email, password: password);
     res.fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
-        (session) => emit(AuthStateAuthenticated(session: session)));
+        (session) => null);
   }
 
-  void signUp({required String email, required String password}) async {
+  Future<void> signUp({required String email, required String password}) async {
     emit(AuthStateLoading());
     final res = await authRepo.signUp(email: email, password: password);
     res.fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
@@ -49,7 +46,6 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthStateUnconfirmed(email: email));
         return;
       }
-      emit(AuthStateAuthenticated(session: session));
     });
   }
 
@@ -57,7 +53,22 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthStateLoading());
     final res = await authRepo.sendConfirmationEmail(email);
     res.fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
-        (success) => success);
+        (success) {
+      emit(AuthStateUnconfirmed(email: email));
+    });
+  }
+
+  Future<void> checkUser({required Session session}) async {
+    final res = await authRepo.fetchProfile(session.user.id);
+    return res
+        .fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
+            (profile) {
+      if (profile == null) {
+        emit(AuthStateNewUser(session: session));
+        return;
+      }
+      emit(AuthStateAuthenticated(session: session));
+    });
   }
 
   void resetState() => emit(AuthStateInitial());

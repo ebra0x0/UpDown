@@ -8,3 +8,11 @@ const Map<String, String> kIssuesList = {
   "Above_Floor": "مرتفع عن الطابق",
   "Other": "أخرى",
 };
+const String kAvatarsBucket = "avatars";
+const String kIssuesBucket = "issues";
+const String kAvatarsBucketFolder = "Clients";
+const Map<String, String> kIssuesBucketFolders = {
+  "image": "images",
+  "video": "videos",
+  "other": "other"
+};

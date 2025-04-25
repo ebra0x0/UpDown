@@ -13,7 +13,7 @@ class BackButtonNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => route != null ? context.go(route!) : context.pop(),
+      onTap: () => route != null ? context.replace(route!) : context.pop(),
       child: Container(
         width: 42,
         height: 42,

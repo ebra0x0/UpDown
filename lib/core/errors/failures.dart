@@ -64,17 +64,20 @@ class SupabaseFailure extends Failure {
   }
 
   factory SupabaseFailure.fromDatabase(PostgrestException e) {
+    print(e.code);
     final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
         e.code ?? SupabaseErrorCode.unknown.code);
 
     switch (code) {
+      case SupabaseErrorCode.notFound:
+        return SupabaseFailure("هذا الطلب غير موجود.");
       case SupabaseErrorCode.syntaxError:
         return SupabaseFailure("هناك خطأ في صيغة البيانات المدخلة.");
       case SupabaseErrorCode.permissionDenied ||
             SupabaseErrorCode.noPermissionForTable:
         return SupabaseFailure("ليس لديك صلاحيات كافية.");
       case SupabaseErrorCode.roleDoesNotExist:
-        return SupabaseFailure("الدور غير موجود.");
+        return SupabaseFailure("هذه الصلاحية غير موجودة.");
       case SupabaseErrorCode.relationDoesNotExist:
         return SupabaseFailure("العلاقة غير موجودة.");
       case SupabaseErrorCode.connectionFailed:
@@ -94,6 +97,8 @@ class SupabaseFailure extends Failure {
     final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
         e.statusCode ?? SupabaseErrorCode.unknown.code);
     switch (code) {
+      case SupabaseErrorCode.unauthorized:
+        return SupabaseFailure("غير مصرح لك.");
       case SupabaseErrorCode.noSuchBucket:
         return SupabaseFailure("الحاوية غير موجودة.");
       case SupabaseErrorCode.noSuchKey:

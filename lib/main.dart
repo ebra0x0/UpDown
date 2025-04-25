@@ -1,7 +1,6 @@
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/function/api_initialization.dart';
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
-import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/auth/data/repos/auth_repo_imp.dart';
 import 'package:UpDown/updown.dart';
@@ -24,7 +23,6 @@ Future<void> main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (context) => authCubit),
-      BlocProvider(create: (context) => UserDataCubit()),
     ],
     child: UpDown(
       appRouter: appRouter,

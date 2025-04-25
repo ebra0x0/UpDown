@@ -90,6 +90,8 @@ extension SupabaseErrorExtension on SupabaseErrorCode {
         return "flow_state_expired";
 
       // PostgreSQL Errors
+      case SupabaseErrorCode.notFound:
+        return "404";
       case SupabaseErrorCode.syntaxError:
         return "syntax_error";
       case SupabaseErrorCode.permissionDenied:
@@ -112,6 +114,8 @@ extension SupabaseErrorExtension on SupabaseErrorCode {
         return "disk_full";
 
       // Storage Errors
+      case SupabaseErrorCode.unauthorized:
+        return "403";
       case SupabaseErrorCode.noSuchBucket:
         return "404";
       case SupabaseErrorCode.noSuchKey:

@@ -18,6 +18,12 @@ final class AuthStateUnconfirmed extends AuthState {
   AuthStateUnconfirmed({required this.email});
 }
 
+final class AuthStateNewUser extends AuthState {
+  final Session session;
+
+  AuthStateNewUser({required this.session});
+}
+
 final class AuthStateError extends AuthState {
   AuthStateError({required this.errorMsg});
   final String errorMsg;

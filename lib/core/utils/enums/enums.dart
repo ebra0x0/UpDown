@@ -21,3 +21,5 @@ enum IssueType {
 }
 
 enum UnitStatus { active, needsMaintenance, outOfService }
+
+enum MediaType { image, video, other }

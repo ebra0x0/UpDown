@@ -1,4 +1,5 @@
 import 'package:UpDown/core/errors/failures.dart';
+import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -22,4 +23,6 @@ abstract class AuthRepo {
   Future<String?> getRefreshToken();
 
   void setRefreshToken(String refreshToken);
+
+  Future<Either<Failure, ProfileModel?>> fetchProfile(String id);
 }

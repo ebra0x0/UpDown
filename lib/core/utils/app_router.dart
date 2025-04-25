@@ -1,23 +1,20 @@
 import 'package:UpDown/core/utils/go_router_refresh_stream.dart';
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
-import 'package:UpDown/core/utils/manager/user_cubit/cubit/user_data_cubit.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
-import 'package:UpDown/features/auth/presentaion/views/confirmation/confirmation_view.dart';
 import 'package:UpDown/features/auth/presentaion/views/login/login_view.dart';
 import 'package:UpDown/features/auth/presentaion/views/registration/registration_view.dart';
-import 'package:UpDown/features/root/create_issue/data/model/issue_model.dart';
-import 'package:UpDown/features/root/create_issue/data/repos/create_issue_repo_imp.dart';
-import 'package:UpDown/features/root/create_issue/presentation/manager/cubit/create_issue_cubit.dart';
-import 'package:UpDown/features/root/create_issue/presentation/views/create_issue_view.dart';
-import 'package:UpDown/features/root/home/data/repos/building_repo/building_repo_imp.dart';
-import 'package:UpDown/features/root/home/data/repos/elevator_repo/elevator_repo_imp.dart';
-import 'package:UpDown/features/root/home/presentation/manager/building_details_cubit/cubit/building_details_cubit.dart';
-import 'package:UpDown/features/root/home/presentation/manager/elevator_details_cubit/cubit/elevator_details_cubit.dart';
-import 'package:UpDown/features/root/home/presentation/views/building_details_view.dart';
-import 'package:UpDown/features/root/home/presentation/views/elevator_details_view.dart';
-import 'package:UpDown/features/root/home/presentation/views/home_view.dart';
-import 'package:UpDown/features/root/home/presentation/views/issue_view.dart';
-import 'package:UpDown/features/root/root_view.dart';
+import 'package:UpDown/features/account_setup/presentation/views/account_setup_view.dart';
+import 'package:UpDown/features/buildings/data/repo/buildings_repo_imp.dart';
+import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
+import 'package:UpDown/features/elevators/data/repo/elevator_repo_imp.dart';
+import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
+import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/issues/presentation/views/create_issue_view.dart';
+import 'package:UpDown/features/buildings/presentation/views/building_details_view.dart';
+import 'package:UpDown/features/elevators/presentation/views/elevator_details_view.dart';
+import 'package:UpDown/features/home/presentation/views/home_view.dart';
+import 'package:UpDown/features/issues/presentation/views/issue_view.dart';
+import 'package:UpDown/features/main_shell/root_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,24 +23,12 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   static const String kregistrationView = '/registrationView';
   static const String kloginView = '/loginView';
-  static const String kconfirmationView = '/confirmationView/:email';
   static const String khomeView = '/homeView';
+  static const String kprofileSetupView = '/profileSetupView';
   static const String kcreateIssueView = '/createReportView';
-  static const String kbuildingDetails = 'buildingDetails/:buildingId';
-  static const String kelevatorDetails = '/elevatorDetails/:elevatorId';
-  static const String kissueView = 'issueView';
-
-  static void goToBuildingDetails(BuildContext context, String buildingId) {
-    context.go("$khomeView/buildingDetails/$buildingId");
-  }
-
-  static void goToElevatorDetails(BuildContext context, String elevatorId) {
-    context.push("$khomeView/elevatorDetails/$elevatorId");
-  }
-
-  static void goToIssueView(BuildContext context, IssueModel issue) {
-    context.go("$khomeView/issueView", extra: issue);
-  }
+  static const String kbuildingDetails = '/buildingDetails';
+  static const String kelevatorDetails = '/elevatorDetails';
+  static const String kissueView = '/issueView';
 
   GoRouter router(BuildContext context) {
     return GoRouter(
@@ -60,22 +45,16 @@ class AppRouter {
 
           if (authState is AuthStateAuthenticated) {
             if (isGoingToAuthPages) {
-              loadUserData(context, authState);
               return khomeView;
             }
           } else if (authState is AuthStateUnAuthenticated) {
-            if (isGoingToAuthPages) {
-              resetUserData(context);
-              if (isGoingToSplash) {
-                return kloginView;
-              }
-            } else {
-              resetUserData(context);
+            if (!isGoingToAuthPages) {
+              return kloginView;
+            } else if (isGoingToSplash) {
               return kloginView;
             }
-          } else if (authState is AuthStateUnconfirmed) {
-            final email = authState.email;
-            return kconfirmationView.replaceAll(':email', email);
+          } else if (authState is AuthStateNewUser) {
+            return kprofileSetupView;
           }
           return null;
         },
@@ -93,81 +72,52 @@ class AppRouter {
             builder: (context, state) => const LoginView(),
           ),
           GoRoute(
-            path: kconfirmationView,
-            builder: (context, state) => ConfirmationView(
-              email: state.pathParameters['email'] as String,
-            ),
+            path: kprofileSetupView,
+            builder: (context, state) => const AccountSetupView(),
           ),
           ShellRoute(
               builder: (context, state, child) => RootView(child: child),
               routes: [
                 GoRoute(
-                    path: khomeView,
-                    builder: (context, state) => HomeView(),
-                    routes: [
-                      GoRoute(
-                        path: kbuildingDetails,
-                        builder: (context, state) {
-                          final String buildingId =
-                              state.pathParameters['buildingId']!;
-                          return BlocProvider(
-                            create: (context) => BuildingDetailsCubit(
-                                gitIt.get<BuildingRepoImp>())
-                              ..getBuildingDetails(buildingId: buildingId),
-                            child: BuildingDetailsView(),
-                          );
-                        },
-                      ),
-                      GoRoute(
-                        path: kelevatorDetails,
-                        builder: (context, state) {
-                          final String elevatorId =
-                              state.pathParameters['elevatorId']!;
-
-                          return BlocProvider(
-                              create: (context) => ElevatorDetailsCubit(
-                                  gitIt.get<ElevatorRepoImp>())
-                                ..getElevatorDetails(elevatorId: elevatorId),
-                              child: ElevatorDetailsView());
-                        },
-                      ),
-                      GoRoute(
-                        path: kissueView,
-                        builder: (context, state) {
-                          final issue = state.extra as IssueModel;
-                          return IssueView(issue: issue);
-                        },
-                      ),
-                    ]),
+                  path: khomeView,
+                  builder: (context, state) => HomeView(),
+                ),
                 GoRoute(
                   path: kcreateIssueView,
-                  builder: (context, state) => BlocProvider(
-                    create: (context) => CreateIssueCubit(
-                      gitIt.get<CreateIssueRepoImp>(),
-                      buildings: BlocProvider.of<UserDataCubit>(context)
-                          .userData!
-                          .buildings,
-                      elevators: BlocProvider.of<UserDataCubit>(context)
-                          .userData!
-                          .elevators,
-                    ),
-                    child: const CreateIssueView(),
-                  ),
-                )
+                  builder: (context, state) => const CreateIssueView(),
+                ),
+                GoRoute(
+                    path: kbuildingDetails,
+                    builder: (context, state) {
+                      // final buildingId = state.pathParameters['buildingId'];
+                      final String buildingId = state.extra as String;
+
+                      return BlocProvider(
+                        create: (context) =>
+                            BuildingDetailsCubit(gitIt.get<BuildingsRepoImp>()),
+                        child: BuildingDetailsView(buildingId: buildingId),
+                      );
+                    }),
+                GoRoute(
+                    path: kelevatorDetails,
+                    builder: (context, state) {
+                      // final elevatorId = state.pathParameters['elevatorId'];
+                      final String elevatorId = state.extra as String;
+
+                      return BlocProvider(
+                        create: (context) =>
+                            ElevatorDetailsCubit(gitIt.get<ElevatorRepoImp>()),
+                        child: ElevatorDetailsView(elevatorId: elevatorId),
+                      );
+                    }),
+                GoRoute(
+                  path: kissueView,
+                  builder: (context, state) {
+                    final IssueModel issue = state.extra as IssueModel;
+                    return IssueView(issue: issue);
+                  },
+                ),
               ]),
         ]);
-  }
-
-  void resetUserData(BuildContext context) {
-    if (BlocProvider.of<UserDataCubit>(context).userData != null) {
-      BlocProvider.of<UserDataCubit>(context).reset();
-    }
-  }
-
-  void loadUserData(BuildContext context, AuthStateAuthenticated authState) {
-    if (BlocProvider.of<UserDataCubit>(context).userData == null) {
-      BlocProvider.of<UserDataCubit>(context)
-          .loadUserData(user: authState.session.user);
-    }
   }
 }

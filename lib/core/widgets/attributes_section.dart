@@ -1,4 +1,4 @@
-import 'package:UpDown/features/root/home/data/model/attribute_model.dart';
+import 'package:UpDown/core/utils/model/attribute_model.dart';
 import 'package:flutter/material.dart';
 
 class AttributesSection extends StatelessWidget {

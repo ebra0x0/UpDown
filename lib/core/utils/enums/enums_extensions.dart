@@ -38,13 +38,13 @@ extension ElevatorStatusExtension on ElevatorStatus {
     }
   }
 
-  String description(BuildContext context) {
+  String description(BuildContext context, IssueType? issueType) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case ElevatorStatus.working:
         return local.elevatorWorkingDescription;
       case ElevatorStatus.broken:
-        return local.elevatorBrokenDescription;
+        return issueType!.title(context);
       case ElevatorStatus.repair:
         return local.elevatorRepairDescription;
       case ElevatorStatus.maintenance:
@@ -90,6 +90,25 @@ extension IssueTypeExtension on IssueType {
         return IssueType.other;
       default:
         return IssueType.other;
+    }
+  }
+
+  static String fromIssueType(IssueType issueType) {
+    switch (issueType) {
+      case IssueType.doorNotOpening:
+        return "Door_Not_Opening";
+      case IssueType.stuckBetweenFloors:
+        return "Stuck_Between_Floors";
+      case IssueType.noise:
+        return "Noise";
+      case IssueType.notResponding:
+        return "Not_Responding";
+      case IssueType.buttonNotResponding:
+        return "Button_Not_Responding";
+      case IssueType.aboveFloor:
+        return "Above_Floor";
+      case IssueType.other:
+        return "Other";
     }
   }
 
@@ -283,6 +302,22 @@ extension UnitStatusExtension on UnitStatus {
         return Pallete.lightWarning;
       case UnitStatus.outOfService:
         return Pallete.lightError;
+    }
+  }
+}
+
+// Media Type Extension
+extension MediaTypeExtension on MediaType {
+  static MediaType fromString(String type) {
+    switch (type.toLowerCase()) {
+      case "image":
+        return MediaType.image;
+      case "video":
+        return MediaType.video;
+      case "other":
+        return MediaType.other;
+      default:
+        return MediaType.other;
     }
   }
 }

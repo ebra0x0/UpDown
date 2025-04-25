@@ -128,31 +128,31 @@ abstract class AppLocalizations {
   /// No description provided for @elevatorWorkingDescription.
   ///
   /// In en, this message translates to:
-  /// **'The elevator is in good condition and working normally.'**
+  /// **'The elevator\'s working'**
   String get elevatorWorkingDescription;
 
   /// No description provided for @elevatorBrokenDescription.
   ///
   /// In en, this message translates to:
-  /// **'The elevator is broken and cannot be used.'**
+  /// **'The elevator\'s broken and cannot be used'**
   String get elevatorBrokenDescription;
 
   /// No description provided for @elevatorRepairDescription.
   ///
   /// In en, this message translates to:
-  /// **'The elevator is under repair.'**
+  /// **'The elevator\'s under repair'**
   String get elevatorRepairDescription;
 
   /// No description provided for @elevatorMaintenanceDescription.
   ///
   /// In en, this message translates to:
-  /// **'The elevator is under maintenance.'**
+  /// **'The elevator\'s under maintenance'**
   String get elevatorMaintenanceDescription;
 
   /// No description provided for @elevatorDisabledDescription.
   ///
   /// In en, this message translates to:
-  /// **'The elevator is currently unavailable.'**
+  /// **'The elevator\'s currently unavailable'**
   String get elevatorDisabledDescription;
 
   /// No description provided for @issueType_door_not_opening.
@@ -224,25 +224,25 @@ abstract class AppLocalizations {
   /// No description provided for @notFixedDescription.
   ///
   /// In en, this message translates to:
-  /// **'The issue has not been fixed yet.'**
+  /// **'The issue has not been fixed yet'**
   String get notFixedDescription;
 
   /// No description provided for @needsPartsDescription.
   ///
   /// In en, this message translates to:
-  /// **'The issue needs parts.'**
+  /// **'The issue needs parts'**
   String get needsPartsDescription;
 
   /// No description provided for @escalatedDescription.
   ///
   /// In en, this message translates to:
-  /// **'The issue has been escalated to a higher level.'**
+  /// **'The issue has been escalated to another technecian'**
   String get escalatedDescription;
 
   /// No description provided for @fixedDescription.
   ///
   /// In en, this message translates to:
-  /// **'The issue has been fixed.'**
+  /// **'The issue has been fixed'**
   String get fixedDescription;
 
   /// No description provided for @report_pending.
@@ -284,37 +284,37 @@ abstract class AppLocalizations {
   /// No description provided for @reportPendingDescription.
   ///
   /// In en, this message translates to:
-  /// **'The report is pending and hasn\'t been handled yet.'**
+  /// **'The report is pending and hasn\'t been handled yet'**
   String get reportPendingDescription;
 
   /// No description provided for @reportReportedDescription.
   ///
   /// In en, this message translates to:
-  /// **'The issue has been reported.'**
+  /// **'The issue has been reported'**
   String get reportReportedDescription;
 
   /// No description provided for @reportComingDescription.
   ///
   /// In en, this message translates to:
-  /// **'The experts are on their way to solve the issue.'**
+  /// **'The technecian\'s on the way'**
   String get reportComingDescription;
 
   /// No description provided for @reportArrivedDescription.
   ///
   /// In en, this message translates to:
-  /// **'The experts have arrived at the location.'**
+  /// **'The technician has arrived'**
   String get reportArrivedDescription;
 
   /// No description provided for @reportInProgressDescription.
   ///
   /// In en, this message translates to:
-  /// **'The issue is being worked on.'**
+  /// **'In progress'**
   String get reportInProgressDescription;
 
   /// No description provided for @reportResolvedDescription.
   ///
   /// In en, this message translates to:
-  /// **'The issue has been resolved.'**
+  /// **'The issue has been resolved'**
   String get reportResolvedDescription;
 
   /// No description provided for @unit_active.
