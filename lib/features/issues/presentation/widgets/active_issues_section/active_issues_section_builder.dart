@@ -1,4 +1,4 @@
-import 'package:UpDown/core/widgets/loading_indicator.dart';
+import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
 import 'package:UpDown/core/widgets/custom_error.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:UpDown/features/issues/presentation/widgets/active_issues_section/active_issues_section.dart';

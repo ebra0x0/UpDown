@@ -11,6 +11,7 @@ class ElevatorsCubit extends Cubit<ElevatorsState> {
   List<ElevatorSummaryModel>? elevators;
 
   Future<void> call({required String buildingId}) async {
+    if (state is ElevatorsLoading) return;
     if (elevators != null && buildingId == elevators![0].buildingId) {
       emit(ElevatorsLoaded(elevators: elevators!));
     }

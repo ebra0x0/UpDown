@@ -1,5 +1,6 @@
 import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
@@ -28,12 +29,8 @@ class CustomButton extends StatelessWidget {
             backgroundColor: WidgetStatePropertyAll(Pallete.lightPrimary),
           ),
           child: isLoading
-              ? SizedBox(
-                  width: 25,
-                  height: 25,
-                  child: const CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
+              ? LoadingIndicator(
+                  color: Colors.white,
                 )
               : Text(title,
                   style: Styles.textStyle16.copyWith(color: Colors.white)),

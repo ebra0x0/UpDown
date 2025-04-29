@@ -18,7 +18,6 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
 
   final IssuesRepoImp _repo;
 
-  List<BuildingSummaryModel>? buildings;
   List<ElevatorSummaryModel>? elevators;
 
   MediaModel? media;
@@ -74,6 +73,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
     final currentState = state is SelectSuccess ? state as SelectSuccess : null;
     selectedBuilding = building;
 
+    emit(SelectLoading());
     final res = await _repo.fetchElevators(building.id);
 
     res.fold((failure) => null, (res) {

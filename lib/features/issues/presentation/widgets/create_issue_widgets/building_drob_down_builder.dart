@@ -13,11 +13,13 @@ class BuildingDrobDownBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 64,
-      child: BlocBuilder<CreateIssueCubit, CreateIssueState>(
+      child: BlocBuilder<BuildingsCubit, BuildingsState>(
           builder: (context, state) {
         return BuildingDropdown(
-            buildings: context.read<BuildingsCubit>().buildings,
-            selectedBuilding: state is SelectSuccess ? state.building : null);
+          isLoading: state is BuildingsLoading,
+          buildings: state is BuildingsLoaded ? state.buildings : null,
+          selectedBuilding: context.watch<CreateIssueCubit>().selectedBuilding,
+        );
       }),
     );
   }

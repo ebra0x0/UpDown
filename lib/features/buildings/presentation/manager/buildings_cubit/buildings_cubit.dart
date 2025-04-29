@@ -11,6 +11,7 @@ class BuildingsCubit extends Cubit<BuildingsState> {
   List<BuildingSummaryModel>? buildings;
 
   Future<void> call() async {
+    if (state is BuildingsLoading) return;
     if (buildings != null) {
       emit(BuildingsLoaded(buildings: buildings!));
       return;

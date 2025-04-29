@@ -1,5 +1,5 @@
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,10 +20,8 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-          child: CircularProgressIndicator(
-        color: Pallete.lightInfo,
-      )),
-    );
+        body: LoadingIndicator(
+      size: 28,
+    ));
   }
 }

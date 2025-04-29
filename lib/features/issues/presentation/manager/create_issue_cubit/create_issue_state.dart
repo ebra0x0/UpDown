@@ -43,3 +43,5 @@ final class SelectSuccess extends CreateIssueState {
     );
   }
 }
+
+final class SelectLoading extends CreateIssueState {}

@@ -14,7 +14,9 @@ class ElevatorDrobDownBuilder extends StatelessWidget {
     return SizedBox(
       height: 64,
       child: ElevatorDropdown(
-          elevators: cubit.elevators, selectedElevator: cubit.selectedElevator),
+          isLoading: cubit.state is SelectLoading,
+          elevators: cubit.elevators,
+          selectedElevator: cubit.selectedElevator),
     );
   }
 }

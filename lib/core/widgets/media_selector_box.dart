@@ -3,6 +3,7 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_animated_button.dart';
+import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -75,11 +76,7 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
               boxShadow: [Styles.boxShadow],
             ),
             child: isLoading
-                ? Center(
-                    child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: const CircularProgressIndicator()))
+                ? LoadingIndicator()
                 : _video != null
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

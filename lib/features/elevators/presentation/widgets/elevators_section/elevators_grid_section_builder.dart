@@ -1,4 +1,4 @@
-import 'package:UpDown/core/widgets/loading_indicator.dart';
+import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/elevators_grid_section.dart';
 import 'package:flutter/material.dart';

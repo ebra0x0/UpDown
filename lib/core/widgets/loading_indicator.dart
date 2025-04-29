@@ -1,22 +1,21 @@
 import 'package:UpDown/core/utils/pallete.dart';
-import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-class DataLoadingIndicator extends StatelessWidget {
-  const DataLoadingIndicator({super.key});
+class LoadingIndicator extends StatelessWidget {
+  const LoadingIndicator(
+      {super.key, this.color = Pallete.lightPrimary, this.size = 24});
+
+  final double size;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        constraints: BoxConstraints(
-          minHeight: 100,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: Styles.borderRadius8,
-          color: Pallete.lightPrimary.withValues(alpha: 0.2),
-        ),
-      ),
-    );
+        child: SizedBox(
+            width: size,
+            height: size,
+            child: CircularProgressIndicator(
+              color: color,
+            )));
   }
 }
