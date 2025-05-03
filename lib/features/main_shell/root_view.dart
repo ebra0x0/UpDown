@@ -11,8 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class RootView extends StatelessWidget {
-  final Widget child;
-  const RootView({super.key, required this.child});
+  const RootView({super.key, required this.navigationShell});
+  final StatefulNavigationShell navigationShell;
 
   @override
   Widget build(BuildContext context) {
@@ -26,33 +26,17 @@ class RootView extends StatelessWidget {
             create: (context) => IssuesCubit(gitIt.get<IssuesRepoImp>())),
       ],
       child: Scaffold(
-        body: child,
+        body: navigationShell,
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _getCurrentIndex(context),
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                context.go(AppRouter.khomeView);
-                break;
-              case 1:
-                context.go(AppRouter.kcreateIssueView);
-                break;
-            }
-          },
+          currentIndex: navigationShell.currentIndex,
+          onTap: (index) => navigationShell.goBranch(index),
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.report), label: 'عطل جديد'),
+                icon: Icon(Icons.report), label: 'إنشاء عطل'),
           ],
         ),
       ),
     );
-  }
-
-  int _getCurrentIndex(BuildContext context) {
-    final location = GoRouterState.of(context).uri.toString();
-    if (location.startsWith(AppRouter.khomeView)) return 0;
-    if (location.startsWith(AppRouter.kcreateIssueView)) return 1;
-    return 0;
   }
 }

@@ -75,48 +75,53 @@ class AppRouter {
             path: kprofileSetupView,
             builder: (context, state) => const AccountSetupView(),
           ),
-          ShellRoute(
-              builder: (context, state, child) => RootView(child: child),
-              routes: [
-                GoRoute(
-                  path: khomeView,
-                  builder: (context, state) => HomeView(),
-                ),
-                GoRoute(
-                  path: kcreateIssueView,
-                  builder: (context, state) => const CreateIssueView(),
-                ),
-                GoRoute(
-                    path: kbuildingDetails,
-                    builder: (context, state) {
-                      // final buildingId = state.pathParameters['buildingId'];
-                      final String buildingId = state.extra as String;
+          StatefulShellRoute.indexedStack(
+              builder: (context, state, navigationShell) =>
+                  RootView(navigationShell: navigationShell),
+              branches: [
+                StatefulShellBranch(routes: [
+                  GoRoute(
+                    path: khomeView,
+                    builder: (context, state) => HomeView(),
+                  ),
+                ]),
+                StatefulShellBranch(routes: [
+                  GoRoute(
+                    path: kcreateIssueView,
+                    builder: (context, state) => const CreateIssueView(),
+                  ),
+                ]),
+                StatefulShellBranch(routes: [
+                  GoRoute(
+                      path: kbuildingDetails,
+                      builder: (context, state) {
+                        final String buildingId = state.extra as String;
 
-                      return BlocProvider(
-                        create: (context) =>
-                            BuildingDetailsCubit(gitIt.get<BuildingsRepoImp>()),
-                        child: BuildingDetailsView(buildingId: buildingId),
-                      );
-                    }),
-                GoRoute(
-                    path: kelevatorDetails,
-                    builder: (context, state) {
-                      // final elevatorId = state.pathParameters['elevatorId'];
-                      final String elevatorId = state.extra as String;
+                        return BlocProvider(
+                          create: (context) => BuildingDetailsCubit(
+                              gitIt.get<BuildingsRepoImp>()),
+                          child: BuildingDetailsView(buildingId: buildingId),
+                        );
+                      }),
+                  GoRoute(
+                      path: kelevatorDetails,
+                      builder: (context, state) {
+                        final String elevatorId = state.extra as String;
 
-                      return BlocProvider(
-                        create: (context) =>
-                            ElevatorDetailsCubit(gitIt.get<ElevatorRepoImp>()),
-                        child: ElevatorDetailsView(elevatorId: elevatorId),
-                      );
-                    }),
-                GoRoute(
-                  path: kissueView,
-                  builder: (context, state) {
-                    final IssueModel issue = state.extra as IssueModel;
-                    return IssueView(issue: issue);
-                  },
-                ),
+                        return BlocProvider(
+                          create: (context) => ElevatorDetailsCubit(
+                              gitIt.get<ElevatorRepoImp>()),
+                          child: ElevatorDetailsView(elevatorId: elevatorId),
+                        );
+                      }),
+                  GoRoute(
+                    path: kissueView,
+                    builder: (context, state) {
+                      final IssueModel issue = state.extra as IssueModel;
+                      return IssueView(issue: issue);
+                    },
+                  ),
+                ]),
               ]),
         ]);
   }
