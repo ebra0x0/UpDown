@@ -1,10 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:UpDown/constants.dart';
 import 'package:UpDown/core/errors/failures.dart';
-import 'package:UpDown/core/utils/function/build_storage_issue_path.dart';
+import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/core/utils/function/media_compressor.dart';
 import 'package:UpDown/core/utils/model/profile_model.dart';
-import 'package:UpDown/core/utils/secure_storage.dart';
-import 'package:UpDown/core/utils/service_locator.dart';
+import 'package:UpDown/core/utils/storage_path.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
@@ -13,6 +14,8 @@ import 'package:UpDown/features/auth/data/model/user_credentials_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
 import 'package:either_dart/either.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ApiService {
@@ -112,6 +115,19 @@ class ApiService {
   Stream<Session?> get onAuthStateChanged =>
       _supabase.auth.onAuthStateChange.map((data) => data.session);
 
+  Future<Either<Failure, bool>> isNewAccount() async {
+    try {
+      final bool isNewAccount =
+          await _supabase.rpc("check_new_account") ?? false;
+
+      return Right(isNewAccount);
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطاء اثناء التحقق من حالة الحساب"));
+    }
+  }
+
   // User Functions
   Future<Either<Failure, void>> createProfile(ProfileModel user) async {
     try {
@@ -124,20 +140,28 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, ProfileModel?>> fetchProfile(String id) async {
+  Future<Either<Failure, ProfileModel?>> fetchProfile() async {
     try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) {
+        return Left(CustomFailure("المستخدم غير مسجل"));
+      }
       final Map<String, dynamic>? response = await _supabase
-          .rpc("get_user_assets", params: {"u_id": id}).maybeSingle();
+          .rpc("get_user_assets", params: {"u_id": user.id}).maybeSingle();
 
       if (response == null || response.isEmpty) {
         return const Right(null);
       }
 
-      final ProfileModel profile = ProfileModel.fromJson(response);
+      if (response["image_path"] != null) {
+        final String? avatarPath = await downloadAvatar(response["image_path"]);
 
-      gitIt.get<SecureStorage>().addAll({
-        "user_data": jsonEncode(profile.toJson()),
-      });
+        if (avatarPath != null) {
+          response["image_path"] = avatarPath;
+        }
+      }
+
+      final ProfileModel profile = ProfileModel.fromJson(response);
 
       return Right(profile);
     } on PostgrestException catch (e) {
@@ -146,7 +170,66 @@ class ApiService {
       return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المستخدم"));
     }
   }
-  // App Endpoints
+
+  Future<String?> downloadAvatar(String imagePath) async {
+    try {
+      final Uint8List response =
+          await _supabase.storage.from(kAvatarsBucket).download(imagePath);
+
+      final Directory dir = await getApplicationDocumentsDirectory();
+
+      final String filePath = '${dir.path}/${imagePath.split('/').last}';
+
+      final file = File(filePath);
+      await file.writeAsBytes(response);
+
+      return file.path;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<Either<Failure, void>> uploadAvatar(XFile file) async {
+    try {
+      final User? user = _supabase.auth.currentUser;
+      if (user == null) {
+        return Left(CustomFailure("المستخدم غير مسجل"));
+      }
+
+      // Compress file
+      final File? compressedFile =
+          await prepareMediaFile(File(file.path), MediaType.image);
+
+      if (compressedFile == null) {
+        return Left(CustomFailure("حدث خطاء اثناء تحديث صورة المستخدم"));
+      }
+
+      // Upload avatar
+      final uploadResult = await uploadMedia(
+        bucketName: kAvatarsBucket,
+        filePath: compressedFile.path,
+        path: StoragePath.fromAvatar(
+                filePath: compressedFile.path, userId: user.id)
+            .path,
+      );
+
+      if (uploadResult.isLeft) return Left(uploadResult.left);
+
+      final String url =
+          uploadResult.right.substring("$kAvatarsBucket/".length);
+
+      // Update avatar
+      await _supabase
+          .from('Users')
+          .update({"image_path": url}).eq("user_id", user.id);
+
+      return const Right(null);
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطاء اثناء تحديث صورة المستخدم"));
+    }
+  }
 
   // Buildings
   Future<Either<Failure, List<BuildingSummaryModel>?>> fetchBuildings() async {
@@ -272,7 +355,15 @@ class ApiService {
   // Issues
   Future<Either<Failure, void>> createIssue(IssueModel issueModel) async {
     try {
-      final media = issueModel.media;
+      MediaModel? media = issueModel.media;
+
+      if (media != null) {
+        // Compress file
+        final File? compressedFile =
+            await prepareMediaFile(media.file!, media.type);
+
+        media = media.copyWith(file: compressedFile, url: compressedFile?.path);
+      }
 
       // Create report
       final reportIdResult =
@@ -290,15 +381,23 @@ class ApiService {
       // Upload media
       final issueId = issueResponse["issue_id"] as String;
       final mediaWithIssueId = media.copyWith(issueId: issueId);
-      final filePath = buildStorageIssuePath(issueModel, media, issueId);
+      final filePath = StoragePath.fromIssue(issue: issueModel, media: media);
 
-      final uploadResult =
-          await uploadMedia(media: mediaWithIssueId, path: filePath);
+      final uploadResult = await uploadMedia(
+          bucketName: "issues",
+          filePath: mediaWithIssueId.file!.path,
+          path: filePath.path);
 
-      return uploadResult.fold(
-        (failure) => Left(failure),
-        (_) => const Right(null),
-      );
+      if (uploadResult.isLeft) return Left(uploadResult.left);
+
+      final url = uploadResult.right;
+
+      // Create media in db
+      final uploadedMedia = media.copyWith(url: url);
+
+      await _supabase.from('Media').insert(uploadedMedia.toJson());
+
+      return const Right(null);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (_) {
@@ -314,22 +413,18 @@ class ApiService {
         .maybeSingle();
   }
 
-  Future<Either<Failure, void>> uploadMedia(
-      {required MediaModel media, required String path}) async {
+  Future<Either<Failure, String>> uploadMedia(
+      {required String bucketName,
+      required String filePath,
+      required String path}) async {
     try {
       // Upload to bucket
-      final String url = await _supabase.storage.from('issues').upload(
+      final String url = await _supabase.storage.from(bucketName).upload(
             path,
-            File(media.url),
+            File(filePath),
           );
 
-      // Create media in db
-
-      final uploadedMedia = media.copyWith(url: url);
-
-      await _supabase.from('Media').insert(uploadedMedia.toJson());
-
-      return Right(null);
+      return Right(url.substring("avatars/".length));
     } on StorageException catch (e) {
       return Left(SupabaseFailure.fromStorage(e));
     } catch (e) {

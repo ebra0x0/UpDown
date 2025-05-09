@@ -1,5 +1,4 @@
 import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
@@ -12,22 +11,10 @@ class RegistrationSubmitSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        state is AuthStateError
-            ? Text(
-                (state as AuthStateError).errorMsg,
-                style: TextStyle(color: Pallete.lightError),
-                textAlign: TextAlign.center,
-              )
-            : SizedBox(),
-        SizedBox(height: 100),
-        CustomButton(
-          title: "إنشاء حساب",
-          onPress: submit,
-          isLoading: state is AuthStateLoading,
-        )
-      ],
+    return CustomButton(
+      title: "إنشاء حساب",
+      onPress: submit,
+      isLoading: state is AuthStateLoading,
     );
   }
 }

@@ -31,13 +31,19 @@ class ProfileModel {
         updatedAt: DateTime.parse(json["updated_at"]),
       );
 
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "phone": phone,
-        "address": address,
-        "image_path": imagePath,
-        "email": email,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-      };
+  Map<String, dynamic> toJson({bool isRemote = false}) {
+    final Map<String, dynamic> data = <String, dynamic>{
+      "name": name,
+      "phone": phone,
+      "address": address,
+      "image_path": imagePath,
+      "email": email,
+    };
+    if (!isRemote) {
+      data["user_id"] = id;
+      data["created_at"] = createdAt.toIso8601String();
+      data["updated_at"] = updatedAt.toIso8601String();
+    }
+    return data;
+  }
 }

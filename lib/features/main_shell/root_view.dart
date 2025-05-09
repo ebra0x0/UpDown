@@ -1,4 +1,3 @@
-import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/buildings/data/repo/buildings_repo_imp.dart';
 import 'package:UpDown/features/elevators/data/repo/elevator_repo_imp.dart';
@@ -31,9 +30,11 @@ class RootView extends StatelessWidget {
           currentIndex: navigationShell.currentIndex,
           onTap: (index) => navigationShell.goBranch(index),
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.report), label: 'إنشاء عطل'),
+                icon: Icon(Icons.roofing_rounded), label: 'الرئيسية'),
+            BottomNavigationBarItem(icon: Icon(Icons.add), label: 'إنشاء عطل'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline_rounded), label: 'الحساب'),
           ],
         ),
       ),

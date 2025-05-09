@@ -15,20 +15,25 @@ import 'package:UpDown/features/elevators/presentation/views/elevator_details_vi
 import 'package:UpDown/features/home/presentation/views/home_view.dart';
 import 'package:UpDown/features/issues/presentation/views/issue_view.dart';
 import 'package:UpDown/features/main_shell/root_view.dart';
+import 'package:UpDown/features/profile/presentation/views/profile_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
-  static const String kregistrationView = '/registrationView';
-  static const String kloginView = '/loginView';
-  static const String khomeView = '/homeView';
-  static const String kprofileSetupView = '/profileSetupView';
-  static const String kcreateIssueView = '/createReportView';
+  // Auth Paths
+  static const String kregistrationView = '/registration';
+  static const String kloginView = '/login';
+  // Account Setup
+  static const String kaccountSetupView = '/accountSetup';
+  // Main Paths
+  static const String khomeView = '/home';
+  static const String kcreateIssueView = '/createIssue';
+  static const String kprofileView = '/profile';
   static const String kbuildingDetails = '/buildingDetails';
   static const String kelevatorDetails = '/elevatorDetails';
-  static const String kissueView = '/issueView';
+  static const String kissueView = '/issue';
 
   GoRouter router(BuildContext context) {
     return GoRouter(
@@ -54,7 +59,7 @@ class AppRouter {
               return kloginView;
             }
           } else if (authState is AuthStateNewUser) {
-            return kprofileSetupView;
+            return kaccountSetupView;
           }
           return null;
         },
@@ -72,7 +77,7 @@ class AppRouter {
             builder: (context, state) => const LoginView(),
           ),
           GoRoute(
-            path: kprofileSetupView,
+            path: kaccountSetupView,
             builder: (context, state) => const AccountSetupView(),
           ),
           StatefulShellRoute.indexedStack(
@@ -89,6 +94,12 @@ class AppRouter {
                   GoRoute(
                     path: kcreateIssueView,
                     builder: (context, state) => const CreateIssueView(),
+                  ),
+                ]),
+                StatefulShellBranch(routes: [
+                  GoRoute(
+                    path: kprofileView,
+                    builder: (context, state) => const ProfileView(),
                   ),
                 ]),
                 StatefulShellBranch(routes: [

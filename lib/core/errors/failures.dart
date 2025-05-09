@@ -12,7 +12,6 @@ class SupabaseFailure extends Failure {
   SupabaseFailure(super.errMessage);
 
   factory SupabaseFailure.fromAuth(AuthException e) {
-    print(e.code);
     final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
         e.code ?? SupabaseErrorCode.unknown.code);
 
@@ -64,7 +63,6 @@ class SupabaseFailure extends Failure {
   }
 
   factory SupabaseFailure.fromDatabase(PostgrestException e) {
-    print(e.code);
     final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
         e.code ?? SupabaseErrorCode.unknown.code);
 
@@ -116,7 +114,7 @@ class SupabaseFailure extends Failure {
       case SupabaseErrorCode.internalError:
         return SupabaseFailure("حدث خطأ داخلي في النظام.");
       case SupabaseErrorCode.resourceAlreadyExists:
-        return SupabaseFailure("المورد موجود بالفعل.");
+        return SupabaseFailure("الملف موجود بالفعل.");
       case SupabaseErrorCode.invalidBucketName:
         return SupabaseFailure("اسم الحاوية غير صالح.");
       case SupabaseErrorCode.invalidKey:

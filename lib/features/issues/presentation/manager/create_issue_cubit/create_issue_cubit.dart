@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/function/media_compressor.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo_imp.dart';
@@ -28,14 +27,6 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
 
   Future<void> createIssue() async {
     emit(CreateIssueLoading());
-
-    if (media != null) {
-      // Compress file
-      final File? compressedFile =
-          await prepareMediaFile(media!.file!, media!.type);
-
-      media = media?.copyWith(file: compressedFile, url: compressedFile?.path);
-    }
 
     final IssueModel issueModel = IssueModel.fromJson({
       "media": media,

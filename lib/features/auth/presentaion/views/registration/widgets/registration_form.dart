@@ -2,7 +2,7 @@ import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/core/widgets/password_field.dart';
 import 'package:UpDown/core/utils/model/form_field_model.dart';
-import 'package:UpDown/features/auth/presentaion/views/registration/widgets/registration_submit_section.dart';
+import 'package:UpDown/features/auth/presentaion/views/registration/widgets/registration_submit_builder.dart';
 import 'package:UpDown/features/auth/validators/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,7 +46,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
       final String email = _emailField.controller.text.trim();
       final String pass = _passwordField.controller.text.trim();
-      BlocProvider.of<AuthCubit>(context).signUp(email: email, password: pass);
+
+      context.read<AuthCubit>().signUp(email: email, password: pass);
     } else {
       setState(() {
         _autoValidateMode = AutovalidateMode.always;
@@ -97,9 +98,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             },
           ),
           SizedBox(height: 16),
-          BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
-            return RegistrationSubmitSection(state: state, submit: _submit);
-          }),
+          RegistrationSubmitSectionBuilder(submit: _submit),
         ],
       ),
     );

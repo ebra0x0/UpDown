@@ -1,19 +1,17 @@
-import 'dart:convert';
-
-import 'package:UpDown/core/utils/api_service.dart';
 import 'package:UpDown/core/utils/model/profile_model.dart';
-import 'package:UpDown/core/utils/secure_storage.dart';
-import 'package:UpDown/core/utils/service_locator.dart';
+import 'package:UpDown/features/profile/data/repos/profile_repo.dart';
+import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit() : super(ProfileInitial());
+  ProfileCubit(this._repo) : super(ProfileInitial());
 
   ProfileModel? profile;
+  final ProfileRepo _repo;
 
-  Future<void> fetchUserData({required User user}) async {
+  Future<void> call() async {
     if (profile != null) {
       emit(ProfileLoaded(profile!));
       return;
@@ -21,40 +19,24 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     emit(ProfileLoading());
 
-    final localData = await fetchLocalData();
-    if (localData != null) {
-      profile = localData;
-      emit(ProfileLoaded(localData));
-      return;
-    }
-
-    final remoteData = await fetchRemoteData(user);
-    if (remoteData != null) {
-      profile = remoteData;
-      emit(ProfileLoaded(remoteData));
-    }
+    final res = await _repo.call();
+    res.fold(
+      (failure) => emit(ProfileError(failure.errMessage)),
+      (profile) {
+        if (profile == null) {
+          emit(ProfileEmpty());
+          return;
+        }
+        this.profile = profile;
+        emit(ProfileLoaded(profile));
+      },
+    );
   }
 
-  Future<ProfileModel?> fetchLocalData() async {
-    final storedUser = await gitIt.get<SecureStorage>().get("user_data");
-    if (storedUser != null) {
-      return ProfileModel.fromJson(jsonDecode(storedUser));
-    }
-    return null;
-  }
-
-  Future<ProfileModel?> fetchRemoteData(User user) async {
-    final result = await gitIt.get<ApiService>().fetchProfile(user.id);
-    return result.fold((failure) => null, (user) => user);
-  }
-
-  // Future<void> createNewUser() async {
-  //   final result = await gitIt.get<ApiService>().createNewUser();
-  //   result.fold((failure) => null, (user) => user);
-  // }
-  void clearUserData() {
-    gitIt.get<SecureStorage>().delete("user_data");
-    profile = null;
-    emit(ProfileInitial());
+  Future<void> updateAvatar(XFile file) async {
+    await _repo.updateAvatar(file).fold(
+          (f) => emit(AvatarError(f.errMessage, profile: profile!)),
+          (_) => null,
+        );
   }
 }

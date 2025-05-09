@@ -1,6 +1,5 @@
 import 'package:UpDown/core/errors/failures.dart';
 import 'package:UpDown/core/utils/api_service.dart';
-import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:UpDown/core/utils/secure_storage.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/auth/data/model/user_credentials_model.dart';
@@ -19,7 +18,8 @@ class AuthRepoImp implements AuthRepo {
       if (session != null && session.isExpired) {
         String? savedRefToken = await getRefreshToken();
 
-        final refreshedSession = await _refreshSession(savedRefToken);
+        final refreshedSession =
+            await refreshSession(refreshToken: savedRefToken);
 
         if (refreshedSession != null) {
           setRefreshToken(refreshedSession.refreshToken!);
@@ -30,19 +30,12 @@ class AuthRepoImp implements AuthRepo {
     });
   }
 
-  Future<Session?> _refreshSession(String? savedRefToken) async {
-    return await refreshToken(refreshToken: savedRefToken)
-        .fold((failure) => null, (session) => session);
-  }
-
   @override
-  Future<Either<Failure, Session?>> refreshToken({String? refreshToken}) async {
-    var session = await _api.refreshToken(refreshToken: refreshToken);
-
-    return session.fold(
-      (failure) => Left(failure),
-      (session) => Right(session),
-    );
+  Future<Session?> refreshSession({String? refreshToken}) async {
+    await _api
+        .refreshToken(refreshToken: refreshToken)
+        .fold((_) => null, (session) => session);
+    return null;
   }
 
   @override
@@ -114,10 +107,9 @@ class AuthRepoImp implements AuthRepo {
   }
 
   @override
-  Future<Either<Failure, ProfileModel?>> fetchProfile(String id) async {
-    final newUser = await _api.fetchProfile(id);
+  Future<Either<Failure, bool>> isNewAccount() async {
+    final newUser = await _api.isNewAccount();
 
-    return newUser.fold(
-        (failure) => Left(failure), (profile) => Right(profile));
+    return newUser.fold((failure) => Left(failure), (status) => Right(status));
   }
 }

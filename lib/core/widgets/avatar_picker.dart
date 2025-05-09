@@ -1,15 +1,14 @@
 import 'dart:io';
-
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AvatarPicker extends StatefulWidget {
   final ValueChanged<XFile>? onImageSelected;
-
+  final String? image;
   const AvatarPicker({
     super.key,
     this.onImageSelected,
+    this.image,
   });
 
   @override
@@ -35,18 +34,20 @@ class _AvatarPickerState extends State<AvatarPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _pickImage,
-      child: _image != null
-          ? CircleAvatar(
-              radius: 48,
-              backgroundImage: Image.file(File(_image!.path)).image,
-            )
-          : const CircleAvatar(
-              radius: 48,
-              backgroundColor: Pallete.lightPrimary,
-              child: Icon(Icons.person, size: 48, color: Pallete.lightCard),
-            ),
+    return Center(
+      child: GestureDetector(
+          onTap: _pickImage,
+          child: CircleAvatar(
+            radius: 78,
+            backgroundImage: _image != null
+                ? Image.file(File(_image!.path)).image
+                : widget.image != null
+                    ? Image.file(File(widget.image!)).image
+                    : null,
+            child: _image == null && widget.image == null
+                ? const Icon(Icons.add, size: 50)
+                : null,
+          )),
     );
   }
 }

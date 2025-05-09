@@ -1,5 +1,4 @@
 import 'package:UpDown/core/errors/failures.dart';
-import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,7 +13,7 @@ abstract class AuthRepo {
   Future<Either<Failure, Session?>> signUp(
       {required String email, required String password});
 
-  Future<Either<Failure, Session?>> refreshToken({String? refreshToken});
+  Future<Session?> refreshSession({String? refreshToken});
 
   Future<Either<Failure, void>> resetPassword({required String email});
 
@@ -24,5 +23,5 @@ abstract class AuthRepo {
 
   void setRefreshToken(String refreshToken);
 
-  Future<Either<Failure, ProfileModel?>> fetchProfile(String id);
+  Future<Either<Failure, bool>> isNewAccount();
 }

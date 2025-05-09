@@ -31,7 +31,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
     return null;
   }
 
-  void _submitForm() {
+  void _submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
     }
@@ -49,7 +49,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
             AvatarPicker(
               onImageSelected: _handleImagePicked,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 28),
             CustomTextFormField(
               controller: _nameController,
               labelText: "الاسم",
@@ -86,7 +86,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
             ),
             SizedBox(height: 30),
             CustomButton(
-              onPress: _submitForm,
+              onPress: _submit,
               title: "حفظ",
             ),
           ],

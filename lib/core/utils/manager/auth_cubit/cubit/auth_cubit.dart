@@ -18,7 +18,7 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthStateUnconfirmed(email: session.user.email!));
         return;
       }
-      checkUser(session: session);
+      checkAccountStatus(session: session);
     });
   }
 
@@ -58,12 +58,12 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  Future<void> checkUser({required Session session}) async {
-    final res = await authRepo.fetchProfile(session.user.id);
+  Future<void> checkAccountStatus({required Session session}) async {
+    final res = await authRepo.isNewAccount();
     return res
         .fold((failure) => emit(AuthStateError(errorMsg: failure.errMessage)),
-            (profile) {
-      if (profile == null) {
+            (isNew) {
+      if (isNew) {
         emit(AuthStateNewUser(session: session));
         return;
       }

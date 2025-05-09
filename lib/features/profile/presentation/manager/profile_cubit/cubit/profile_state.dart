@@ -5,16 +5,18 @@ sealed class ProfileState {}
 final class ProfileInitial extends ProfileState {}
 
 final class ProfileLoaded extends ProfileState {
-  final ProfileModel? userDataModel;
+  final ProfileModel profile;
 
-  ProfileLoaded(this.userDataModel);
+  ProfileLoaded(this.profile);
 }
 
 final class ProfileError extends ProfileState {
   final String error;
 
-  ProfileError({required this.error});
+  ProfileError(this.error);
 }
+
+final class ProfileEmpty extends ProfileState {}
 
 final class ProfileNew extends ProfileState {
   final ProfileModel? user;
@@ -23,3 +25,10 @@ final class ProfileNew extends ProfileState {
 }
 
 final class ProfileLoading extends ProfileState {}
+
+final class AvatarError extends ProfileState {
+  final ProfileModel profile;
+  final String error;
+
+  AvatarError(this.error, {required this.profile});
+}

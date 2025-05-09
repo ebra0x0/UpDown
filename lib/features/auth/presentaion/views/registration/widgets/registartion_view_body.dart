@@ -9,7 +9,7 @@ class RegistrationViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Center(
       child: SingleChildScrollView(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

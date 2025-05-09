@@ -27,6 +27,9 @@ class UpDown extends StatelessWidget {
       ],
       locale: Locale('ar', 'AE'),
       theme: ThemeData(
+        primaryColorLight: Pallete.lightPrimary,
+        primaryColorDark: Pallete.darkPrimary,
+        scaffoldBackgroundColor: Pallete.lightScaffoldBackground,
         useMaterial3: true,
         primaryColor: Pallete.lightPrimary,
         textTheme: GoogleFonts.notoKufiArabicTextTheme(),

@@ -10,7 +10,7 @@ const Map<String, String> kIssuesList = {
 };
 const String kAvatarsBucket = "avatars";
 const String kIssuesBucket = "issues";
-const String kAvatarsBucketFolder = "Clients";
+const String kAvatarsBucketFolder = "clients";
 const Map<String, String> kIssuesBucketFolders = {
   "image": "images",
   "video": "videos",
