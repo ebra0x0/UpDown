@@ -1,10 +1,9 @@
-import 'package:UpDown/core/utils/model/attribute_model.dart';
 import 'package:flutter/material.dart';
 
 class AttributesSection extends StatelessWidget {
   const AttributesSection({super.key, required this.attributes});
 
-  final List<AttributeModel> attributes;
+  final List<Map<String, dynamic>> attributes;
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +16,13 @@ class AttributesSection extends StatelessWidget {
 class AttributeBox extends StatelessWidget {
   const AttributeBox({super.key, required this.attribute});
 
-  final AttributeModel attribute;
+  final Map<String, dynamic> attribute;
 
   @override
   Widget build(BuildContext context) {
     return Column(spacing: 4, children: [
-      Icon(attribute.icon, color: Colors.grey),
-      Text(attribute.text),
+      Icon(attribute["icon"], color: Colors.grey),
+      Text(attribute["title"]),
     ]);
   }
 }

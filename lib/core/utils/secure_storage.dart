@@ -1,8 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorage {
-  SecureStorage(this.storage);
   final FlutterSecureStorage storage;
+  SecureStorage(this.storage);
+
   void add(String key, String value) => storage.write(key: key, value: value);
 
   Future<String?> get(String key) => storage.read(key: key);

@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
+import 'package:UpDown/features/auth/manager/auth_cubit.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

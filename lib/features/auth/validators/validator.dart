@@ -1,11 +1,12 @@
+import 'package:UpDown/core/utils/normalization.dart';
+
 class Validator {
   Validator({this.password});
 
   String? password;
 
   String? emailValidator(String? email) {
-    final regex = RegExp(
-        r'^(?=[^@]*[a-zA-Z])([a-zA-Z0-9._%+-]+)@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final regex = Normalization.kEmailRegex;
     if (email == null || !regex.hasMatch(email)) {
       return ("إيميل غير صحيح.");
     } else {
@@ -14,7 +15,7 @@ class Validator {
   }
 
   String? regestrationPasswordValidator(String? password) {
-    final RegExp regex = RegExp(r'^(?=.*?)(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
+    final RegExp regex = Normalization.kPasswordRegex;
     if (password == null || !regex.hasMatch(password)) {
       return ("كلمة مرور ضعيفة.");
     } else {
@@ -41,15 +42,6 @@ class Validator {
   String? nameValidator(String? name) {
     if (name == null || name.length < 3) {
       return ("الأسم قصير جداً.");
-    } else {
-      return null;
-    }
-  }
-
-  String? floorValidator(String? floor) {
-    final regex = RegExp(r'^\d+$');
-    if (floor == null || !regex.hasMatch(floor)) {
-      return ("رقم الطابق غير صحيح.");
     } else {
       return null;
     }

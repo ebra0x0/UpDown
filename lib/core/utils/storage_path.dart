@@ -1,4 +1,4 @@
-import 'package:UpDown/constants.dart';
+import 'package:UpDown/core/utils/constants.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
 

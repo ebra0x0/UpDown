@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'building_details_header_section/building_details_header_section.dart';
 
 class BuildingDetailsViewBody extends StatelessWidget {
-  const BuildingDetailsViewBody({super.key, required this.buildingState});
+  const BuildingDetailsViewBody({super.key, required this.state});
 
-  final BuildingDetailsLoaded buildingState;
+  final BuildingDetailsLoaded state;
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +18,14 @@ class BuildingDetailsViewBody extends StatelessWidget {
         SliverAppBar(
           floating: true,
           leading: BackButtonNavigation(),
-          title: Text(buildingState.building.name, style: Styles.textStyle26),
+          title: Text(state.building.name, style: Styles.textStyle26),
           centerTitle: true,
         ),
         SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
               child: BuildingDetailsHeaderSection(
-                state: buildingState,
+                state: state,
               ),
             )),
         SliverToBoxAdapter(child: SizedBox(height: 12)),

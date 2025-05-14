@@ -1,9 +1,9 @@
 import 'package:UpDown/core/utils/go_router_refresh_stream.dart';
-import 'package:UpDown/core/utils/manager/auth_cubit/cubit/auth_cubit.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
-import 'package:UpDown/features/auth/presentaion/views/login/login_view.dart';
-import 'package:UpDown/features/auth/presentaion/views/registration/registration_view.dart';
 import 'package:UpDown/features/account_setup/presentation/views/account_setup_view.dart';
+import 'package:UpDown/features/auth/manager/auth_cubit.dart';
+import 'package:UpDown/features/auth/login/presentaion/views/login_view.dart';
+import 'package:UpDown/features/auth/registration/presentation/views/registration_view.dart';
 import 'package:UpDown/features/buildings/data/repo/buildings_repo_imp.dart';
 import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
 import 'package:UpDown/features/elevators/data/repo/elevator_repo_imp.dart';
@@ -58,7 +58,7 @@ class AppRouter {
             } else if (isGoingToSplash) {
               return kloginView;
             }
-          } else if (authState is AuthStateNewUser) {
+          } else if (authState is AuthStateNewAccount) {
             return kaccountSetupView;
           }
           return null;

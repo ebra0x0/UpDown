@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/core/utils/normalization.dart';
 import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_animated_button.dart';
@@ -21,12 +22,9 @@ class MediaSelectorBox extends StatefulWidget {
 class _MediaSelectorBoxState extends State<MediaSelectorBox> {
   File? _image;
   File? _video;
-  final RegExp _regexImage = RegExp(
-      r'^[^\s]+\/[\w\-.]+\.(jpg|jpeg|png|gif|bmp|webp|tiff|ico)$',
-      caseSensitive: false);
-  final RegExp _regexVideo = RegExp(
-      r'^[^\s]+\/[\w\-.]+\.(mp4|mkv|mov|avi|wmv|flv|webm|mpeg|mpg|m4v)$',
-      caseSensitive: false);
+
+  final RegExp _regexImage = Normalization.kImageRegex;
+  final RegExp _regexVideo = Normalization.kVideoRegex;
 
   bool isLoading = false;
 

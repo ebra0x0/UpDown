@@ -35,10 +35,13 @@ class ProfileViewBody extends StatelessWidget {
                 style: Styles.textStyle14,
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.email_outlined),
-              subtitle: Text(profile.email, style: Styles.textStyle14),
-              title: Text("البريد الالكتروني", style: Styles.textStyle14),
+            Visibility(
+              visible: profile.email != null,
+              child: ListTile(
+                leading: const Icon(Icons.email_outlined),
+                subtitle: Text(profile.email!, style: Styles.textStyle14),
+                title: Text("البريد الالكتروني", style: Styles.textStyle14),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.phone_enabled_outlined),

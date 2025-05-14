@@ -1,7 +1,10 @@
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-void showToast(BuildContext context, String message, Icon icon) {
+void showToast(
+    {required BuildContext context,
+    required String message,
+    required Icon icon}) {
   final scaffold = ScaffoldMessenger.of(context);
   scaffold.showSnackBar(
     SnackBar(

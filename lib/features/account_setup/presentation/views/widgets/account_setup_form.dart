@@ -1,7 +1,11 @@
+import 'package:UpDown/core/utils/normalization.dart';
 import 'package:UpDown/core/widgets/avatar_picker.dart';
 import 'package:UpDown/core/widgets/custom_button.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
+import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AccountSetupForm extends StatefulWidget {
@@ -15,25 +19,15 @@ class AccountSetupForm extends StatefulWidget {
 
 class _AccountSetupFormState extends State<AccountSetupForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  XFile? _image;
 
-  final _phoneRegex = RegExp(r'^01[0125][0-9]{8}$');
-  final _nameRegex =
-      RegExp(r'^[\u0621-\u064Aa-zA-Z]{3,}(?: [\u0621-\u064Aa-zA-Z]{3,})*$');
+  final _phoneRegex = Normalization.kPhoneRegex;
+  final _nameRegex = Normalization.kNameRegex;
 
-  ValueChanged<XFile>? _handleImagePicked(XFile? image) {
-    setState(() {
-      _image = image;
-    });
-    return null;
-  }
-
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
+      await context.read<AccountSetupCubit>().call();
     }
   }
 
@@ -46,12 +40,13 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AvatarPicker(
-              onImageSelected: _handleImagePicked,
-            ),
-            SizedBox(height: 28),
+            AvatarPicker(onImageSelected: (XFile image) {
+              context.read<AccountSetupCubit>().setAvatar(image);
+            }),
+            SizedBox(height: 28.h),
             CustomTextFormField(
-              controller: _nameController,
+              onChanged: (value) =>
+                  context.read<AccountSetupCubit>().setName(value),
               labelText: "الاسم",
               validator: (value) {
                 if (!_nameRegex.hasMatch(value!)) {
@@ -60,9 +55,10 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
                 return null;
               },
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16.h),
             CustomTextFormField(
-              controller: _phoneController,
+              onChanged: (value) =>
+                  context.read<AccountSetupCubit>().setPhone(value),
               labelText: "رقم الهاتف",
               validator: (value) {
                 if (!_phoneRegex.hasMatch(value!)) {
@@ -71,9 +67,10 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
                 return null;
               },
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16.h),
             CustomTextFormField(
-              controller: _addressController,
+              onChanged: (value) =>
+                  context.read<AccountSetupCubit>().setAddress(value),
               labelText: "العنوان",
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -84,7 +81,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
                 return null;
               },
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 32.h),
             CustomButton(
               onPress: _submit,
               title: "حفظ",

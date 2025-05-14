@@ -1,7 +1,8 @@
 import 'package:UpDown/core/utils/api_service.dart';
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/secure_storage.dart';
-import 'package:UpDown/features/auth/data/repos/auth_repo_imp.dart';
+import 'package:UpDown/features/account_setup/data/repos/account_setup_repo_imp.dart';
+import 'package:UpDown/features/auth/repos/auth_repo_imp.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo_imp.dart';
 import 'package:UpDown/features/buildings/data/repo/buildings_repo_imp.dart';
 import 'package:UpDown/features/elevators/data/repo/elevator_repo_imp.dart';
@@ -14,17 +15,29 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final gitIt = GetIt.instance;
 
 void setupServiceLocator() {
+  // AppRouter
   gitIt.registerSingleton<AppRouter>(AppRouter());
+  // ApiService
   gitIt.registerSingleton<ApiService>(ApiService(Supabase.instance.client));
+  // AuthRepo
   gitIt.registerSingleton<AuthRepoImp>(AuthRepoImp(gitIt.get<ApiService>()));
+  // AccountSetupRepo
+  gitIt.registerSingleton<AccountSetupRepoImp>(
+      AccountSetupRepoImp(gitIt.get<ApiService>()));
+  // ProfileRepo
   gitIt.registerSingleton<ProfileRepoImp>(
       ProfileRepoImp(gitIt.get<ApiService>()));
+  // HomeRepo
   gitIt.registerSingleton<HomeRepoImp>(HomeRepoImp(gitIt.get<ApiService>()));
+  // IssuesRepo
   gitIt
       .registerSingleton<IssuesRepoImp>(IssuesRepoImp(gitIt.get<ApiService>()));
+  // ElevatorRepo
   gitIt.registerSingleton<ElevatorRepoImp>(
       ElevatorRepoImp(gitIt.get<ApiService>()));
+  // BuildingsRepo
   gitIt.registerSingleton<BuildingsRepoImp>(
       BuildingsRepoImp(gitIt.get<ApiService>()));
+  // SecureStorage
   gitIt.registerSingleton<SecureStorage>(SecureStorage(FlutterSecureStorage()));
 }

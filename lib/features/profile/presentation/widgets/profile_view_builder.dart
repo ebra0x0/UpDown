@@ -29,10 +29,12 @@ class _ProfileViewBuilderState extends State<ProfileViewBuilder> {
               ? state.error
               : (state as AvatarError).error;
           showToast(
-            context,
-            errorMessage,
-            const Icon(Icons.error_outline_rounded, color: Pallete.lightError),
-          );
+              context: context,
+              message: errorMessage,
+              icon: Icon(
+                Icons.error_outline_rounded,
+                color: Pallete.lightError,
+              ));
         }
       },
       builder: (context, state) {

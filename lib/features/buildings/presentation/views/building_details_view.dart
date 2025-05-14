@@ -30,7 +30,7 @@ class _BuildingDetailsViewState extends State<BuildingDetailsView> {
         body: BlocBuilder<BuildingDetailsCubit, BuildingDetailsState>(
             builder: (context, state) {
           if (state is BuildingDetailsLoaded) {
-            return BuildingDetailsViewBody(buildingState: state);
+            return BuildingDetailsViewBody(state: state);
           } else if (state is BuildingDetailsError) {
             return CustomError(errorMessage: state.error);
           } else if (state is BuildingDetailsEmpty) {

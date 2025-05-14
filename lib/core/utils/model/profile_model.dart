@@ -4,17 +4,16 @@ class ProfileModel {
   final String phone;
   final String address;
   final String? imagePath;
-  final String email;
+  final String? email;
   final DateTime createdAt;
-  final DateTime updatedAt;
-  final String role = "client";
+  final DateTime? updatedAt;
 
   ProfileModel({
     required this.name,
     required this.phone,
     required this.address,
     this.imagePath,
-    required this.email,
+    this.email,
     required this.createdAt,
     required this.updatedAt,
     required this.id,
@@ -28,21 +27,45 @@ class ProfileModel {
         email: json["email"],
         imagePath: json["image_path"],
         createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
       );
+
+  copyWith({
+    String? id,
+    String? name,
+    String? phone,
+    String? address,
+    String? imagePath,
+    String? email,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ProfileModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      address: address ?? this.address,
+      imagePath: imagePath ?? this.imagePath,
+      email: email ?? this.email,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   Map<String, dynamic> toJson({bool isRemote = false}) {
     final Map<String, dynamic> data = <String, dynamic>{
       "name": name,
+      "email": email,
       "phone": phone,
       "address": address,
       "image_path": imagePath,
-      "email": email,
     };
     if (!isRemote) {
       data["user_id"] = id;
       data["created_at"] = createdAt.toIso8601String();
-      data["updated_at"] = updatedAt.toIso8601String();
+      data["updated_at"] = updatedAt?.toIso8601String();
     }
     return data;
   }

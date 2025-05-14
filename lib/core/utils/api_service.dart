@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:UpDown/constants.dart';
+import 'package:UpDown/core/utils/constants.dart';
 import 'package:UpDown/core/errors/failures.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/function/media_compressor.dart';
@@ -10,7 +10,7 @@ import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
-import 'package:UpDown/features/auth/data/model/user_credentials_model.dart';
+import 'package:UpDown/core/utils/model/user_credentials_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
 import 'package:either_dart/either.dart';
@@ -129,9 +129,13 @@ class ApiService {
   }
 
   // User Functions
-  Future<Either<Failure, void>> createProfile(ProfileModel user) async {
+  Future<Either<Failure, void>> createProfile(ProfileModel profile) async {
     try {
-      await _supabase.from('Users').insert(user.toJson());
+      // Add user email in request
+      final String? userEmail = _supabase.auth.currentUser?.email;
+      profile = profile.copyWith(email: userEmail);
+
+      await _supabase.from('Users').insert(profile.toJson());
       return const Right(null);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));

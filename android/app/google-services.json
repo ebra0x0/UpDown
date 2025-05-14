@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "669185880498",
+    "project_id": "updown-6eb83",
+    "storage_bucket": "updown-6eb83.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669185880498:android:e297335d2f59c3a45db4ab",
+        "android_client_info": {
+          "package_name": "com.updown.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsWVQOegSWtjvLX5N6wnuuuHywsjQOIl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

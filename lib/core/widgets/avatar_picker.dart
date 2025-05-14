@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AvatarPicker extends StatefulWidget {
@@ -38,7 +39,7 @@ class _AvatarPickerState extends State<AvatarPicker> {
       child: GestureDetector(
           onTap: _pickImage,
           child: CircleAvatar(
-            radius: 78,
+            radius: 76.h,
             backgroundImage: _image != null
                 ? Image.file(File(_image!.path)).image
                 : widget.image != null
