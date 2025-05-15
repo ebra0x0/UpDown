@@ -14,7 +14,7 @@ class RegistrationSubmitSection extends StatelessWidget {
     return CustomButton(
       title: "إنشاء حساب",
       onPress: submit,
-      isLoading: state is AuthStateLoading,
+      isLoading: state.status == AuthStatus.loading,
     );
   }
 }

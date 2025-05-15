@@ -117,8 +117,7 @@ class ApiService {
 
   Future<Either<Failure, bool>> isNewAccount() async {
     try {
-      final bool isNewAccount =
-          await _supabase.rpc("check_new_account") ?? false;
+      final bool isNewAccount = await _supabase.rpc("check_new_account");
 
       return Right(isNewAccount);
     } on PostgrestException catch (e) {
@@ -131,11 +130,18 @@ class ApiService {
   // User Functions
   Future<Either<Failure, void>> createProfile(ProfileModel profile) async {
     try {
-      // Add user email in request
-      final String? userEmail = _supabase.auth.currentUser?.email;
-      profile = profile.copyWith(email: userEmail);
+      // Upload avatar if exists
+      if (profile.imagePath != null) {
+        final uploadResult = await uploadAvatar(XFile(profile.imagePath!));
+        if (uploadResult.isLeft) return Left(uploadResult.left);
 
-      await _supabase.from('Users').insert(profile.toJson());
+        // Update profile model
+        final String? userEmail = _supabase.auth.currentUser?.email;
+        profile =
+            profile.copyWith(email: userEmail, imagePath: uploadResult.right);
+      }
+
+      await _supabase.from('Users').insert(profile.toJson(isRemote: true));
       return const Right(null);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
@@ -193,7 +199,7 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, void>> uploadAvatar(XFile file) async {
+  Future<Either<Failure, String>> uploadAvatar(XFile file) async {
     try {
       final User? user = _supabase.auth.currentUser;
       if (user == null) {
@@ -222,16 +228,28 @@ class ApiService {
       final String url =
           uploadResult.right.substring("$kAvatarsBucket/".length);
 
-      // Update avatar
-      await _supabase
-          .from('Users')
-          .update({"image_path": url}).eq("user_id", user.id);
+      return Right(url);
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطاء اثناء تحديث صورة المستخدم"));
+    }
+  }
+
+  Future<Either<Failure, void>> updateProfile(ProfileModel profile) async {
+    try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) {
+        return Left(CustomFailure("المستخدم غير مسجل"));
+      }
+
+      await _supabase.from('Users').update(profile.toJson()).eq("id", user.id);
 
       return const Right(null);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomFailure("حدث خطاء اثناء تحديث صورة المستخدم"));
+      return Left(CustomFailure("حدث خطاء اثناء تحديث بيانات المستخدم"));
     }
   }
 

@@ -45,20 +45,23 @@ class AppRouter {
           final isGoingToLogin = state.fullPath == kloginView;
           final isGoingToRegister = state.fullPath == kregistrationView;
           final isGoingToSplash = state.fullPath == '/';
-          final isGoingToAuthPages =
-              isGoingToLogin || isGoingToRegister || isGoingToSplash;
+          final isGoingToAccountSetup = state.fullPath == kaccountSetupView;
+          final isGoingToAuthPages = isGoingToLogin ||
+              isGoingToRegister ||
+              isGoingToAccountSetup ||
+              isGoingToSplash;
 
-          if (authState is AuthStateAuthenticated) {
+          if (authState.status == AuthStatus.authenticated) {
             if (isGoingToAuthPages) {
               return khomeView;
             }
-          } else if (authState is AuthStateUnAuthenticated) {
+          } else if (authState.status == AuthStatus.unAuthenticated) {
             if (!isGoingToAuthPages) {
               return kloginView;
             } else if (isGoingToSplash) {
               return kloginView;
             }
-          } else if (authState is AuthStateNewAccount) {
+          } else if (authState.status == AuthStatus.newAccount) {
             return kaccountSetupView;
           }
           return null;

@@ -1,22 +1,22 @@
 class ProfileModel {
-  final String id;
+  final String? id;
   final String name;
   final String phone;
   final String address;
   final String? imagePath;
   final String? email;
-  final DateTime createdAt;
+  final DateTime? createdAt;
   final DateTime? updatedAt;
 
   ProfileModel({
+    this.id,
     required this.name,
     required this.phone,
     required this.address,
     this.imagePath,
     this.email,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.id,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
@@ -26,7 +26,9 @@ class ProfileModel {
         address: json["address"],
         email: json["email"],
         imagePath: json["image_path"],
-        createdAt: DateTime.parse(json["created_at"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
@@ -64,7 +66,7 @@ class ProfileModel {
     };
     if (!isRemote) {
       data["user_id"] = id;
-      data["created_at"] = createdAt.toIso8601String();
+      data["created_at"] = createdAt?.toIso8601String();
       data["updated_at"] = updatedAt?.toIso8601String();
     }
     return data;

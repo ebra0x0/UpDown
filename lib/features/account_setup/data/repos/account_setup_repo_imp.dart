@@ -9,7 +9,7 @@ class AccountSetupRepoImp implements AccountSetupRepo {
   AccountSetupRepoImp(this._api);
   @override
   Future<Either<Failure, void>> setup(ProfileModel profile) async {
-    final res = _api.createProfile(profile);
+    final res = await _api.createProfile(profile);
     return res.fold(
       (f) => Left(f),
       (_) => Right(null),

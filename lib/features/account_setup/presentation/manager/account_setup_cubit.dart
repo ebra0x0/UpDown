@@ -8,10 +8,10 @@ part 'account_setup_state.dart';
 
 class AccountSetupCubit extends Cubit<AccountSetupState> {
   final AccountSetupRepo _repo;
-  AccountSetupCubit(this._repo) : super(AccountSetupInitial());
+  AccountSetupCubit(this._repo) : super(AccountSetupState());
 
   void setAvatar(XFile avatar) {
-    emit(state.copyWith(avatar: avatar));
+    emit(state.copyWith(avatarPath: avatar.path));
   }
 
   void setName(String? name) {
@@ -27,19 +27,26 @@ class AccountSetupCubit extends Cubit<AccountSetupState> {
   }
 
   Future<void> call() async {
-    emit(AccountSetupLoading());
+    emit(state.copyWith(status: AccountSetupStatus.loading));
+
     final ProfileModel profile = ProfileModel.fromJson(
       {
         "name": state.name,
         "phone": state.phone,
         "address": state.address,
-        "imagePath": state.avatar?.path,
+        "image_path": state.avatarPath,
       },
     );
-    final res = _repo.setup(profile);
+    final res = await _repo.setup(profile);
+
     res.fold(
-      (f) => emit(AccountSetupError(error: f.errMessage)),
-      (r) => emit(AccountSetupSuccess()),
+      (f) => emit(state.copyWith(
+        status: AccountSetupStatus.error,
+        error: f.errMessage,
+      )),
+      (r) => emit(state.copyWith(
+        status: AccountSetupStatus.success,
+      )),
     );
   }
 }

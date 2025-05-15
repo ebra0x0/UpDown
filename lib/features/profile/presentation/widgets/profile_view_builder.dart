@@ -1,5 +1,4 @@
 import 'package:UpDown/core/utils/function/toast.dart';
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
 import 'package:UpDown/features/profile/presentation/widgets/profile_view_body.dart';
@@ -29,12 +28,10 @@ class _ProfileViewBuilderState extends State<ProfileViewBuilder> {
               ? state.error
               : (state as AvatarError).error;
           showToast(
-              context: context,
-              message: errorMessage,
-              icon: Icon(
-                Icons.error_outline_rounded,
-                color: Pallete.lightError,
-              ));
+            context: context,
+            message: errorMessage,
+            type: ToastType.error,
+          );
         }
       },
       builder: (context, state) {
