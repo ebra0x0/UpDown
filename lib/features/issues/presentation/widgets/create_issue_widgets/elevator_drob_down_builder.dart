@@ -10,13 +10,18 @@ class ElevatorDrobDownBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.watch<CreateIssueCubit>();
-    return SizedBox(
-      height: 64,
-      child: ElevatorDropdown(
-          isLoading: cubit.state is SelectLoading,
-          elevators: cubit.elevators,
-          selectedElevator: cubit.selectedElevator),
+    return BlocBuilder<CreateIssueCubit, CreateIssueState>(
+      builder: (context, state) {
+        return ElevatorDropdown(
+          onChanged: (elevator) {
+            if (elevator == null) return;
+            context.read<CreateIssueCubit>().selectElevator(elevator);
+          },
+          isLoading: state is CreateIssueLoading,
+          elevators: context.read<CreateIssueCubit>().elevators,
+          selectedElevator: context.read<CreateIssueCubit>().selectedElevator,
+        );
+      },
     );
   }
 }

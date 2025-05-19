@@ -1,5 +1,5 @@
 import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
-import 'package:UpDown/core/widgets/custom_error.dart';
+import 'package:UpDown/core/widgets/placeholder_panel.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +30,7 @@ class _ElevatorDetailsViewState extends State<ElevatorDetailsView> {
           if (state is ElevatorDetailsLoaded) {
             return ElevatorDetailsViewBody(state: state);
           } else if (state is ElevatorDetailsError) {
-            return CustomError(errorMessage: state.error);
+            return PlaceholderPanel(message: state.error);
           }
           return const DataLoadingIndicator();
         }),

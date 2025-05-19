@@ -1,4 +1,6 @@
+import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/model/profile_model.dart';
+import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/avatar_picker.dart';
 import 'package:UpDown/core/widgets/header_text.dart';
@@ -25,10 +27,10 @@ class ProfileViewBody extends StatelessWidget {
                   context.read<ProfileCubit>().updateAvatar(file),
             ),
             const SizedBox(height: 22),
-            const HeaderText(
+            HeaderText(
                 title: "المعلومات الشخصية", textStyle: Styles.textStyle16),
             ListTile(
-              leading: const Icon(Icons.person_outline_rounded),
+              leading: Styles.userIcon.copyWith(color: Pallete.lightSecondary),
               subtitle: Text(profile.name, style: Styles.textStyle14),
               title: Text(
                 "الاسم",
@@ -38,18 +40,18 @@ class ProfileViewBody extends StatelessWidget {
             Visibility(
               visible: profile.email != null,
               child: ListTile(
-                leading: const Icon(Icons.email_outlined),
+                leading: Styles.emailIcon,
                 subtitle: Text(profile.email!, style: Styles.textStyle14),
                 title: Text("البريد الالكتروني", style: Styles.textStyle14),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.phone_enabled_outlined),
+              leading: Styles.phoneIcon,
               subtitle: Text(profile.phone, style: Styles.textStyle14),
-              title: Text("رقم الجوال", style: Styles.textStyle14),
+              title: Text("رقم الهاتف", style: Styles.textStyle14),
             ),
             ListTile(
-              leading: const Icon(Icons.location_on_outlined),
+              leading: Styles.locationIcon,
               subtitle: Text(profile.address, style: Styles.textStyle14),
               title: Text("العنوان", style: Styles.textStyle14),
             ),

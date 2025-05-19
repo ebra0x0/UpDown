@@ -34,11 +34,7 @@ class BuildingBoxHeader extends StatelessWidget {
             ],
           ),
         ),
-        Icon(
-          Icons.apartment_rounded,
-          size: 24,
-          color: Pallete.lightSecondary,
-        ),
+        Styles.apartmentIcon
       ],
     );
   }

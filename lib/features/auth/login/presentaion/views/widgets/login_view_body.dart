@@ -16,11 +16,11 @@ class LoginViewBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
-            const HeaderText(
+            HeaderText(
               title: "أهلاً من جديد",
               textStyle: Styles.textStyle26,
             ),
-            const HeaderText(
+            HeaderText(
               title: "هيا نسجل الدخول لحسابك",
               textStyle: Styles.textStyle16,
             ),

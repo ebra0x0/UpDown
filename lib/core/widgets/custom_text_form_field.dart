@@ -45,29 +45,15 @@ class CustomTextFormField extends StatelessWidget {
         return validator!(value);
       },
       decoration: InputDecoration(
-          fillColor: Pallete.lightCard,
-          filled: true,
-          labelText: labelText,
-          hintText: hintText,
-          suffixIcon: suffixIcon,
-          border: OutlineInputBorder(
-            borderRadius: Styles.borderRadius8,
-            borderSide:
-                const BorderSide(color: Pallete.lightSecondary, width: .4),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: Styles.borderRadius8,
-            borderSide:
-                const BorderSide(color: Pallete.lightSecondary, width: .4),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: Styles.borderRadius8,
-            borderSide: const BorderSide(color: Pallete.lightPrimary),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: Styles.borderRadius8,
-            borderSide: const BorderSide(color: Pallete.lightError),
-          )),
+        fillColor: Pallete.lightCard,
+        labelText: labelText,
+        hintText: hintText,
+        suffixIcon: suffixIcon,
+        border: Styles.generalBorder,
+        enabledBorder: Styles.enabledBorder,
+        focusedBorder: Styles.focusedBorder,
+        errorBorder: Styles.errorBorder,
+      ),
     );
   }
 }

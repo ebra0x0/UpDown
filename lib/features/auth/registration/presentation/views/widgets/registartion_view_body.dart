@@ -17,7 +17,7 @@ class RegistrationViewBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
-            const HeaderText(
+            HeaderText(
               title: "انشاء حساب جديد",
               textStyle: Styles.textStyle26,
             ),

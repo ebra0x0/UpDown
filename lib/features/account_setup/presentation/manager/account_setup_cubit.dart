@@ -1,6 +1,5 @@
 import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:UpDown/features/account_setup/data/repos/account_setup_repo.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 

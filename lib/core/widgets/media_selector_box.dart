@@ -1,25 +1,18 @@
-import 'dart:io';
-import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/normalization.dart';
-import 'package:UpDown/core/utils/pallete.dart';
-import 'package:UpDown/core/utils/styles.dart';
-import 'package:UpDown/core/widgets/custom_animated_button.dart';
-import 'package:UpDown/core/widgets/loading_indicator.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+part of 'media_form_field.dart';
 
-class MediaSelectorBox extends StatefulWidget {
-  const MediaSelectorBox({
-    super.key,
+class _MediaSelectorBox extends StatefulWidget {
+  const _MediaSelectorBox({
     required this.onMediaSelected,
+    required this.field,
   });
+  final FormFieldState<File> field;
   final Function(File, MediaType) onMediaSelected;
 
   @override
-  State<MediaSelectorBox> createState() => _MediaSelectorBoxState();
+  State<_MediaSelectorBox> createState() => _MediaSelectorBoxState();
 }
 
-class _MediaSelectorBoxState extends State<MediaSelectorBox> {
+class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
   File? _image;
   File? _video;
 
@@ -39,17 +32,20 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
     _video = null;
 
     if (media != null) {
+      final File file = File(media.path);
+
       if (_regexImage.hasMatch(media.path)) {
         setState(() {
           _image = File(media.path);
         });
-        widget.onMediaSelected(_image!, MediaType.image);
+        widget.onMediaSelected(file, MediaType.image);
       } else if (_regexVideo.hasMatch(media.path)) {
         setState(() {
           _video = File(media.path);
         });
-        widget.onMediaSelected(_video!, MediaType.video);
+        widget.onMediaSelected(file, MediaType.video);
       }
+      widget.field.didChange(file);
     }
 
     setState(() {
@@ -62,8 +58,8 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
     return CustomAnimatedButton(
         action: pickMedia,
         child: Container(
-            width: 125,
-            height: 125,
+            width: double.infinity,
+            height: 150.h,
             decoration: BoxDecoration(
               image: _image != null
                   ? DecorationImage(
@@ -71,7 +67,7 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
                   : null,
               color: Pallete.lightCard,
               borderRadius: Styles.borderRadius8,
-              boxShadow: [Styles.boxShadow],
+              border: Styles.generalBoxBorder,
             ),
             child: isLoading
                 ? LoadingIndicator()
@@ -79,23 +75,16 @@ class _MediaSelectorBoxState extends State<MediaSelectorBox> {
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Icon(
-                            Icons.check_circle_rounded,
-                            size: 32,
-                            color: Pallete.lightSuccess,
+                          Styles.checkIcon.copyWith(
+                            size: 32.w,
                           ),
-                          const Text(
+                          Text(
                             'تم تحميل الفيديو',
                             style: Styles.textStyle14,
                           )
                         ],
                       )
-                    : _image == null
-                        ? Icon(
-                            Icons.add_photo_alternate_outlined,
-                            size: 46,
-                            color: Pallete.lightSecondary,
-                          )
-                        : null));
+                    : Visibility(
+                        visible: _image == null, child: Styles.addPhotoIcon)));
   }
 }

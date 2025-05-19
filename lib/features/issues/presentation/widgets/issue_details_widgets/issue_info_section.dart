@@ -16,13 +16,13 @@ class IssueInfoSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        IssueInfoRow(issue: issue, icon: Icons.apartment_rounded),
+        IssueInfoRow(issue: issue, icon: Styles.apartmentIcon.icon!),
         SizedBox(height: 16),
-        IssueInfoRow(issue: issue, icon: Icons.date_range),
+        IssueInfoRow(issue: issue, icon: Styles.calendarIcon.icon!),
         SizedBox(height: 16),
-        IssueInfoRow(issue: issue, icon: Icons.info_outlined),
+        IssueInfoRow(issue: issue, icon: Styles.reportIcon.icon!),
         SizedBox(height: 16),
-        IssueInfoRow(issue: issue, icon: Icons.description_outlined),
+        IssueInfoRow(issue: issue, icon: Styles.descriptionIcon.icon!),
       ],
     );
   }

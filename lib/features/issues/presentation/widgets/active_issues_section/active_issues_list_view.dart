@@ -31,10 +31,7 @@ class ActiveIssuesListView extends StatelessWidget {
           subtitle: Text("${issue.buildingName} , المصعد:${issue.elevatorName}",
               overflow: TextOverflow.ellipsis, maxLines: 1),
           leading: BubbleStatus(color: issue.status!.color),
-          trailing: const Icon(
-            Icons.arrow_forward_ios_rounded,
-            color: Colors.grey,
-          ),
+          trailing: Styles.forwardIcon,
         );
       },
     );

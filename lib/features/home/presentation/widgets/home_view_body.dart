@@ -15,7 +15,7 @@ class HomeViewBody extends StatelessWidget {
       child: CustomScrollView(slivers: [
         BuildingsGridSectionBuilder(),
         SliverToBoxAdapter(child: SizedBox(height: 24)),
-        SliverFillRemaining(child: ActiveIssuesSectionBuilder()),
+        ActiveIssuesSectionBuilder(),
       ]),
     );
   }

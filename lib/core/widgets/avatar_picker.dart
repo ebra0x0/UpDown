@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -45,9 +46,8 @@ class _AvatarPickerState extends State<AvatarPicker> {
                 : widget.image != null
                     ? Image.file(File(widget.image!)).image
                     : null,
-            child: _image == null && widget.image == null
-                ? const Icon(Icons.add, size: 50)
-                : null,
+            child:
+                _image == null && widget.image == null ? Styles.addIcon : null,
           )),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
+import 'package:UpDown/core/widgets/placeholder_panel.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/buildings_grid_view_section.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +17,11 @@ class BuildingsGridSectionBuilder extends StatelessWidget {
       if (state is BuildingsLoaded) {
         return BuildingsGridViewSection(state: state);
       } else if (state is BuildingsError) {
-        return SliverToBoxAdapter(child: Text(state.error));
+        return SliverFillRemaining(
+            child: PlaceholderPanel(message: state.error));
       } else if (state is BuildingsEmpty) {
-        return SliverToBoxAdapter(
-            child: Center(child: Text("لا يوجد مباني مسجلة")));
+        return SliverFillRemaining(
+            child: PlaceholderPanel(message: "لا توجد مباني مسجلة"));
       }
       return SliverToBoxAdapter(child: DataLoadingIndicator());
     });

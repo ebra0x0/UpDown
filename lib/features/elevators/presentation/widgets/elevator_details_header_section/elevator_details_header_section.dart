@@ -1,5 +1,6 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/attributes_section.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevator_details_header_section/alert_banner_issue.dart';
@@ -18,11 +19,11 @@ class ElevatorDetailsHeaderSection extends StatelessWidget {
   IssueType? get issueType => state.elevator.activeIssue?.issueType;
   List<Map<String, dynamic>> get attributes => [
         {
-          'icon': Icons.assignment_late_outlined,
+          'icon': Styles.reportIcon.icon,
           'text': state.elevator.issues.length.toString()
         },
         {
-          'icon': Icons.timer_outlined,
+          'icon': Styles.maintenanceIcon.icon,
           'text': state.elevator.nextMaintenanceDate != null
               ? DateFormat.yMd().format(state.elevator.nextMaintenanceDate!)
               : "لم يحدد بعد"
@@ -31,10 +32,10 @@ class ElevatorDetailsHeaderSection extends StatelessWidget {
           'text': state.elevator.lastMaintenanceDate != null
               ? DateFormat.yMd().format(state.elevator.lastMaintenanceDate!)
               : "لا توجد صيانات سابقة",
-          'icon': Icons.calendar_month_outlined
+          'icon': Styles.calendarIcon.icon,
         },
         {
-          'icon': Icons.groups_outlined,
+          'icon': Styles.groupIcon.icon,
           'text': state.elevator.maxLoad.toString()
         },
       ];

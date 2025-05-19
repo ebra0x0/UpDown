@@ -22,10 +22,7 @@ class BuildingBoxFooter extends StatelessWidget {
             style: Styles.textStyle14.copyWith(color: Pallete.lightError),
           ),
         ),
-        Icon(
-          Icons.arrow_forward_ios_rounded,
-          color: Pallete.lightSecondary,
-        ),
+        Styles.forwardIcon
       ],
     );
   }

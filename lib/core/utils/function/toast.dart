@@ -1,4 +1,3 @@
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -14,14 +13,7 @@ void showToast(
       content: Row(
         spacing: 8,
         children: [
-          Icon(
-            type == ToastType.success
-                ? Icons.check_circle_outline_rounded
-                : Icons.error_outline_rounded,
-            color: type == ToastType.success
-                ? Pallete.lightSuccess
-                : Pallete.lightError,
-          ),
+          type == ToastType.success ? Styles.checkIcon : Styles.errorIcon,
           Expanded(
             child: Text(
               message,

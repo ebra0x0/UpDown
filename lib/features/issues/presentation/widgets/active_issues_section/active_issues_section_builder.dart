@@ -1,5 +1,4 @@
 import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
-import 'package:UpDown/core/widgets/custom_error.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:UpDown/features/issues/presentation/widgets/active_issues_section/active_issues_section.dart';
 import 'package:flutter/widgets.dart';
@@ -16,13 +15,16 @@ class ActiveIssuesSectionBuilder extends StatelessWidget {
       if (state is IssuesLoaded) {
         return ActiveIssuesSection(state: state);
       } else if (state is IssuesError) {
-        return CustomError(
-          errorMessage: state.error,
+        return SliverToBoxAdapter(
+          child: Center(
+            child: Text(state.error),
+          ),
         );
       } else if (state is IssuesEmpty) {
-        return SizedBox();
+        return SliverToBoxAdapter(
+            child: Visibility(visible: false, child: SizedBox()));
       }
-      return DataLoadingIndicator();
+      return SliverToBoxAdapter(child: DataLoadingIndicator());
     });
   }
 }

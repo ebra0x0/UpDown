@@ -1,5 +1,5 @@
 import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
-import 'package:UpDown/core/widgets/custom_error.dart';
+import 'package:UpDown/core/widgets/placeholder_panel.dart';
 import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/building_details_view_body.dart';
@@ -32,7 +32,7 @@ class _BuildingDetailsViewState extends State<BuildingDetailsView> {
           if (state is BuildingDetailsLoaded) {
             return BuildingDetailsViewBody(state: state);
           } else if (state is BuildingDetailsError) {
-            return CustomError(errorMessage: state.error);
+            return PlaceholderPanel(message: state.error);
           } else if (state is BuildingDetailsEmpty) {
             return Center(child: Text("يبدو أن المبنى قد حذف"));
           }

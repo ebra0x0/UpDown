@@ -7,7 +7,7 @@ abstract class Pallete {
   static const Color lightScaffoldBackground = Color(0xFFFFFFFF);
   static const Color lightCard = Color(0xFFF8F9FA);
   static const Color lightText = Color(0xFF000000);
-  static const Color lightSecondary = Color(0xFF8D8E98);
+  static const Color lightSecondary = Color(0xFFBBBBBB);
   static const Color lightWarning = Color(0xFFFFD166);
   static const Color lightSuccess = Color(0xFF07CFB1);
   static const Color lightError = Color(0xFFEF476F);

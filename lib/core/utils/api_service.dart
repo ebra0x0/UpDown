@@ -183,8 +183,9 @@ class ApiService {
 
   Future<String?> downloadAvatar(String imagePath) async {
     try {
-      final Uint8List response =
-          await _supabase.storage.from(kAvatarsBucket).download(imagePath);
+      final Uint8List response = await _supabase.storage
+          .from(kAvatarsBucket)
+          .download("$kAvatarsBucketFolder/$imagePath");
 
       final Directory dir = await getApplicationDocumentsDirectory();
 
@@ -256,17 +257,17 @@ class ApiService {
   // Buildings
   Future<Either<Failure, List<BuildingSummaryModel>?>> fetchBuildings() async {
     try {
-      final user = _supabase.auth.currentUser;
+      final User? user = _supabase.auth.currentUser;
       if (user == null) {
         return Left(CustomFailure("المستخدم غير مسجل"));
       }
 
       final String userId = user.id;
 
-      final List<dynamic>? response = await _supabase
+      final List<dynamic> response = await _supabase
           .rpc("get_user_buildings_summary", params: {"user_id": userId});
 
-      if (response == null) {
+      if (response.isEmpty) {
         return Right(null);
       }
 
@@ -304,12 +305,12 @@ class ApiService {
   Future<Either<Failure, List<ElevatorSummaryModel>?>> fetchElevators(
       {required String buildingId}) async {
     try {
-      final List<dynamic>? response = await _supabase.rpc(
+      final List<dynamic> response = await _supabase.rpc(
         "get_building_elevators_summary",
         params: {"b_id": buildingId},
       );
 
-      if (response == null) {
+      if (response.isEmpty) {
         return Right(null);
       }
 
