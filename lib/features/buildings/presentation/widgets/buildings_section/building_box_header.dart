@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +15,7 @@ class BuildingBoxHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Column(
@@ -28,8 +29,7 @@ class BuildingBoxHeader extends StatelessWidget {
               ),
               Text(
                 "$elevatorsCount مصعد",
-                style:
-                    Styles.textStyle14.copyWith(color: Pallete.lightSecondary),
+                style: Styles.textStyle14.copyWith(color: AppTheme.grey),
               ),
             ],
           ),

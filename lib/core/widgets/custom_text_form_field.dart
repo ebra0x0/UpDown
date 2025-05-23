@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +14,7 @@ class CustomTextFormField extends StatelessWidget {
     this.toggleVisibility,
     this.obscureText = false,
     this.suffixIcon,
+    this.prefixIcon,
     this.validator,
     this.maxLines = 1,
     this.formKey,
@@ -22,6 +23,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? labelText;
   final String? hintText;
   final TextInputType? keyType;
+  final Widget? prefixIcon;
   final Widget? suffixIcon;
   final bool obscureText;
   final VoidCallback? toggleVisibility;
@@ -45,10 +47,15 @@ class CustomTextFormField extends StatelessWidget {
         return validator!(value);
       },
       decoration: InputDecoration(
-        fillColor: Pallete.lightCard,
         labelText: labelText,
+        labelStyle: Styles.textStyle14.copyWith(
+          color: AppTheme.grey,
+        ),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
         hintText: hintText,
+        prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        errorStyle: const TextStyle(height: 0),
         border: Styles.generalBorder,
         enabledBorder: Styles.enabledBorder,
         focusedBorder: Styles.focusedBorder,

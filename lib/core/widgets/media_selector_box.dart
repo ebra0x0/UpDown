@@ -24,6 +24,7 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> pickMedia() async {
+    if (isLoading) return;
     setState(() {
       isLoading = true;
     });
@@ -65,7 +66,7 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                   ? DecorationImage(
                       image: Image.file(_image!).image, fit: BoxFit.cover)
                   : null,
-              color: Pallete.lightCard,
+              color: AppTheme.accent,
               borderRadius: Styles.borderRadius8,
               border: Styles.generalBoxBorder,
             ),

@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class DataLoadingIndicator extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: Styles.borderRadius8,
-          color: Pallete.lightPrimary.withValues(alpha: 0.2),
+          color: AppTheme.primary.withValues(alpha: 0.2),
         ),
       ),
     );

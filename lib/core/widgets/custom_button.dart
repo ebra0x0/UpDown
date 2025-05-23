@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class CustomButton extends StatelessWidget {
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
               borderRadius: Styles.borderRadius8,
             )),
-            backgroundColor: WidgetStatePropertyAll(Pallete.lightPrimary),
+            backgroundColor: WidgetStatePropertyAll(AppTheme.accent),
           ),
           child: isLoading
               ? LoadingIndicator(

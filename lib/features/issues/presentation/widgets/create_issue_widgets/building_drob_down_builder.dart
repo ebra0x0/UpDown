@@ -1,12 +1,12 @@
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
-import 'package:UpDown/features/buildings/presentation/widgets/building_drob_down.dart';
+import 'package:UpDown/features/buildings/presentation/widgets/building_drop_down.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BuildingDrobDownBuilder extends StatelessWidget {
-  const BuildingDrobDownBuilder({
+class BuildingDropDownBuilder extends StatelessWidget {
+  const BuildingDropDownBuilder({
     super.key,
   });
 

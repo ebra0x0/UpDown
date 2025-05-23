@@ -1,13 +1,13 @@
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/ext_icon.dart';
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomDrobDown extends StatelessWidget {
-  const CustomDrobDown({
+class CustomDropDown extends StatelessWidget {
+  const CustomDropDown({
     super.key,
     required this.listItem,
     required this.hint,
@@ -26,12 +26,15 @@ class CustomDrobDown extends StatelessWidget {
           border: Styles.generalBorder,
           focusedBorder: Styles.focusedBorder,
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 4.sp, vertical: 14.sp),
+              EdgeInsets.symmetric(horizontal: 4.sp, vertical: 4.sp),
+          errorStyle: TextStyle(height: 0),
           hintText: hint,
-          prefixIcon: Styles.errorIcon.copyWith(color: Pallete.lightSecondary),
+          prefixIcon: Styles.errorIcon.copyWith(color: AppTheme.grey),
         ),
+        dropdownColor: AppTheme.accent,
         value: value,
         menuMaxHeight: 250,
+        isDense: false,
         isExpanded: true,
         items: listItem == null
             ? []

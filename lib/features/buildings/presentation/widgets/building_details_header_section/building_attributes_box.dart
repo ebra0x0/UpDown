@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class BuildingAttributesBox extends StatelessWidget {
       child: Column(spacing: 6, children: [
         Icon(
           icon,
-          color: Pallete.lightSecondary,
+          color: AppTheme.grey,
         ),
         Text(
           text,

@@ -1,4 +1,6 @@
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/app_router.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/auth/manager/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +22,12 @@ class SignUpLinkText extends StatelessWidget {
             context.push(AppRouter.kregistrationView);
           },
           style: ButtonStyle(
-              overlayColor: WidgetStatePropertyAll(Colors.transparent)),
-          child: Text("انشاء حساب"),
+              overlayColor: WidgetStatePropertyAll(
+                  Theme.of(context).colorScheme.primary)),
+          child: Text("إنشاء حساب",
+              style: Styles.textStyle14.copyWith(
+                color: AppTheme.grey,
+              )),
         )
       ],
     );

@@ -1,5 +1,5 @@
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -57,15 +57,15 @@ extension ElevatorStatusExtension on ElevatorStatus {
   Color get color {
     switch (this) {
       case ElevatorStatus.working:
-        return Pallete.lightSuccess;
+        return AppTheme.green;
       case ElevatorStatus.broken:
-        return Pallete.lightError;
+        return AppTheme.red;
       case ElevatorStatus.repair:
-        return Pallete.lightInfo;
+        return AppTheme.blue;
       case ElevatorStatus.maintenance:
-        return Pallete.lightWarning;
+        return AppTheme.yellow;
       case ElevatorStatus.disabled:
-        return Pallete.lightSecondary;
+        return AppTheme.grey;
     }
   }
 }
@@ -181,13 +181,13 @@ extension IssueStatusExtension on IssueStatus {
   Color get color {
     switch (this) {
       case IssueStatus.notFixed:
-        return Pallete.lightError;
+        return AppTheme.red;
       case IssueStatus.needsParts:
-        return Pallete.lightInfo;
+        return AppTheme.blue;
       case IssueStatus.escalated:
-        return Pallete.lightWarning;
+        return AppTheme.yellow;
       case IssueStatus.fixed:
-        return Pallete.lightSuccess;
+        return AppTheme.green;
     }
   }
 }
@@ -252,17 +252,17 @@ extension ReportStatusExtension on ReportStatus {
   Color get color {
     switch (this) {
       case ReportStatus.pending:
-        return Pallete.lightError;
+        return AppTheme.grey;
       case ReportStatus.reported:
-        return Pallete.lightError;
+        return AppTheme.red;
       case ReportStatus.coming:
-        return Pallete.lightError;
+        return AppTheme.red;
       case ReportStatus.arrived:
-        return Pallete.lightInfo;
+        return AppTheme.blue;
       case ReportStatus.inProgress:
-        return Pallete.lightWarning;
+        return AppTheme.yellow;
       case ReportStatus.resolved:
-        return Pallete.lightSuccess;
+        return AppTheme.green;
     }
   }
 }
@@ -297,11 +297,11 @@ extension UnitStatusExtension on UnitStatus {
   Color get color {
     switch (this) {
       case UnitStatus.active:
-        return Pallete.lightSuccess;
+        return AppTheme.green;
       case UnitStatus.needsMaintenance:
-        return Pallete.lightWarning;
+        return AppTheme.yellow;
       case UnitStatus.outOfService:
-        return Pallete.lightError;
+        return AppTheme.red;
     }
   }
 }

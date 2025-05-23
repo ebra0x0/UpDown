@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/issues/presentation/widgets/create_issue_widgets/building_drob_down_builder.dart';
@@ -39,8 +40,8 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
         Row(
           spacing: 8,
           children: [
-            Expanded(child: BuildingDrobDownBuilder()),
-            Expanded(child: ElevatorDrobDownBuilder()),
+            Expanded(child: BuildingDropDownBuilder()),
+            Expanded(child: ElevatorDropDownBuilder()),
           ],
         ),
         SizedBox(height: 16),
@@ -51,6 +52,7 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
           keyType: TextInputType.multiline,
           labelText: "وصف العطل",
           maxLines: 6,
+          prefixIcon: Styles.descriptionIcon,
           onChanged: (value) =>
               context.read<CreateIssueCubit>().updateDescription(value ?? ''),
           validator: (value) {

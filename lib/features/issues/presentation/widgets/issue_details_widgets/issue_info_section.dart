@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class IssueInfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: Pallete.lightSecondary, size: 24),
+        Icon(icon, color: AppTheme.grey, size: 24),
         SizedBox(width: 8),
         Text(
           issue.buildingName,

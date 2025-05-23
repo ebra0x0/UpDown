@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/normalization.dart';
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_animated_button.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';

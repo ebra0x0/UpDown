@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,7 @@ class PlaceholderPanel extends StatelessWidget {
       child: Text(
         message,
         style: Styles.textStyle18.copyWith(
-          color: Pallete.lightSecondary,
+          color: AppTheme.grey,
         ),
       ),
     );

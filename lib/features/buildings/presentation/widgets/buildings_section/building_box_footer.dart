@@ -1,4 +1,5 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
+import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -19,10 +20,12 @@ class BuildingBoxFooter extends StatelessWidget {
           visible: hasActiveReport,
           child: Text(
             "يوجد عطل",
-            style: Styles.textStyle14.copyWith(color: Pallete.lightError),
+            style: Styles.textStyle14.copyWith(color: AppTheme.red),
           ),
         ),
-        Styles.forwardIcon
+        Styles.forwardIcon.copyWith(
+          color: AppTheme.grey,
+        ),
       ],
     );
   }

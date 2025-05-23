@@ -14,6 +14,7 @@ class CreateIssueForm extends StatefulWidget {
 
 class _CreateIssueFormState extends State<CreateIssueForm> {
   final formKey = GlobalKey<FormState>();
+  AutovalidateMode autoValidateMode = AutovalidateMode.disabled;
 
   final descriptionController = TextEditingController();
 
@@ -22,6 +23,10 @@ class _CreateIssueFormState extends State<CreateIssueForm> {
       formKey.currentState!.save();
       FocusScope.of(context).unfocus();
       await context.read<CreateIssueCubit>().createIssue();
+    } else {
+      setState(() {
+        autoValidateMode = AutovalidateMode.always;
+      });
     }
   }
 
@@ -29,6 +34,7 @@ class _CreateIssueFormState extends State<CreateIssueForm> {
   Widget build(BuildContext context) {
     return Form(
         key: formKey,
+        autovalidateMode: autoValidateMode,
         child: CreateIssueFormBody(
           descriptionController: descriptionController,
           submit: submit,

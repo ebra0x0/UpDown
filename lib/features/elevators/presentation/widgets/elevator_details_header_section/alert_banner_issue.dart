@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class AlertBannerIssue extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(8),
       alignment: Alignment.center,
-      color: color ?? Pallete.lightSecondary,
+      color: color ?? AppTheme.grey,
       child: Text(
         title ?? "تم الإبلاغ عن عطل وسيتم حله قريباً",
         style: Styles.textStyle14.copyWith(color: Colors.white),

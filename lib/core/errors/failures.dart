@@ -1,5 +1,4 @@
 import 'package:UpDown/core/errors/error_codes.dart';
-import 'package:UpDown/core/errors/error_extension.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class Failure {
@@ -12,8 +11,8 @@ class SupabaseFailure extends Failure {
   SupabaseFailure(super.errMessage);
 
   factory SupabaseFailure.fromAuth(AuthException e) {
-    final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
-        e.code ?? SupabaseErrorCode.unknown.code);
+    final SupabaseErrorCode code =
+        SupabaseErrorCode.fromCode(e.code ?? "unknown");
 
     switch (code) {
       case SupabaseErrorCode.overEmailSendRateLimit:
@@ -63,16 +62,16 @@ class SupabaseFailure extends Failure {
   }
 
   factory SupabaseFailure.fromDatabase(PostgrestException e) {
-    final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
-        e.code ?? SupabaseErrorCode.unknown.code);
+    final SupabaseErrorCode code =
+        SupabaseErrorCode.fromCode(e.code ?? "unknown");
 
     switch (code) {
       case SupabaseErrorCode.notFound:
         return SupabaseFailure("هذا الطلب غير موجود.");
       case SupabaseErrorCode.syntaxError:
         return SupabaseFailure("هناك خطأ في صيغة البيانات المدخلة.");
-      case SupabaseErrorCode.permissionDenied ||
-            SupabaseErrorCode.noPermissionForTable:
+      case SupabaseErrorCode.permissionDenied:
+      case SupabaseErrorCode.noPermissionForTable:
         return SupabaseFailure("ليس لديك صلاحيات كافية.");
       case SupabaseErrorCode.roleDoesNotExist:
         return SupabaseFailure("هذه الصلاحية غير موجودة.");
@@ -92,8 +91,9 @@ class SupabaseFailure extends Failure {
   }
 
   factory SupabaseFailure.fromStorage(StorageException e) {
-    final SupabaseErrorCode code = SupabaseErrorExtension.fromCode(
-        e.statusCode ?? SupabaseErrorCode.unknown.code);
+    final SupabaseErrorCode code =
+        SupabaseErrorCode.fromCode(e.statusCode ?? "unknown");
+
     switch (code) {
       case SupabaseErrorCode.unauthorized:
         return SupabaseFailure("غير مصرح لك.");

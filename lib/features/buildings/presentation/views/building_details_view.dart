@@ -1,3 +1,4 @@
+import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
 import 'package:UpDown/core/widgets/placeholder_panel.dart';
 import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
@@ -25,20 +26,26 @@ class _BuildingDetailsViewState extends State<BuildingDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BlocBuilder<BuildingDetailsCubit, BuildingDetailsState>(
-            builder: (context, state) {
-          if (state is BuildingDetailsLoaded) {
-            return BuildingDetailsViewBody(state: state);
-          } else if (state is BuildingDetailsError) {
-            return PlaceholderPanel(message: state.error);
-          } else if (state is BuildingDetailsEmpty) {
-            return Center(child: Text("يبدو أن المبنى قد حذف"));
-          }
-          return DataLoadingIndicator();
-        }),
-      ),
+    return BlocBuilder<BuildingDetailsCubit, BuildingDetailsState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: state is BuildingDetailsLoaded
+              ? null
+              : AppBar(
+                  leading: BackButtonNavigation(),
+                ),
+          body: () {
+            if (state is BuildingDetailsLoaded) {
+              return BuildingDetailsViewBody(state: state);
+            } else if (state is BuildingDetailsError) {
+              return PlaceholderPanel(message: state.error);
+            } else if (state is BuildingDetailsEmpty) {
+              return PlaceholderPanel(message: "يبدو أن المبنى قد حذف");
+            }
+            return const DataLoadingIndicator();
+          }(),
+        );
+      },
     );
   }
 }

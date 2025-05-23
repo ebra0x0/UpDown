@@ -1,6 +1,8 @@
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/api_service.dart';
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/secure_storage.dart';
+import 'package:UpDown/core/utils/shared_pref.dart';
 import 'package:UpDown/features/account_setup/data/repos/account_setup_repo_imp.dart';
 import 'package:UpDown/features/auth/repos/auth_repo_imp.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo_imp.dart';
@@ -10,11 +12,12 @@ import 'package:UpDown/features/home/data/repo/home_repo_imp.dart';
 import 'package:UpDown/features/profile/data/repos/profile_repo_imp.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final gitIt = GetIt.instance;
 
-void setupServiceLocator() {
+Future<void> setupServiceLocator() async {
   // AppRouter
   gitIt.registerSingleton<AppRouter>(AppRouter());
   // ApiService
@@ -40,4 +43,9 @@ void setupServiceLocator() {
       BuildingsRepoImp(gitIt.get<ApiService>()));
   // SecureStorage
   gitIt.registerSingleton<SecureStorage>(SecureStorage(FlutterSecureStorage()));
+  // SharedPreferences
+  gitIt.registerSingleton<SharedPref>(
+      SharedPref(await SharedPreferences.getInstance()));
+  // Theme
+  gitIt.registerSingleton<AppTheme>(AppTheme());
 }

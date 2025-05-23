@@ -11,17 +11,17 @@ class BuildingDetailsHeaderSection extends StatelessWidget {
   List<Map<String, dynamic>> get attributes => [
         {
           'icon': Styles.reportIcon.icon,
-          'text': state.building.reports.isEmpty
+          'title': state.building.reports.isEmpty
               ? "0"
               : state.building.reports.length.toString()
         },
         {
           'icon': Styles.stairsIcon.icon,
-          'text': state.building.floors.length.toString()
+          'title': state.building.floors.length.toString()
         },
         {
           'icon': Styles.elevatorIcon.icon,
-          'text': state.building.elevators.length.toString()
+          'title': state.building.elevators.length.toString()
         },
       ];
 

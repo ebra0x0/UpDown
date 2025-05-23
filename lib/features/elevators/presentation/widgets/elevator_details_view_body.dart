@@ -17,7 +17,12 @@ class ElevatorDetailsViewBody extends StatelessWidget {
         SliverAppBar(
           floating: true,
           leading: BackButtonNavigation(),
-          title: Text(state.elevator.name, style: Styles.textStyle26),
+          title: Text(
+            "المصعد ${state.elevator.name}",
+            style: Styles.textStyle26,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
           centerTitle: true,
         ),
         SliverToBoxAdapter(

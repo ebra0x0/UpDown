@@ -1,3 +1,4 @@
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:flutter/material.dart';
@@ -24,15 +25,9 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Padding(
-            padding: EdgeInsets.only(bottom: 8),
-            child: Text(
-              'أنت تدير',
-              style: TextStyle(
-                color: Color.fromARGB(221, 34, 34, 34),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          title: Text(
+            'أنت تدير',
+            style: Styles.textStyle20,
           ),
         ),
         body: const HomeViewBody());

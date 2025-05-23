@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -36,14 +36,14 @@ abstract class Styles {
 
   // Icons
 
-  static const Icon checkIcon = Icon(
+  static Icon checkIcon = Icon(
     Icons.check_circle_outline_rounded,
-    color: Pallete.lightSuccess,
+    color: AppTheme.green,
   );
 
-  static const Icon errorIcon = Icon(
+  static Icon errorIcon = Icon(
     Icons.error_outline_rounded,
-    color: Pallete.lightError,
+    color: AppTheme.red,
   );
 
   static const Icon backIcon = Icon(
@@ -61,75 +61,76 @@ abstract class Styles {
     size: 12,
   );
 
-  static const Icon addPhotoIcon = Icon(
+  static Icon addPhotoIcon = Icon(
     Icons.add_photo_alternate_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
     size: 46,
   );
 
-  static const Icon hideIcon = Icon(
+  static Icon hideIcon = Icon(
     Icons.visibility_off_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon showIcon = Icon(
+  static Icon showIcon = Icon(
     Icons.visibility_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon reportIcon = Icon(
+  static Icon reportIcon = Icon(
     Icons.assignment_late_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon stairsIcon = Icon(
+  static Icon stairsIcon = Icon(
     Icons.stairs_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon elevatorIcon = Icon(
+  static Icon elevatorIcon = Icon(
     Icons.elevator_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon apartmentIcon = Icon(
+  static Icon apartmentIcon = Icon(
     Icons.apartment_rounded,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
     size: 24,
   );
 
-  static const Icon timerIcon = Icon(
+  static Icon timerIcon = Icon(
     Icons.timer_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon maintenanceIcon = Icon(
+  static Icon maintenanceIcon = Icon(
     Icons.build_circle_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon calendarIcon = Icon(
+  static Icon calendarIcon = Icon(
     Icons.calendar_month_outlined,
-    color: Pallete.lightSuccess,
+    color: AppTheme.grey,
   );
 
-  static const Icon descriptionIcon = Icon(
+  static Icon descriptionIcon = Icon(
     Icons.description_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon groupIcon = Icon(
+  static Icon groupIcon = Icon(
     Icons.groups_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon lockIcon = Icon(
+  static Icon lockIcon = Icon(
     Icons.lock,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon homeIcon = Icon(
+  static Icon homeIcon = Icon(
     Icons.roofing_rounded,
+    // color: AppTheme.primary,
   );
 
   static const Icon addIcon = Icon(
@@ -140,19 +141,19 @@ abstract class Styles {
     Icons.person_outline_rounded,
   );
 
-  static const Icon emailIcon = Icon(
+  static Icon emailIcon = Icon(
     Icons.email_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon phoneIcon = Icon(
+  static Icon phoneIcon = Icon(
     Icons.phone_enabled_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
-  static const Icon locationIcon = Icon(
+  static Icon locationIcon = Icon(
     Icons.location_on_outlined,
-    color: Pallete.lightSecondary,
+    color: AppTheme.grey,
   );
 
   // Border Radius
@@ -185,14 +186,14 @@ abstract class Styles {
 
   // Border
   static final BoxBorder generalBoxBorder = Border.all(
-    color: Pallete.lightSecondary.withValues(
+    color: AppTheme.accent.withValues(
       alpha: 0.2,
     ),
     width: 1.8.w,
   );
 
   static final BoxBorder errorBoxBorder = Border.all(
-    color: Pallete.lightError.withValues(
+    color: AppTheme.red.withValues(
       alpha: 0.2,
     ),
     width: 1.8.w,
@@ -200,23 +201,23 @@ abstract class Styles {
 
   static final OutlineInputBorder generalBorder = OutlineInputBorder(
     borderRadius: Styles.borderRadius8,
-    borderSide: BorderSide(
-        color: Pallete.lightSecondary.withValues(alpha: .2), width: 1.8.w),
+    borderSide:
+        BorderSide(color: AppTheme.grey.withValues(alpha: .2), width: 1.8.w),
   );
 
   static final OutlineInputBorder errorBorder = OutlineInputBorder(
     borderRadius: Styles.borderRadius8,
-    borderSide: BorderSide(color: Pallete.lightError, width: 1.8.w),
+    borderSide: BorderSide(color: AppTheme.red, width: 1.8.w),
   );
 
   static final OutlineInputBorder focusedBorder = OutlineInputBorder(
     borderRadius: Styles.borderRadius8,
-    borderSide: BorderSide(color: Pallete.lightPrimary, width: 1.8.w),
+    borderSide: BorderSide(color: AppTheme.primary, width: 1.8.w),
   );
 
   static final OutlineInputBorder enabledBorder = OutlineInputBorder(
     borderRadius: Styles.borderRadius8,
-    borderSide: BorderSide(
-        color: Pallete.lightSecondary.withValues(alpha: .2), width: 1.8.w),
+    borderSide:
+        BorderSide(color: AppTheme.grey.withValues(alpha: .2), width: 1.8.w),
   );
 }

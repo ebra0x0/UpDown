@@ -18,9 +18,13 @@ class BuildingDetailsViewBody extends StatelessWidget {
         SliverAppBar(
           floating: true,
           leading: BackButtonNavigation(),
-          title: Text(state.building.name, style: Styles.textStyle26),
+          title: Text(state.building.name,
+              style: Styles.textStyle26,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1),
           centerTitle: true,
         ),
+        SliverToBoxAdapter(child: SizedBox(height: 12)),
         SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(

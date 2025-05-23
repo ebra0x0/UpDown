@@ -1,6 +1,6 @@
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/pallete.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +19,8 @@ class ElevatorBoxBody extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: Styles.textStyle14.copyWith(
-                fontWeight: FontWeight.bold, color: Pallete.lightSecondary)),
+            style: Styles.textStyle14
+                .copyWith(fontWeight: FontWeight.bold, color: AppTheme.grey)),
       ),
     );
   }

@@ -1,10 +1,10 @@
-import 'package:UpDown/features/elevators/presentation/widgets/elevator_drob_down.dart';
+import 'package:UpDown/features/elevators/presentation/widgets/elevator_drop_down.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ElevatorDrobDownBuilder extends StatelessWidget {
-  const ElevatorDrobDownBuilder({
+class ElevatorDropDownBuilder extends StatelessWidget {
+  const ElevatorDropDownBuilder({
     super.key,
   });
 

@@ -1,3 +1,4 @@
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/buildings/data/repo/buildings_repo_imp.dart';
@@ -27,14 +28,23 @@ class RootView extends StatelessWidget {
       ],
       child: Scaffold(
         body: navigationShell,
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: navigationShell.currentIndex,
-          onTap: (index) => navigationShell.goBranch(index),
-          items: const [
-            BottomNavigationBarItem(icon: Styles.homeIcon, label: 'الرئيسية'),
-            BottomNavigationBarItem(icon: Styles.addIcon, label: 'إنشاء عطل'),
-            BottomNavigationBarItem(icon: Styles.userIcon, label: 'الحساب'),
-          ],
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashFactory: NoSplash.splashFactory,
+          ),
+          child: BottomNavigationBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: (index) => navigationShell.goBranch(index),
+            selectedItemColor: AppTheme.primary,
+            unselectedItemColor: AppTheme.grey,
+            items: [
+              BottomNavigationBarItem(icon: Styles.homeIcon, label: 'الرئيسية'),
+              BottomNavigationBarItem(icon: Styles.addIcon, label: 'إنشاء عطل'),
+              BottomNavigationBarItem(icon: Styles.userIcon, label: 'الحساب'),
+            ],
+          ),
         ),
       ),
     );

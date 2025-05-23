@@ -20,23 +20,23 @@ class ElevatorDetailsHeaderSection extends StatelessWidget {
   List<Map<String, dynamic>> get attributes => [
         {
           'icon': Styles.reportIcon.icon,
-          'text': state.elevator.issues.length.toString()
+          'title': state.elevator.issues.length.toString()
         },
         {
           'icon': Styles.maintenanceIcon.icon,
-          'text': state.elevator.nextMaintenanceDate != null
+          'title': state.elevator.nextMaintenanceDate != null
               ? DateFormat.yMd().format(state.elevator.nextMaintenanceDate!)
               : "لم يحدد بعد"
         },
         {
-          'text': state.elevator.lastMaintenanceDate != null
+          'title': state.elevator.lastMaintenanceDate != null
               ? DateFormat.yMd().format(state.elevator.lastMaintenanceDate!)
               : "لا توجد صيانات سابقة",
           'icon': Styles.calendarIcon.icon,
         },
         {
           'icon': Styles.groupIcon.icon,
-          'text': state.elevator.maxLoad.toString()
+          'title': state.elevator.maxLoad.toString()
         },
       ];
 

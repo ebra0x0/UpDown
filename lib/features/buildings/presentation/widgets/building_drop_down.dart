@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/pallete.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
@@ -26,16 +26,17 @@ class BuildingDropdown extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: Styles.borderRadius8,
           borderSide: BorderSide(
-              color: Pallete.lightSecondary.withValues(alpha: .2),
-              width: 1.8.sp),
+              color: AppTheme.grey.withValues(alpha: .2), width: 1.8.sp),
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 4.sp, vertical: 4.sp),
+        errorStyle: TextStyle(height: 0),
         prefixIcon: Styles.apartmentIcon,
       ),
       isDense: false,
       hint: isLoading ? LoadingIndicator() : Text("إختر المبنى"),
       isExpanded: true,
       value: selectedBuilding,
+      dropdownColor: AppTheme.accent,
       validator: (value) {
         if (value == null) {
           return "المبنى مطلوب";
