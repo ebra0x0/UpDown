@@ -89,7 +89,7 @@ class IssueModel {
       'report_id': reportId,
       'elevator_id': elevatorId,
       'description': description,
-      'issue_type': IssueTypeExtension.fromIssueType(issueType),
+      'issue_type': issueType.name,
       'building_name': buildingName,
       'elevator_name': elevatorName
     };

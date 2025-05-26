@@ -13,7 +13,7 @@ class ActiveIssuesSectionBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<IssuesCubit, IssuesState>(builder: (context, state) {
       if (state is IssuesLoaded) {
-        return ActiveIssuesSection(state: state);
+        return SliverFillRemaining(child: ActiveIssuesSection(state: state));
       } else if (state is IssuesError) {
         return SliverToBoxAdapter(
           child: Center(

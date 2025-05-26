@@ -31,7 +31,7 @@ class ProfileViewBody extends StatelessWidget {
                 title: "المعلومات الشخصية",
                 textStyle: Styles.textStyle14.copyWith(color: AppTheme.grey)),
             ListTile(
-              leading: Styles.userIcon.copyWith(color: AppTheme.grey),
+              leading: Styles.userIcon.copyWith(color: AppTheme.primary),
               subtitle: Text(profile.name,
                   style: Styles.textStyle14.copyWith(
                     color: AppTheme.grey,

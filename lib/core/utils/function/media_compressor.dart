@@ -28,8 +28,9 @@ bool isUnder512KB(File file) {
 Future<File?> compressImage(File file) async {
   final XFile? result = await FlutterImageCompress.compressAndGetFile(
     file.absolute.path,
-    '${file.parent.path}/${file.uri.pathSegments.last.replaceFirst(RegExp(r'\.[a-zA-Z]+$'), '.jpg')}',
+    '${file.parent.path}/${file.uri.pathSegments.last.replaceFirst(RegExp(r'\.[a-zA-Z]+$'), '_compressed.jpeg')}',
     quality: 60,
+    format: CompressFormat.jpeg,
   );
 
   return result != null ? File(result.path) : null;

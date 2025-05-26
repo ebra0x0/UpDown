@@ -395,20 +395,22 @@ class ApiService {
       if (reportId == null) return Left(CustomFailure("تعذر إنشاء العطل"));
 
       // Create issue
-      final issue = issueModel.copyWith(reportId: reportId);
-      final issueResponse = await _insertIssue(issue);
+      issueModel = issueModel.copyWith(reportId: reportId);
+      final issueResponse = await _insertIssue(issueModel);
       if (issueResponse == null) return Left(CustomFailure("تعذر إنشاء العطل"));
 
       if (media == null) return const Right(null);
 
       // Upload media
       final issueId = issueResponse["issue_id"] as String;
-      final mediaWithIssueId = media.copyWith(issueId: issueId);
+
+      media = media.copyWith(issueId: issueId);
+
       final filePath = StoragePath.fromIssue(issue: issueModel, media: media);
 
       final uploadResult = await uploadMedia(
           bucketName: "issues",
-          filePath: mediaWithIssueId.file!.path,
+          filePath: media.file!.path,
           path: filePath.path);
 
       if (uploadResult.isLeft) return Left(uploadResult.left);
@@ -416,9 +418,9 @@ class ApiService {
       final url = uploadResult.right;
 
       // Create media in db
-      final uploadedMedia = media.copyWith(url: url);
+      media = media.copyWith(url: url);
 
-      await _supabase.from('Media').insert(uploadedMedia.toJson());
+      await _supabase.from('Media').insert(media.toJson());
 
       return const Right(null);
     } on PostgrestException catch (e) {

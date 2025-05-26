@@ -17,13 +17,14 @@ class CustomTextFormField extends StatelessWidget {
     this.prefixIcon,
     this.validator,
     this.maxLines = 1,
+    this.maxLength,
     this.formKey,
   });
   final TextDirection? textDirection;
   final String? labelText;
   final String? hintText;
   final TextInputType? keyType;
-  final Widget? prefixIcon;
+  final Icon? prefixIcon;
   final Widget? suffixIcon;
   final bool obscureText;
   final VoidCallback? toggleVisibility;
@@ -31,6 +32,7 @@ class CustomTextFormField extends StatelessWidget {
   final void Function(String?)? onChanged;
   final String? Function(String?)? validator;
   final int maxLines;
+  final int? maxLength;
   final GlobalKey<FormState>? formKey;
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class CustomTextFormField extends StatelessWidget {
       textDirection: textDirection,
       textAlign: TextAlign.start,
       obscureText: obscureText,
+      maxLength: maxLength,
       minLines: 1,
       maxLines: maxLines,
       controller: controller,
@@ -50,6 +53,7 @@ class CustomTextFormField extends StatelessWidget {
         labelText: labelText,
         labelStyle: Styles.textStyle14.copyWith(
           color: AppTheme.grey,
+          backgroundColor: AppTheme.scaffold,
         ),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         hintText: hintText,

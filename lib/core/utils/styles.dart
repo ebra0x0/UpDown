@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract class Styles {
+  static final TextStyle textStyle12 = TextStyle(
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w400,
+  );
   static final TextStyle textStyle14 = TextStyle(
     fontSize: 14.sp,
     fontWeight: FontWeight.w400,
@@ -79,7 +83,7 @@ abstract class Styles {
 
   static Icon reportIcon = Icon(
     Icons.assignment_late_outlined,
-    color: AppTheme.grey,
+    color: AppTheme.primary,
   );
 
   static Icon stairsIcon = Icon(
@@ -89,12 +93,12 @@ abstract class Styles {
 
   static Icon elevatorIcon = Icon(
     Icons.elevator_outlined,
-    color: AppTheme.grey,
+    color: AppTheme.primary,
   );
 
   static Icon apartmentIcon = Icon(
     Icons.apartment_rounded,
-    color: AppTheme.grey,
+    color: AppTheme.primary,
     size: 24,
   );
 
@@ -115,7 +119,7 @@ abstract class Styles {
 
   static Icon descriptionIcon = Icon(
     Icons.description_outlined,
-    color: AppTheme.grey,
+    color: AppTheme.primary,
   );
 
   static Icon groupIcon = Icon(
@@ -130,11 +134,11 @@ abstract class Styles {
 
   static Icon homeIcon = Icon(
     Icons.roofing_rounded,
-    // color: AppTheme.primary,
   );
 
   static const Icon addIcon = Icon(
-    Icons.add_circle_outline_rounded,
+    // Icons.add_circle_outline_rounded,
+    Icons.add,
   );
 
   static const Icon userIcon = Icon(
@@ -143,17 +147,17 @@ abstract class Styles {
 
   static Icon emailIcon = Icon(
     Icons.email_outlined,
-    color: AppTheme.grey,
+    color: AppTheme.primary,
   );
 
   static Icon phoneIcon = Icon(
     Icons.phone_enabled_outlined,
-    color: AppTheme.grey,
+    color: AppTheme.primary,
   );
 
   static Icon locationIcon = Icon(
     Icons.location_on_outlined,
-    color: AppTheme.grey,
+    color: AppTheme.primary,
   );
 
   // Border Radius
@@ -186,7 +190,7 @@ abstract class Styles {
 
   // Border
   static final BoxBorder generalBoxBorder = Border.all(
-    color: AppTheme.accent.withValues(
+    color: AppTheme.grey.withValues(
       alpha: 0.2,
     ),
     width: 1.8.w,

@@ -17,7 +17,7 @@ final class SelectSuccess extends CreateIssueState {
   final MediaModel? media;
   final BuildingSummaryModel? building;
   final ElevatorSummaryModel? elevator;
-  final String? issueType;
+  final IssueType? issueType;
   final String? description;
 
   SelectSuccess(
@@ -31,7 +31,7 @@ final class SelectSuccess extends CreateIssueState {
     MediaModel? media,
     BuildingSummaryModel? building,
     ElevatorSummaryModel? elevator,
-    String? issueType,
+    IssueType? issueType,
     String? description,
   }) {
     return SelectSuccess(

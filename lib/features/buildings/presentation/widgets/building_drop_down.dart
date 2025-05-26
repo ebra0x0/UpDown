@@ -23,11 +23,9 @@ class BuildingDropdown extends StatelessWidget {
       decoration: InputDecoration(
         errorBorder: Styles.errorBorder,
         enabledBorder: Styles.enabledBorder,
-        border: OutlineInputBorder(
-          borderRadius: Styles.borderRadius8,
-          borderSide: BorderSide(
-              color: AppTheme.grey.withValues(alpha: .2), width: 1.8.sp),
-        ),
+        border: Styles.generalBorder,
+        focusedBorder: Styles.focusedBorder,
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
         contentPadding: EdgeInsets.symmetric(horizontal: 4.sp, vertical: 4.sp),
         errorStyle: TextStyle(height: 0),
         prefixIcon: Styles.apartmentIcon,

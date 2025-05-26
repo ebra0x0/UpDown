@@ -11,7 +11,7 @@ class StoragePath {
     final fileName = media.file!.path.split('/').last;
     final folder = kIssuesBucketFolders[media.type.name]!;
     return StoragePath(
-        "${issue.buildingId}/${issue.elevatorId}/${issue.id}/$folder/$fileName");
+        "${issue.buildingId}/${issue.elevatorId}/${media.issueId}/$folder/$fileName");
   }
   factory StoragePath.fromAvatar(
       {required String filePath, required String userId}) {

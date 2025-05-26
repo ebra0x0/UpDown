@@ -10,6 +10,11 @@ class ThemeCubit extends Cubit<ThemeMode> {
   void getTheme() {
     final String? theme = gitIt<SharedPref>().get('theme');
 
+    if (theme == null) {
+      emit(ThemeMode.system);
+      return;
+    }
+
     switch (theme) {
       case 'dark':
         emit(ThemeMode.dark);

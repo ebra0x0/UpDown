@@ -29,8 +29,6 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
       isLoading = true;
     });
     final XFile? media = await _picker.pickMedia();
-    _image = null;
-    _video = null;
 
     if (media != null) {
       final File file = File(media.path);
@@ -66,7 +64,6 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                   ? DecorationImage(
                       image: Image.file(_image!).image, fit: BoxFit.cover)
                   : null,
-              color: AppTheme.accent,
               borderRadius: Styles.borderRadius8,
               border: Styles.generalBoxBorder,
             ),
@@ -86,6 +83,8 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                         ],
                       )
                     : Visibility(
-                        visible: _image == null, child: Styles.addPhotoIcon)));
+                        visible: _image == null,
+                        child: Styles.addIcon
+                            .copyWith(size: 56.w, color: AppTheme.primary))));
   }
 }

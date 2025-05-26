@@ -93,25 +93,6 @@ extension IssueTypeExtension on IssueType {
     }
   }
 
-  static String fromIssueType(IssueType issueType) {
-    switch (issueType) {
-      case IssueType.doorNotOpening:
-        return "Door_Not_Opening";
-      case IssueType.stuckBetweenFloors:
-        return "Stuck_Between_Floors";
-      case IssueType.noise:
-        return "Noise";
-      case IssueType.notResponding:
-        return "Not_Responding";
-      case IssueType.buttonNotResponding:
-        return "Button_Not_Responding";
-      case IssueType.aboveFloor:
-        return "Above_Floor";
-      case IssueType.other:
-        return "Other";
-    }
-  }
-
   String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {

@@ -1,3 +1,4 @@
+import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
 import 'package:UpDown/core/widgets/placeholder_panel.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
@@ -23,18 +24,23 @@ class _ElevatorDetailsViewState extends State<ElevatorDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BlocBuilder<ElevatorDetailsCubit, ElevatorDetailsState>(
-            builder: (context, state) {
-          if (state is ElevatorDetailsLoaded) {
-            return ElevatorDetailsViewBody(state: state);
-          } else if (state is ElevatorDetailsError) {
-            return PlaceholderPanel(message: state.error);
-          }
-          return const DataLoadingIndicator();
-        }),
-      ),
+    return BlocBuilder<ElevatorDetailsCubit, ElevatorDetailsState>(
+      builder: (context, state) {
+        return Scaffold(
+            appBar: state is ElevatorDetailsLoaded
+                ? null
+                : AppBar(
+                    leading: BackButtonNavigation(),
+                  ),
+            body: () {
+              if (state is ElevatorDetailsLoaded) {
+                return ElevatorDetailsViewBody(state: state);
+              } else if (state is ElevatorDetailsError) {
+                return PlaceholderPanel(message: state.error);
+              }
+              return const DataLoadingIndicator();
+            }());
+      },
     );
   }
 }

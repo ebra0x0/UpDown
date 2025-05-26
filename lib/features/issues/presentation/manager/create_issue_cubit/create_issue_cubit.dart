@@ -22,7 +22,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   MediaModel? media;
   BuildingSummaryModel? selectedBuilding;
   ElevatorSummaryModel? selectedElevator;
-  String? issueType;
+  IssueType? selectedIssueType;
   String? description;
 
   Future<void> createIssue() async {
@@ -32,7 +32,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
       "media": media,
       "building_name": selectedBuilding?.name,
       "elevator_name": selectedElevator?.name,
-      "issue_type": issueType,
+      "issue_type": selectedIssueType,
       "description": description,
       "building_id": selectedBuilding?.id,
       "elevator_id": selectedElevator?.id,
@@ -88,9 +88,9 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
     ));
   }
 
-  void selectIssueType(String value) {
+  void selectIssueType(IssueType value) {
     final currentState = state is SelectSuccess ? state as SelectSuccess : null;
-    issueType = value;
+    selectedIssueType = value;
 
     emit(SelectSuccess(
         building: currentState?.building,
