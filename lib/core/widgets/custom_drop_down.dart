@@ -1,11 +1,12 @@
 import 'package:UpDown/core/theme/app_theme.dart';
+import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/model/drop_down_model.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomDropDown extends StatelessWidget {
+class CustomDropDown extends StatefulWidget {
   const CustomDropDown({
     super.key,
     required this.listItem,
@@ -16,13 +17,20 @@ class CustomDropDown extends StatelessWidget {
     this.isLoading = false,
     this.onChanged,
   });
-  final List<DropDownModel>? listItem;
+  final List<DropDownModel> listItem;
   final String hint;
   final DropDownModel? value;
   final String? error;
   final Icon? prefixIcon;
   final bool isLoading;
   final void Function(Object? value)? onChanged;
+
+  @override
+  State<CustomDropDown> createState() => _CustomDropDownState();
+}
+
+class _CustomDropDownState extends State<CustomDropDown> {
+  bool hasError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,36 +43,60 @@ class CustomDropDown extends StatelessWidget {
           contentPadding:
               EdgeInsets.symmetric(horizontal: 4.sp, vertical: 4.sp),
           errorStyle: TextStyle(height: 0),
-          prefixIcon: prefixIcon),
-      hint: isLoading ? LoadingIndicator() : Text(hint),
+          prefixIcon: widget.prefixIcon?.copyWith(
+            color: hasError
+                ? AppTheme.red
+                : widget.listItem.isEmpty
+                    ? AppTheme.grey.withValues(
+                        alpha: 0.5,
+                      )
+                    : AppTheme.grey,
+            size: 24.sp,
+          )),
+      hint: widget.isLoading
+          ? LoadingIndicator(
+              size: 18.sp,
+            )
+          : Text(
+              widget.hint,
+              style: Styles.textStyle14.copyWith(
+                color: hasError ? AppTheme.red : AppTheme.grey,
+              ),
+            ),
       dropdownColor: AppTheme.accent,
-      value: value,
+      value: widget.value,
       menuMaxHeight: 250,
-      iconEnabledColor: AppTheme.primary,
-      iconDisabledColor: AppTheme.accent,
+      iconEnabledColor: AppTheme.grey,
+      iconDisabledColor: AppTheme.grey.withValues(
+        alpha: 0.5,
+      ),
       icon: Icon(
-        Icons.keyboard_arrow_down_rounded,
-        color: AppTheme.primary,
-        size: 24.sp,
+        Icons.arrow_drop_down_rounded,
+        size: 32.sp,
+        color: hasError ? AppTheme.red : null,
       ),
       isDense: false,
       isExpanded: true,
-      items: listItem == null
-          ? []
-          : listItem!.map((drop) {
-              return DropdownMenuItem<DropDownModel>(
-                value: drop,
-                child: Text(drop.label,
-                    maxLines: 1, overflow: TextOverflow.ellipsis),
-              );
-            }).toList(),
+      items: widget.listItem.map((drop) {
+        return DropdownMenuItem<DropDownModel>(
+          value: drop,
+          child: Text(drop.label, maxLines: 1, overflow: TextOverflow.ellipsis),
+        );
+      }).toList(),
       validator: (value) {
-        if (value == null) {
-          return error ?? "هذا الحقل مطلوب";
+        if (value == null || value.label.isEmpty) {
+          setState(() {
+            hasError = true;
+          });
+          return widget.error ?? "هذا الحقل مطلوب";
         }
+        setState(() {
+          hasError = false;
+        });
         return null;
       },
-      onChanged: (value) => onChanged == null ? null : onChanged!(value),
+      onChanged: (value) =>
+          widget.onChanged == null ? null : widget.onChanged!(value),
     );
   }
 }

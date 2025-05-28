@@ -1,3 +1,4 @@
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_view_body.dart';
@@ -13,7 +14,10 @@ class IssueView extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("تفاصيل العطل"),
+          title: Text(
+            "تفاصيل العطل",
+            style: Styles.textStyle24,
+          ),
           leading: BackButtonNavigation(),
         ),
         body: IssueViewBody(issue: issue),

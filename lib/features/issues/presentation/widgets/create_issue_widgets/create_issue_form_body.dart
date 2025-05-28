@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
@@ -53,7 +55,9 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
           labelText: "وصف العطل",
           maxLines: 6,
           maxLength: 200,
-          prefixIcon: Styles.descriptionIcon,
+          prefixIcon: Styles.descriptionIcon.copyWith(
+            color: AppTheme.primary,
+          ),
           onChanged: (value) =>
               context.read<CreateIssueCubit>().updateDescription(value ?? ''),
           validator: (value) {
@@ -67,5 +71,11 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
         CreateIssueButtonBuilder(onPress: () => widget.submit(context)),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    widget.descriptionController.dispose();
+    super.dispose();
   }
 }

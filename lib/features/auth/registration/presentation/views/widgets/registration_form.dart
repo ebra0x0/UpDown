@@ -1,3 +1,4 @@
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/core/widgets/password_field.dart';
 import 'package:UpDown/core/utils/model/form_field_model.dart';
@@ -68,6 +69,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             labelText: _emailField.labelText,
             controller: _emailField.controller,
             validator: _emailField.validator,
+            prefixIcon: Styles.emailIcon,
           ),
           PasswordField(
             labelText: _passwordField.labelText,

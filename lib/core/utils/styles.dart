@@ -27,6 +27,16 @@ abstract class Styles {
     fontWeight: FontWeight.w500,
   );
 
+  static final TextStyle textStyle22 = TextStyle(
+    fontSize: 22.sp,
+    fontWeight: FontWeight.w600,
+  );
+
+  static final TextStyle textStyle24 = TextStyle(
+    fontSize: 24.sp,
+    fontWeight: FontWeight.w600,
+  );
+
   static final TextStyle textStyle26 = TextStyle(
     fontSize: 26.sp,
     fontWeight: FontWeight.w600,
@@ -41,13 +51,15 @@ abstract class Styles {
   // Icons
 
   static Icon checkIcon = Icon(
-    Icons.check_circle_outline_rounded,
-    color: AppTheme.green,
+    Icons.check_circle_rounded,
+    color: AppTheme.white,
+    size: 24.sp,
   );
 
   static Icon errorIcon = Icon(
-    Icons.error_outline_rounded,
-    color: AppTheme.red,
+    Icons.error_rounded,
+    color: AppTheme.white,
+    size: 24.sp,
   );
 
   static const Icon backIcon = Icon(
@@ -55,14 +67,15 @@ abstract class Styles {
     size: 22,
   );
 
-  static const Icon forwardIcon = Icon(
+  static Icon forwardIcon = Icon(
     Icons.arrow_forward_ios_rounded,
-    size: 22,
+    color: AppTheme.grey,
+    size: 20.sp,
   );
 
-  static const Icon circleIcon = Icon(
+  static Icon circleIcon = Icon(
     Icons.circle,
-    size: 12,
+    size: 12.sp,
   );
 
   static Icon addPhotoIcon = Icon(
@@ -71,93 +84,133 @@ abstract class Styles {
     size: 46,
   );
 
+  static Icon cameraIcon = Icon(
+    Icons.photo_camera_outlined,
+    color: AppTheme.grey,
+    size: 60.sp,
+  );
+
   static Icon hideIcon = Icon(
     Icons.visibility_off_outlined,
     color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon showIcon = Icon(
     Icons.visibility_outlined,
     color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon passwordIcon = Icon(
+    Icons.password_rounded,
+    color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon reportIcon = Icon(
     Icons.assignment_late_outlined,
-    color: AppTheme.primary,
+    color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon stairsIcon = Icon(
     Icons.stairs_outlined,
     color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon elevatorIcon = Icon(
     Icons.elevator_outlined,
-    color: AppTheme.primary,
+    color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon apartmentIcon = Icon(
     Icons.apartment_rounded,
-    color: AppTheme.primary,
-    size: 24,
+    color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon timerIcon = Icon(
     Icons.timer_outlined,
     color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon maintenanceIcon = Icon(
     Icons.build_circle_outlined,
     color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon calendarIcon = Icon(
     Icons.calendar_month_outlined,
     color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon descriptionIcon = Icon(
     Icons.description_outlined,
-    color: AppTheme.primary,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon addMediaIcon = Icon(
+    Icons.add_photo_alternate_outlined,
+    color: AppTheme.grey,
+    size: 56.sp,
   );
 
   static Icon groupIcon = Icon(
     Icons.groups_outlined,
     color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon badgeIcon = Icon(
+    Icons.badge_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon lockIcon = Icon(
     Icons.lock,
     color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon homeIcon = Icon(
     Icons.roofing_rounded,
+    size: 24.sp,
   );
 
-  static const Icon addIcon = Icon(
-    // Icons.add_circle_outline_rounded,
+  static Icon addIcon = Icon(
     Icons.add,
+    size: 24.sp,
   );
 
-  static const Icon userIcon = Icon(
+  static Icon userIcon = Icon(
     Icons.person_outline_rounded,
+    size: 24.sp,
   );
 
   static Icon emailIcon = Icon(
     Icons.email_outlined,
-    color: AppTheme.primary,
+    color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon phoneIcon = Icon(
     Icons.phone_enabled_outlined,
-    color: AppTheme.primary,
+    color: AppTheme.grey,
+    size: 24.sp,
   );
 
   static Icon locationIcon = Icon(
     Icons.location_on_outlined,
-    color: AppTheme.primary,
+    color: AppTheme.grey,
+    size: 24.sp,
   );
 
   // Border Radius

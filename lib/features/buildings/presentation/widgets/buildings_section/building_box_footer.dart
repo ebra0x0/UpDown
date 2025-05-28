@@ -24,8 +24,8 @@ class BuildingBoxFooter extends StatelessWidget {
           ),
         ),
         Styles.forwardIcon.copyWith(
-          color: AppTheme.grey,
-        ),
+          color: hasActiveReport ? AppTheme.red : null,
+        )
       ],
     );
   }

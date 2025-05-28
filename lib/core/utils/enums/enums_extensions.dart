@@ -135,13 +135,13 @@ extension IssueStatusExtension on IssueStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case IssueStatus.notFixed:
-        return local.issue_not_fixed;
+        return local.issueStatus_not_fixed;
       case IssueStatus.needsParts:
-        return local.issue_needs_parts;
+        return local.issueStatus_needs_parts;
       case IssueStatus.escalated:
-        return local.issue_escalated;
+        return local.issueStatus_escalated;
       case IssueStatus.fixed:
-        return local.issue_fixed;
+        return local.issueStatus_fixed;
     }
   }
 
@@ -149,13 +149,13 @@ extension IssueStatusExtension on IssueStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case IssueStatus.notFixed:
-        return local.notFixedDescription;
+        return local.issueStatusNotFixedDescription;
       case IssueStatus.needsParts:
-        return local.needsPartsDescription;
+        return local.issueStatusNeedsPartsDescription;
       case IssueStatus.escalated:
-        return local.escalatedDescription;
+        return local.issueStatusEscalatedDescription;
       case IssueStatus.fixed:
-        return local.fixedDescription;
+        return local.issueStatusFixedDescription;
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:UpDown/core/utils/normalization.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/avatar_picker.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
@@ -55,14 +56,18 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AvatarPicker(onImageSelected: (XFile image) {
-              context.read<AccountSetupCubit>().setAvatar(image);
-            }),
+            Padding(
+              padding: EdgeInsets.only(top: 26.h),
+              child: AvatarPicker(onImageSelected: (XFile image) {
+                context.read<AccountSetupCubit>().setAvatar(image);
+              }),
+            ),
             SizedBox(height: 28.h),
             CustomTextFormField(
               onChanged: (value) =>
                   context.read<AccountSetupCubit>().setName(value),
               labelText: "الاسم",
+              prefixIcon: Styles.badgeIcon,
               validator: (value) {
                 if (!_nameRegex.hasMatch(value!)) {
                   return 'الاسم غير صالح';
@@ -75,6 +80,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
               onChanged: (value) =>
                   context.read<AccountSetupCubit>().setPhone(value),
               labelText: "رقم الهاتف",
+              prefixIcon: Styles.phoneIcon,
               validator: (value) {
                 if (!_phoneRegex.hasMatch(value!)) {
                   return 'رقم الهاتف غير صالح';
@@ -87,6 +93,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
               onChanged: (value) =>
                   context.read<AccountSetupCubit>().setAddress(value),
               labelText: "العنوان",
+              prefixIcon: Styles.locationIcon,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'العنوان مطلوب';

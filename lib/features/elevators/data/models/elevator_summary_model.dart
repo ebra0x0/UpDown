@@ -22,7 +22,10 @@ class ElevatorSummaryModel {
       buildingId: json["building_id"],
       issueType: json["active_issue"] == null
           ? null
-          : IssueTypeExtension.fromString(json["active_issue"]["issue_type"]),
+          : json["active_issue"]["issue_type"].runtimeType == String
+              ? IssueTypeExtension.fromString(
+                  json["active_issue"]["issue_type"])
+              : json["active_issue"]["issue_type"],
       name: json["elevator_name"],
       status: ElevatorStatusExtension.fromString(json["status"]),
     );

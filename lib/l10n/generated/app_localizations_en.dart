@@ -60,28 +60,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get issueType_other => 'Other';
 
   @override
-  String get issue_not_fixed => 'Not Fixed';
+  String get issueStatus_not_fixed => 'Not Fixed';
 
   @override
-  String get issue_needs_parts => 'Needs Parts';
+  String get issueStatus_needs_parts => 'Needs Parts';
 
   @override
-  String get issue_escalated => 'Escalated';
+  String get issueStatus_escalated => 'Escalated';
 
   @override
-  String get issue_fixed => 'Fixed';
+  String get issueStatus_fixed => 'Fixed';
 
   @override
-  String get notFixedDescription => 'The issue has not been fixed yet';
+  String get issueStatusNotFixedDescription => 'The issue has not been fixed yet';
 
   @override
-  String get needsPartsDescription => 'The issue needs parts';
+  String get issueStatusNeedsPartsDescription => 'The issue needs parts';
 
   @override
-  String get escalatedDescription => 'The issue has been escalated to another technecian';
+  String get issueStatusEscalatedDescription => 'The issue has been escalated to another technecian';
 
   @override
-  String get fixedDescription => 'The issue has been fixed';
+  String get issueStatusFixedDescription => 'The issue has been fixed';
 
   @override
   String get report_pending => 'Pending';

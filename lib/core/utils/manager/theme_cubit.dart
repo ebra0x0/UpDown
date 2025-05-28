@@ -11,7 +11,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
     final String? theme = gitIt<SharedPref>().get('theme');
 
     if (theme == null) {
-      emit(ThemeMode.system);
+      emit(ThemeMode.dark);
       return;
     }
 
@@ -26,7 +26,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
   }
 
   void toggleTheme() {
-    gitIt<SharedPref>().add('theme', state.toString());
+    gitIt<SharedPref>().add('theme', state.name.toString());
 
     switch (state) {
       case ThemeMode.system:

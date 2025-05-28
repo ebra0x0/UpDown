@@ -1,3 +1,4 @@
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/core/utils/model/form_field_model.dart';
 import 'package:UpDown/core/widgets/password_field.dart';
@@ -60,6 +61,7 @@ class _LoginFormState extends State<LoginForm> {
             labelText: "البريد الالكتروني",
             controller: _emailField.controller,
             validator: _emailField.validator,
+            prefixIcon: Styles.emailIcon,
           ),
           SizedBox(height: 16),
           PasswordField(

@@ -34,7 +34,7 @@ class ElevatorDropDownBuilder extends StatelessWidget {
             );
 
         return CustomDropDown(
-          isLoading: state is CreateIssueLoading,
+          isLoading: state is SelectLoading,
           listItem: dropDownList,
           hint: "إختر المصعد",
           value: matchValue,

@@ -22,7 +22,7 @@ class AccountSetupViewBody extends StatelessWidget {
         }
       },
       child: const Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         child: AccountSetupForm(),
       ),
     );

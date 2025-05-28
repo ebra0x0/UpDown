@@ -27,7 +27,7 @@ class _HomeViewState extends State<HomeView> {
         appBar: AppBar(
           title: Text(
             'أنت تدير',
-            style: Styles.textStyle20,
+            style: Styles.textStyle24,
           ),
         ),
         body: const HomeViewBody());

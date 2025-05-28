@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +20,6 @@ class AvatarPicker extends StatefulWidget {
 
 class _AvatarPickerState extends State<AvatarPicker> {
   XFile? _image;
-
   final ImagePicker _picker = ImagePicker();
   bool _isPicking = false;
 
@@ -40,18 +40,16 @@ class _AvatarPickerState extends State<AvatarPicker> {
 
   @override
   Widget build(BuildContext context) {
+    final String? imagePath = _image?.path ?? widget.image;
     return Center(
       child: GestureDetector(
           onTap: _pickImage,
           child: CircleAvatar(
             radius: 76.h,
-            backgroundImage: _image != null
-                ? Image.file(File(_image!.path)).image
-                : widget.image != null
-                    ? Image.file(File(widget.image!)).image
-                    : null,
-            child:
-                _image == null && widget.image == null ? Styles.addIcon : null,
+            backgroundColor: AppTheme.accent,
+            backgroundImage:
+                imagePath != null ? Image.file(File(imagePath)).image : null,
+            child: imagePath == null ? Styles.cameraIcon : null,
           )),
     );
   }

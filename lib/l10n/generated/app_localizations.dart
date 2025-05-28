@@ -197,53 +197,53 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get issueType_other;
 
-  /// No description provided for @issue_not_fixed.
+  /// No description provided for @issueStatus_not_fixed.
   ///
   /// In en, this message translates to:
   /// **'Not Fixed'**
-  String get issue_not_fixed;
+  String get issueStatus_not_fixed;
 
-  /// No description provided for @issue_needs_parts.
+  /// No description provided for @issueStatus_needs_parts.
   ///
   /// In en, this message translates to:
   /// **'Needs Parts'**
-  String get issue_needs_parts;
+  String get issueStatus_needs_parts;
 
-  /// No description provided for @issue_escalated.
+  /// No description provided for @issueStatus_escalated.
   ///
   /// In en, this message translates to:
   /// **'Escalated'**
-  String get issue_escalated;
+  String get issueStatus_escalated;
 
-  /// No description provided for @issue_fixed.
+  /// No description provided for @issueStatus_fixed.
   ///
   /// In en, this message translates to:
   /// **'Fixed'**
-  String get issue_fixed;
+  String get issueStatus_fixed;
 
-  /// No description provided for @notFixedDescription.
+  /// No description provided for @issueStatusNotFixedDescription.
   ///
   /// In en, this message translates to:
   /// **'The issue has not been fixed yet'**
-  String get notFixedDescription;
+  String get issueStatusNotFixedDescription;
 
-  /// No description provided for @needsPartsDescription.
+  /// No description provided for @issueStatusNeedsPartsDescription.
   ///
   /// In en, this message translates to:
   /// **'The issue needs parts'**
-  String get needsPartsDescription;
+  String get issueStatusNeedsPartsDescription;
 
-  /// No description provided for @escalatedDescription.
+  /// No description provided for @issueStatusEscalatedDescription.
   ///
   /// In en, this message translates to:
   /// **'The issue has been escalated to another technecian'**
-  String get escalatedDescription;
+  String get issueStatusEscalatedDescription;
 
-  /// No description provided for @fixedDescription.
+  /// No description provided for @issueStatusFixedDescription.
   ///
   /// In en, this message translates to:
   /// **'The issue has been fixed'**
-  String get fixedDescription;
+  String get issueStatusFixedDescription;
 
   /// No description provided for @report_pending.
   ///

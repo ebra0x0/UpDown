@@ -84,7 +84,7 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                       )
                     : Visibility(
                         visible: _image == null,
-                        child: Styles.addIcon
-                            .copyWith(size: 56.w, color: AppTheme.primary))));
+                        child: Styles.addMediaIcon,
+                      )));
   }
 }

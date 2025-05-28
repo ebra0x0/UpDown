@@ -1,4 +1,5 @@
 import 'package:UpDown/core/utils/service_locator.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/profile/data/repos/profile_repo_imp.dart';
 import 'package:UpDown/features/profile/presentation/widgets/profile_view_builder.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,11 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('الحساب')),
+      appBar: AppBar(
+          title: Text(
+        'الملف الشخصي',
+        style: Styles.textStyle24,
+      )),
       body: BlocProvider(
         create: (context) => ProfileCubit(gitIt.get<ProfileRepoImp>()),
         child: ProfileViewBuilder(),

@@ -1,8 +1,9 @@
 import 'package:UpDown/core/theme/app_theme.dart';
+import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
     super.key,
     this.keyType,
@@ -34,31 +35,79 @@ class CustomTextFormField extends StatelessWidget {
   final int maxLines;
   final int? maxLength;
   final GlobalKey<FormState>? formKey;
+
+  @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  late FocusNode _focusNode;
+  bool hasError = false;
+  bool isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        setState(() {
+          isFocused = true;
+        });
+      } else {
+        setState(() {
+          isFocused = false;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      keyboardType: keyType,
-      textDirection: textDirection,
+      keyboardType: widget.keyType,
+      focusNode: _focusNode,
+      textDirection: widget.textDirection,
       textAlign: TextAlign.start,
-      obscureText: obscureText,
-      maxLength: maxLength,
+      obscureText: widget.obscureText,
+      maxLength: widget.maxLength,
       minLines: 1,
-      maxLines: maxLines,
-      controller: controller,
-      onChanged: onChanged,
+      maxLines: widget.maxLines,
+      controller: widget.controller,
+      onChanged: widget.onChanged,
       validator: (value) {
-        return validator!(value);
+        final validatorResult = widget.validator!(value);
+        if (validatorResult == null || validatorResult.isEmpty) {
+          setState(() {
+            hasError = false;
+          });
+          return null;
+        }
+        setState(() {
+          hasError = true;
+        });
+        return validatorResult;
       },
       decoration: InputDecoration(
-        labelText: labelText,
+        labelText: widget.labelText,
         labelStyle: Styles.textStyle14.copyWith(
-          color: AppTheme.grey,
+          color: hasError
+              ? AppTheme.red
+              : isFocused
+                  ? AppTheme.primary
+                  : AppTheme.grey,
           backgroundColor: AppTheme.scaffold,
         ),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
-        hintText: hintText,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
+        hintText: widget.hintText,
+        prefixIcon: widget.prefixIcon?.copyWith(
+          color: hasError
+              ? AppTheme.red
+              : isFocused
+                  ? AppTheme.primary
+                  : AppTheme.grey,
+        ),
+        suffixIcon: widget.suffixIcon,
         errorStyle: const TextStyle(height: 0),
         border: Styles.generalBorder,
         enabledBorder: Styles.enabledBorder,
@@ -66,5 +115,11 @@ class CustomTextFormField extends StatelessWidget {
         errorBorder: Styles.errorBorder,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 }

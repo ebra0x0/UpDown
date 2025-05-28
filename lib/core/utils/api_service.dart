@@ -130,6 +130,22 @@ class ApiService {
   // User Functions
   Future<Either<Failure, void>> createProfile(ProfileModel profile) async {
     try {
+      final user = _supabase.auth.currentUser;
+      if (user == null) {
+        return Left(CustomFailure("المستخدم غير مسجل"));
+      }
+
+      // Check if profile already exists
+      final Map<String, dynamic>? existingProfile = await _supabase
+          .from('Users')
+          .select()
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+      if (existingProfile != null) {
+        return Left(CustomFailure("الملف الشخصي موجود بالفعل"));
+      }
+
       // Upload avatar if exists
       if (profile.imagePath != null) {
         final uploadResult = await uploadAvatar(XFile(profile.imagePath!));
@@ -137,8 +153,10 @@ class ApiService {
 
         // Update profile model
         final String? userEmail = _supabase.auth.currentUser?.email;
-        profile =
-            profile.copyWith(email: userEmail, imagePath: uploadResult.right);
+        final String avatarPath =
+            uploadResult.right.replaceFirst(RegExp(r'^[^/]+/[^/]+/'), '');
+
+        profile = profile.copyWith(email: userEmail, imagePath: avatarPath);
       }
 
       await _supabase.from('Users').insert(profile.toJson(isRemote: true));
@@ -226,8 +244,7 @@ class ApiService {
 
       if (uploadResult.isLeft) return Left(uploadResult.left);
 
-      final String url =
-          uploadResult.right.substring("$kAvatarsBucket/".length);
+      final String url = uploadResult.right;
 
       return Right(url);
     } on PostgrestException catch (e) {
@@ -345,82 +362,27 @@ class ApiService {
     }
   }
 
-  // Reports
-  Future<Either<Failure, String>> createReport(
-      {required String buildingId}) async {
-    try {
-      final user = _supabase.auth.currentUser;
-      if (user == null) {
-        return Left(CustomFailure("المستخدم غير مسجل"));
-      }
-
-      final Map<String, dynamic> reportData = {
-        "reported_by": user.id,
-        "building_id": buildingId,
-      };
-
-      final Map<String, dynamic>? report = await _supabase.rpc(
-          "create_and_get_report",
-          params: {"report_data": reportData}).maybeSingle();
-
-      if (report == null || report.isEmpty) {
-        return Left(CustomFailure("لم يتم إنشاء التقرير"));
-      }
-
-      return Right(report["report_id"]);
-    } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
-    } catch (e) {
-      return Left(CustomFailure("حدث خطاء اثناءإنشاء التقرير"));
-    }
-  }
-
   // Issues
   Future<Either<Failure, void>> createIssue(IssueModel issueModel) async {
     try {
-      MediaModel? media = issueModel.media;
+      // Create issue
+      final Map<String, dynamic>? issueIdRes = await _supabase
+          .rpc("create_issue_with_report", params: issueModel.toJson())
+          .maybeSingle();
 
-      if (media != null) {
-        // Compress file
-        final File? compressedFile =
-            await prepareMediaFile(media.file!, media.type);
-
-        media = media.copyWith(file: compressedFile, url: compressedFile?.path);
+      if (issueIdRes == null) {
+        return Left(CustomFailure("تعذر إنشاء العطل"));
       }
 
-      // Create report
-      final reportIdResult =
-          await createReport(buildingId: issueModel.buildingId!);
-      final reportId = reportIdResult.fold((_) => null, (id) => id);
-      if (reportId == null) return Left(CustomFailure("تعذر إنشاء العطل"));
+      issueModel = issueModel.copyWith(
+          id: issueIdRes["issue_id"], reportId: issueIdRes["report_id"]);
 
-      // Create issue
-      issueModel = issueModel.copyWith(reportId: reportId);
-      final issueResponse = await _insertIssue(issueModel);
-      if (issueResponse == null) return Left(CustomFailure("تعذر إنشاء العطل"));
+      if (issueModel.media == null) return const Right(null);
 
-      if (media == null) return const Right(null);
+      // Create media
+      final mediaResponse = await createIssueMedia(issueModel);
 
-      // Upload media
-      final issueId = issueResponse["issue_id"] as String;
-
-      media = media.copyWith(issueId: issueId);
-
-      final filePath = StoragePath.fromIssue(issue: issueModel, media: media);
-
-      final uploadResult = await uploadMedia(
-          bucketName: "issues",
-          filePath: media.file!.path,
-          path: filePath.path);
-
-      if (uploadResult.isLeft) return Left(uploadResult.left);
-
-      final url = uploadResult.right;
-
-      // Create media in db
-      media = media.copyWith(url: url);
-
-      await _supabase.from('Media').insert(media.toJson());
+      if (mediaResponse.isLeft) return Left(mediaResponse.left);
 
       return const Right(null);
     } on PostgrestException catch (e) {
@@ -430,12 +392,45 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>?> _insertIssue(IssueModel issue) async {
-    return await _supabase
-        .from('Issues')
-        .insert(issue.toJson())
-        .select()
-        .maybeSingle();
+  Future<Either<Failure, void>> createIssueMedia(IssueModel issue) async {
+    try {
+      // Compress file
+      final File? compressedFile =
+          await prepareMediaFile(issue.media!.file!, issue.media!.type);
+
+      if (compressedFile == null) {
+        return Left(CustomFailure("حدث خطاء اثناء ضغط الملف"));
+      }
+
+      // Create storage path for media
+      final String storagePath = StoragePath.fromIssue(issue: issue).path;
+
+      // Upload media
+      final uploadResult = await uploadMedia(
+        bucketName: kReportsBucket,
+        filePath: compressedFile.path,
+        path: storagePath,
+      );
+
+      if (uploadResult.isLeft) return Left(uploadResult.left);
+
+      final String mediaUrl =
+          uploadResult.right.replaceFirst(RegExp(r'^[^/]+/[^/]+/'), '');
+
+      final MediaModel mediaWithUrl =
+          issue.media!.copyWith(url: mediaUrl, issueId: issue.id);
+
+      // Create media in db
+      issue = issue.copyWith(media: mediaWithUrl);
+
+      await _supabase.from('Media').insert(issue.media!.toJson());
+
+      return const Right(null);
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطأ أثناء إنشاء وسائط العطل"));
+    }
   }
 
   Future<Either<Failure, String>> uploadMedia(
@@ -449,7 +444,7 @@ class ApiService {
             File(filePath),
           );
 
-      return Right(url.substring("avatars/".length));
+      return Right(url);
     } on StorageException catch (e) {
       return Left(SupabaseFailure.fromStorage(e));
     } catch (e) {

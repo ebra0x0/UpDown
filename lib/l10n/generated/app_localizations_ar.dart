@@ -39,49 +39,49 @@ class AppLocalizationsAr extends AppLocalizations {
   String get elevatorDisabledDescription => 'المصعد مغلق';
 
   @override
-  String get issueType_door_not_opening => 'هناك باب لا يفتح ';
+  String get issueType_door_not_opening => 'هناك باب لا يفتح';
 
   @override
   String get issueType_stuck_between_floors => 'المصعد متوقف بين طابقين';
 
   @override
-  String get issueType_noise => 'المصعد يصدر أصوات عالية ';
+  String get issueType_noise => 'المصعد يصدر أصوات عالية';
 
   @override
-  String get issueType_not_responding => 'المصعد متوقف ولا يستجيب للطلبات ';
+  String get issueType_not_responding => 'المصعد متوقف ولا يستجيب للطلبات';
 
   @override
   String get issueType_button_not_responding => 'هناك زر لا يعمل ';
 
   @override
-  String get issueType_above_floor => 'المصعد يتوقف أعلى الطابق المطلوب ';
+  String get issueType_above_floor => 'المصعد يتوقف أعلى الطابق المطلوب';
 
   @override
   String get issueType_other => 'أخرى';
 
   @override
-  String get issue_not_fixed => 'لم يتم الإصلاح';
+  String get issueStatus_not_fixed => 'لم يتم الإصلاح';
 
   @override
-  String get issue_needs_parts => 'يحتاج إلى قطع غيار';
+  String get issueStatus_needs_parts => 'قطع غيار ناقصة';
 
   @override
-  String get issue_escalated => 'تم التصعيد';
+  String get issueStatus_escalated => 'كلفت لفني أخر';
 
   @override
-  String get issue_fixed => 'تم الإصلاح';
+  String get issueStatus_fixed => 'تم الإصلاح';
 
   @override
-  String get notFixedDescription => 'لم تُحل بعد';
+  String get issueStatusNotFixedDescription => 'لم تُحل بعد';
 
   @override
-  String get needsPartsDescription => 'تحتاج إلى قطع غيار';
+  String get issueStatusNeedsPartsDescription => 'تحتاج إلى قطع غيار';
 
   @override
-  String get escalatedDescription => 'تم تصعيد العطل لفني أخر';
+  String get issueStatusEscalatedDescription => 'تم تصعيد العطل لفني أخر';
 
   @override
-  String get fixedDescription => 'تم إصلاح العطل';
+  String get issueStatusFixedDescription => 'تم إصلاح العطل';
 
   @override
   String get report_pending => 'قيد المراجعة';

@@ -18,6 +18,7 @@ class BuildingBoxContent extends StatelessWidget {
       child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         BuildingBoxHeader(
+            hasActiveReport: building.hasActiveReport,
             buildingName: building.name,
             elevatorsCount: building.elevatorsCount),
         BuildingBoxFooter(

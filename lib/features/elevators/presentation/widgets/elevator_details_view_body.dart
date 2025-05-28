@@ -19,7 +19,7 @@ class ElevatorDetailsViewBody extends StatelessWidget {
           leading: BackButtonNavigation(),
           title: Text(
             "المصعد ${state.elevator.name}",
-            style: Styles.textStyle26,
+            style: Styles.textStyle24,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           ),

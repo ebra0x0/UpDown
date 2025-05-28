@@ -1,4 +1,5 @@
 import 'package:UpDown/core/theme/app_theme.dart';
+import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -7,9 +8,11 @@ class BuildingBoxHeader extends StatelessWidget {
     super.key,
     required this.buildingName,
     required this.elevatorsCount,
+    required this.hasActiveReport,
   });
   final String buildingName;
   final int elevatorsCount;
+  final bool hasActiveReport;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,9 @@ class BuildingBoxHeader extends StatelessWidget {
             ],
           ),
         ),
-        Styles.apartmentIcon
+        Styles.apartmentIcon.copyWith(
+          color: hasActiveReport ? AppTheme.red : null,
+        )
       ],
     );
   }

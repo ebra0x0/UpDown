@@ -37,7 +37,9 @@ class IssueModel {
       reportId: json['report_id'],
       elevatorId: json['elevator_id'],
       buildingId: json['building_id'],
-      issueType: IssueTypeExtension.fromString(json['issue_type']),
+      issueType: json['issue_type'].runtimeType == String
+          ? IssueTypeExtension.fromString(json['issue_type'])
+          : json["issue_type"],
       media: json['media'],
       elevatorName: json['elevator_name'],
       buildingName: json['building_name'],
@@ -55,7 +57,7 @@ class IssueModel {
   }
 
   IssueModel copyWith({
-    String? issueId,
+    String? id,
     String? reportId,
     String? elevatorId,
     String? buildingId,
@@ -72,7 +74,7 @@ class IssueModel {
       buildingName: buildingName ?? this.buildingName,
       elevatorName: elevatorName ?? this.elevatorName,
       media: media ?? this.media,
-      id: issueId ?? id,
+      id: id ?? this.id,
       reportId: reportId ?? this.reportId,
       elevatorId: elevatorId ?? this.elevatorId,
       buildingId: buildingId ?? this.buildingId,
@@ -86,7 +88,8 @@ class IssueModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'report_id': reportId,
+      // 'report_id': reportId,
+      'building_id': buildingId,
       'elevator_id': elevatorId,
       'description': description,
       'issue_type': issueType.name,

@@ -1,3 +1,4 @@
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +17,18 @@ void showToast(
           type == ToastType.success ? Styles.checkIcon : Styles.errorIcon,
           Expanded(
             child: Text(
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               message,
-              style: Styles.textStyle14,
+              style: Styles.textStyle14.copyWith(
+                color: Colors.white,
+              ),
             ),
           )
         ],
       ),
+      backgroundColor:
+          type == ToastType.success ? AppTheme.green : AppTheme.red,
     ),
   );
 }

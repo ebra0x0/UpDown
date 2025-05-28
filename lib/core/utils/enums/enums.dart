@@ -8,7 +8,15 @@ enum ElevatorStatus {
 
 enum ReportStatus { pending, reported, coming, arrived, inProgress, resolved }
 
-enum IssueStatus { notFixed, needsParts, escalated, fixed }
+enum IssueStatus {
+  notFixed("Not_Fixed"),
+  needsParts("Needs_Parts"),
+  escalated("Escalated"),
+  fixed("Fixed");
+
+  final String name;
+  const IssueStatus(this.name);
+}
 
 enum IssueType {
   doorNotOpening("Door_Not_Opening"),
@@ -25,4 +33,11 @@ enum IssueType {
 
 enum UnitStatus { active, needsMaintenance, outOfService }
 
-enum MediaType { image, video, other }
+enum MediaType {
+  image("image"),
+  video("video"),
+  other("other");
+
+  final String name;
+  const MediaType(this.name);
+}

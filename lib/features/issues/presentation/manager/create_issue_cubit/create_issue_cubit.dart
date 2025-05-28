@@ -61,6 +61,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   }
 
   Future<void> selectBuilding(BuildingSummaryModel building) async {
+    if (building.id == selectedBuilding?.id) return;
     final currentState = state is SelectSuccess ? state as SelectSuccess : null;
     selectedBuilding = building;
 

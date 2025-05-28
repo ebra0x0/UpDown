@@ -1,4 +1,5 @@
 import 'package:UpDown/core/utils/service_locator.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo_imp.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
@@ -26,7 +27,10 @@ class _CreateIssueViewState extends State<CreateIssueView> {
       create: (context) => CreateIssueCubit(gitIt.get<IssuesRepoImp>()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('الإبلاغ عن عطل جديد'),
+          title: Text(
+            'الإبلاغ عن عطل جديد',
+            style: Styles.textStyle24,
+          ),
         ),
         body: CreateIssueBody(),
       ),

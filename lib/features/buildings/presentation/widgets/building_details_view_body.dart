@@ -19,7 +19,7 @@ class BuildingDetailsViewBody extends StatelessWidget {
           floating: true,
           leading: BackButtonNavigation(),
           title: Text(state.building.name,
-              style: Styles.textStyle26,
+              style: Styles.textStyle24,
               overflow: TextOverflow.ellipsis,
               maxLines: 1),
           centerTitle: true,
