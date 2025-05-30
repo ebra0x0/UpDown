@@ -69,6 +69,11 @@ class AuthRepoImp implements AuthRepo {
   @override
   Future<Either<Failure, void>> signOut() async {
     var res = await _api.signOut();
+    gitIt.get<SecureStorage>().addAll({
+      "access_token": "",
+      "refresh_token": "",
+      "user_id": "",
+    });
 
     return res.fold(
       (failure) => Left(failure),

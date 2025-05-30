@@ -1,9 +1,12 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/localization/local_service.dart';
 import 'package:UpDown/features/elevators/data/models/cabine_model.dart';
 import 'package:UpDown/features/elevators/data/models/counter_model.dart';
 import 'package:UpDown/features/elevators/data/models/engine_model.dart';
-import 'package:UpDown/features/elevators/data/models/panel_model.dart';
+import 'package:UpDown/features/elevators/data/models/control_model.dart';
 import 'package:UpDown/features/elevators/data/models/wires_model.dart';
+import 'package:intl/intl.dart';
 
 class ElevatorUnitModel {
   final String id;
@@ -11,8 +14,8 @@ class ElevatorUnitModel {
   final String? model;
   final String name;
   final String elevatorId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String createdAt;
+  final String updatedAt;
 
   ElevatorUnitModel({
     required this.id,
@@ -25,19 +28,31 @@ class ElevatorUnitModel {
   });
 
   factory ElevatorUnitModel.fromJson(Map<String, dynamic> json) {
-    switch (json['name']) {
-      case 'engine':
+    final DateTime? createdAt = DateTime.tryParse(json['created_at']);
+    final DateTime? updatedAt = DateTime.tryParse(json['updated_at']);
+    final String locale = LocaleService.currentLocale;
+
+    final UnitName unitName =
+        UnitNameExtension.fromString(json['name'] as String);
+
+    json['created_at'] = createdAt == null
+        ? ''
+        : DateFormat('d MMMM, hh:mm a', locale).format(createdAt);
+    json['updated_at'] = updatedAt == null
+        ? ''
+        : DateFormat('d MMMM, hh:mm a', locale).format(updatedAt);
+
+    switch (unitName) {
+      case UnitName.engine:
         return EngineModel.fromJson(json);
-      case 'cabine':
+      case UnitName.cabine:
         return CabineModel.fromJson(json);
-      case 'counter':
+      case UnitName.counter:
         return CounterModel.fromJson(json);
-      case 'wires':
+      case UnitName.wires:
         return WiresModel.fromJson(json);
-      case 'panel':
-        return PanelModel.fromJson(json);
-      default:
-        throw Exception('Unknown part type');
+      case UnitName.control:
+        return ControlModel.fromJson(json);
     }
   }
 }

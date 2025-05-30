@@ -25,9 +25,10 @@ class ElevatorDetailsViewBody extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        SliverToBoxAdapter(
-          child: ElevatorDetailsHeaderSection(state: state),
-        ),
+        SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverToBoxAdapter(
+                child: ElevatorDetailsAlertIssue(state: state))),
         SliverToBoxAdapter(child: SizedBox(height: 36)),
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 16),

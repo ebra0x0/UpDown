@@ -1,5 +1,6 @@
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -68,6 +69,21 @@ extension ElevatorStatusExtension on ElevatorStatus {
         return AppTheme.grey;
     }
   }
+
+  Icon get icon {
+    switch (this) {
+      case ElevatorStatus.working:
+        return Styles.checkIcon;
+      case ElevatorStatus.broken:
+        return Styles.errorOutlineIcon;
+      case ElevatorStatus.repair:
+        return Styles.maintenanceIcon;
+      case ElevatorStatus.maintenance:
+        return Styles.maintenanceIcon;
+      case ElevatorStatus.disabled:
+        return Styles.lockIcon;
+    }
+  }
 }
 
 // Issue Type Extension
@@ -110,6 +126,26 @@ extension IssueTypeExtension on IssueType {
         return local.issueType_above_floor;
       case IssueType.other:
         return local.issueType_other;
+    }
+  }
+
+  String priority(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
+    switch (this) {
+      case IssueType.doorNotOpening:
+        return local.issueTypeDoorNotOpeningPriority;
+      case IssueType.stuckBetweenFloors:
+        return local.issueTypeStuckBetweenFloorsPriority;
+      case IssueType.noise:
+        return local.issueTypeNoisePriority;
+      case IssueType.notResponding:
+        return local.issueTypeNotRespondingPriority;
+      case IssueType.buttonNotResponding:
+        return local.issueTypeButtonNotRespondingPriority;
+      case IssueType.aboveFloor:
+        return local.issueTypeAboveFloorPriority;
+      case IssueType.other:
+        return local.issueTypeOtherPriority;
     }
   }
 }
@@ -244,6 +280,42 @@ extension ReportStatusExtension on ReportStatus {
         return AppTheme.yellow;
       case ReportStatus.resolved:
         return AppTheme.green;
+    }
+  }
+}
+
+// Unit Name Extension
+extension UnitNameExtension on UnitName {
+  static UnitName fromString(String name) {
+    switch (name.toLowerCase()) {
+      case "engine":
+        return UnitName.engine;
+      case "cabine":
+        return UnitName.cabine;
+      case "counter":
+        return UnitName.counter;
+      case "wires":
+        return UnitName.wires;
+      case "control":
+        return UnitName.control;
+      default:
+        return UnitName.engine;
+    }
+  }
+
+  String name(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
+    switch (this) {
+      case UnitName.engine:
+        return local.unit_engine_name;
+      case UnitName.cabine:
+        return local.unit_cabine_name;
+      case UnitName.counter:
+        return local.unit_counter_name;
+      case UnitName.wires:
+        return local.unit_wires_name;
+      case UnitName.control:
+        return local.unit_control_name;
     }
   }
 }

@@ -1,6 +1,8 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/localization/local_service.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
+import 'package:intl/intl.dart';
 
 class IssueModel {
   final String? id;
@@ -13,8 +15,8 @@ class IssueModel {
   final IssueStatus? status;
   final IssueType issueType;
   final MediaModel? media;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String? createdAt;
+  final String? updatedAt;
 
   IssueModel({
     this.id,
@@ -32,6 +34,10 @@ class IssueModel {
   });
 
   factory IssueModel.fromJson(Map<String, dynamic> json) {
+    final DateTime? createdAt = DateTime.tryParse(json['created_at']);
+    final DateTime? updatedAt = DateTime.tryParse(json['updated_at']);
+    final String locale = LocaleService.currentLocale;
+
     return IssueModel(
       id: json['issue_id'],
       reportId: json['report_id'],
@@ -44,12 +50,12 @@ class IssueModel {
       elevatorName: json['elevator_name'],
       buildingName: json['building_name'],
       description: json['description'],
-      createdAt: json['created_at'] == null
+      createdAt: createdAt == null
           ? null
-          : DateTime.parse(json['created_at']),
-      updatedAt: json['updated_at'] == null
+          : DateFormat('d MMMM, hh:mm a', locale).format(createdAt),
+      updatedAt: updatedAt == null
           ? null
-          : DateTime.parse(json['updated_at']),
+          : DateFormat('d MMMM, hh:mm a', locale).format(updatedAt),
       status: json['status'] == null
           ? null
           : IssueStatusExtension.fromString(json['status']),
@@ -67,8 +73,8 @@ class IssueModel {
     String? description,
     IssueType? issueType,
     IssueStatus? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    String? createdAt,
+    String? updatedAt,
   }) {
     return IssueModel(
       buildingName: buildingName ?? this.buildingName,
@@ -88,7 +94,6 @@ class IssueModel {
 
   Map<String, dynamic> toJson() {
     return {
-      // 'report_id': reportId,
       'building_id': buildingId,
       'elevator_id': elevatorId,
       'description': description,

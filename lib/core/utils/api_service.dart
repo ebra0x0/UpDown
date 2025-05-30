@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:UpDown/core/utils/constants.dart';
+import 'package:UpDown/core/utils/localization/constants.dart';
 import 'package:UpDown/core/errors/failures.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/function/media_compressor.dart';

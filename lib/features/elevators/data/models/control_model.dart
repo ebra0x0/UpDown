@@ -1,10 +1,10 @@
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_unit_model.dart';
 
-class PanelModel extends ElevatorUnitModel {
+class ControlModel extends ElevatorUnitModel {
   final String cardModel;
 
-  PanelModel({
+  ControlModel({
     required super.id,
     required super.status,
     required super.model,
@@ -15,15 +15,15 @@ class PanelModel extends ElevatorUnitModel {
     required this.cardModel,
   });
 
-  factory PanelModel.fromJson(Map<String, dynamic> json) {
-    return PanelModel(
+  factory ControlModel.fromJson(Map<String, dynamic> json) {
+    return ControlModel(
       id: json['id'],
       model: json['model'],
       status: UnitStatusExtension.fromString(json['status']),
       name: json['name'],
       elevatorId: json['elevator_id'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
       cardModel: json['details']['card_model'],
     );
   }

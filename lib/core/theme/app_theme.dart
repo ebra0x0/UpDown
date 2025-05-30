@@ -23,11 +23,13 @@ class AppTheme {
 
   static Color get primary =>
       _isDark ? Palette.darkPrimary : Palette.lightPrimary;
-  static Color get accent => _isDark ? Palette.darkAccent : Palette.lightAccent;
   static Color get scaffold =>
       _isDark ? Palette.darkScaffold : Palette.lightScaffold;
+  static Color get background =>
+      _isDark ? Palette.darkBackground : Palette.lightBackground;
+  static Color get surface =>
+      _isDark ? Palette.darkSurface : Palette.lightSurface;
   static Color get white => _isDark ? Palette.darkWhite : Palette.lightWhite;
-  static Color get black => _isDark ? Palette.darkBlack : Palette.lightBlack;
   static Color get red => _isDark ? Palette.darkRed : Palette.lightRed;
   static Color get green => _isDark ? Palette.darkGreen : Palette.lightGreen;
   static Color get blue => _isDark ? Palette.darkBlue : Palette.lightBlue;

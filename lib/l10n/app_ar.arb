@@ -17,6 +17,13 @@
   "issueType_button_not_responding": "هناك زر لا يعمل ",
   "issueType_above_floor": "المصعد يتوقف أعلى الطابق المطلوب",
   "issueType_other": "أخرى",
+  "issueTypeDoorNotOpeningPriority": "حرج",
+  "issueTypeStuckBetweenFloorsPriority": "حرج",
+  "issueTypeNoisePriority": "منخفض",
+  "issueTypeNotRespondingPriority": "حرج",
+  "issueTypeButtonNotRespondingPriority": "متوسط",
+  "issueTypeAboveFloorPriority": "حرج",
+  "issueTypeOtherPriority": "غير محدد",
   
   "issueStatus_not_fixed": "لم يتم الإصلاح",
   "issueStatus_needs_parts": "قطع غيار ناقصة",
@@ -39,6 +46,12 @@
   "reportArrivedDescription": "وصل الفني إلى الموقع",
   "reportInProgressDescription": "جاري إصلاح العطل",
   "reportResolvedDescription": "تم إصلاح العطل",
+
+  "unit_engine_name": "الماكينة",
+  "unit_cabine_name": "الكابينة",
+  "unit_counter_name": "التقل",
+  "unit_wires_name": "الحبال",
+  "unit_control_name": "الكنترول",
 
   "unit_active": "نشط",
   "unit_needs_maintenance": "يحتاج صيانة",

@@ -27,10 +27,8 @@ class BuildingDetailsViewBody extends StatelessWidget {
         SliverToBoxAdapter(child: SizedBox(height: 12)),
         SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverToBoxAdapter(
-              child: BuildingDetailsHeaderSection(
-                state: state,
-              ),
+            sliver: BuildingDetailsHeaderSection(
+              state: state,
             )),
         SliverToBoxAdapter(child: SizedBox(height: 12)),
         SliverPadding(

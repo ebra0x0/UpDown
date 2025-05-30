@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/constants.dart';
+import 'package:UpDown/core/utils/localization/constants.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 
 class StoragePath {

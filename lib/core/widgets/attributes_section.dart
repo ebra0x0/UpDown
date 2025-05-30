@@ -1,3 +1,6 @@
+import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/widgets/bubble_icon.dart';
+import 'package:UpDown/core/widgets/custom_card.dart';
 import 'package:flutter/material.dart';
 
 class AttributesSection extends StatelessWidget {
@@ -7,22 +10,52 @@ class AttributesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: attributes.map((e) => AttributeBox(attribute: e)).toList());
+    return SliverGrid.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 4,
+          childAspectRatio: 1 / 1.4,
+        ),
+        itemCount: attributes.length,
+        itemBuilder: (context, index) {
+          return AttributeCard(attribute: attributes[index]);
+        });
   }
 }
 
-class AttributeBox extends StatelessWidget {
-  const AttributeBox({super.key, required this.attribute});
+class AttributeCard extends StatelessWidget {
+  const AttributeCard({
+    super.key,
+    required this.attribute,
+  });
 
   final Map<String, dynamic> attribute;
 
   @override
   Widget build(BuildContext context) {
-    return Column(spacing: 4, children: [
-      Icon(attribute["icon"], color: Colors.grey),
-      Text(attribute["title"]),
-    ]);
+    return Expanded(
+      child: CustomCard(
+          padding: 16,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              BubbleIcon(
+                icon: attribute['icon'] as Icon,
+              ),
+              Text(
+                attribute['name'],
+                style: Styles.textStyle14,
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                attribute['value'],
+                style: Styles.textStyle16.copyWith(fontWeight: FontWeight.w900),
+                textAlign: TextAlign.center,
+              )
+            ],
+          )),
+    );
   }
 }

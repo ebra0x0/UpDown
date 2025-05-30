@@ -36,6 +36,15 @@ class AuthState {
       email: email ?? this.email,
     );
   }
+
+  AuthState reset() {
+    return AuthState(
+      status: AuthStatus.initial,
+      errorMsg: null,
+      session: null,
+      email: null,
+    );
+  }
 }
 
 // final class AuthStateInitial extends AuthState {}

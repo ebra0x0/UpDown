@@ -15,7 +15,8 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       } else if (session.user.email != null &&
           session.user.emailConfirmedAt == null) {
-        emit(state.copyWith(status: AuthStatus.unconfirmed,email: session.user.email));
+        emit(state.copyWith(
+            status: AuthStatus.unconfirmed, email: session.user.email));
         return;
       }
       await checkAccountStatus(session: session);
@@ -25,7 +26,10 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signOut() async {
     emit(state.copyWith(status: AuthStatus.loading));
     final res = await authRepo.signOut();
-    res.fold((failure) => emit(state.copyWith(status: AuthStatus.error,errorMsg: failure.errMessage)),
+    resetState();
+    res.fold(
+        (failure) => emit(state.copyWith(
+            status: AuthStatus.error, errorMsg: failure.errMessage)),
         (success) => emit(state.copyWith(status: AuthStatus.unAuthenticated)));
   }
 
@@ -33,17 +37,21 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     final res =
         await authRepo.signInWithPassword(email: email, password: password);
-    res.fold((failure) => emit(state.copyWith(status: AuthStatus.error,errorMsg: failure.errMessage)),
+    res.fold(
+        (failure) => emit(state.copyWith(
+            status: AuthStatus.error, errorMsg: failure.errMessage)),
         (session) => null);
   }
 
   Future<void> signUp({required String email, required String password}) async {
     emit(state.copyWith(status: AuthStatus.loading));
     final res = await authRepo.signUp(email: email, password: password);
-    res.fold((failure) => emit(state.copyWith(status: AuthStatus.error,errorMsg: failure.errMessage)),
-        (session) {
+    res.fold(
+        (failure) => emit(state.copyWith(
+            status: AuthStatus.error,
+            errorMsg: failure.errMessage)), (session) {
       if (session == null) {
-        emit(state.copyWith(status: AuthStatus.unconfirmed,email: email));
+        emit(state.copyWith(status: AuthStatus.unconfirmed, email: email));
         return;
       }
     });
@@ -52,24 +60,26 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> sendConfirmationEmail({required String email}) async {
     emit(state.copyWith(status: AuthStatus.loading));
     final res = await authRepo.sendConfirmationEmail(email);
-    res.fold((failure) => emit(state.copyWith(status: AuthStatus.error,errorMsg: failure.errMessage)),
-        (success) {
-      emit(state.copyWith(status: AuthStatus.unconfirmed,email: email));
+    res.fold(
+        (failure) => emit(state.copyWith(
+            status: AuthStatus.error,
+            errorMsg: failure.errMessage)), (success) {
+      emit(state.copyWith(status: AuthStatus.unconfirmed, email: email));
     });
   }
 
   Future<void> checkAccountStatus({required Session session}) async {
     final res = await authRepo.isNewAccount();
-    return res
-        .fold((failure) => emit(state.copyWith(status: AuthStatus.error,errorMsg: failure.errMessage)),
-            (isNew) {
+    return res.fold(
+        (failure) => emit(state.copyWith(
+            status: AuthStatus.error, errorMsg: failure.errMessage)), (isNew) {
       if (isNew) {
-        emit(state.copyWith(status: AuthStatus.newAccount,session: session));
+        emit(state.copyWith(status: AuthStatus.newAccount, session: session));
         return;
       }
-      emit(state.copyWith(status: AuthStatus.authenticated,session: session));
+      emit(state.copyWith(status: AuthStatus.authenticated, session: session));
     });
   }
 
-  void resetState() => emit(state);
+  void resetState() => emit(state.reset());
 }

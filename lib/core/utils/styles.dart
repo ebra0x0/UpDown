@@ -62,6 +62,12 @@ abstract class Styles {
     size: 24.sp,
   );
 
+  static Icon errorOutlineIcon = Icon(
+    Icons.error_outline_rounded,
+    color: AppTheme.white,
+    size: 22.sp,
+  );
+
   static const Icon backIcon = Icon(
     Icons.arrow_back_ios_new_rounded,
     size: 22,
@@ -139,7 +145,7 @@ abstract class Styles {
   );
 
   static Icon maintenanceIcon = Icon(
-    Icons.build_circle_outlined,
+    Icons.handyman_outlined,
     color: AppTheme.grey,
     size: 24.sp,
   );
@@ -209,6 +215,12 @@ abstract class Styles {
 
   static Icon locationIcon = Icon(
     Icons.location_on_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon logoutIcon = Icon(
+    Icons.logout_outlined,
     color: AppTheme.grey,
     size: 24.sp,
   );

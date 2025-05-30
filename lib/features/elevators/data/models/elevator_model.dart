@@ -1,5 +1,6 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/localization/local_service.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_unit_model.dart';
 import 'package:intl/intl.dart';
@@ -9,8 +10,8 @@ class ElevatorModel {
   final String buildingId;
   final String name;
   final ElevatorStatus status;
-  final DateTime? lastMaintenanceDate;
-  final DateTime? nextMaintenanceDate;
+  final String? lastMaintenanceDate;
+  final String? nextMaintenanceDate;
   final int maxLoad;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -36,6 +37,12 @@ class ElevatorModel {
   });
 
   factory ElevatorModel.fromJson(Map<String, dynamic> json) {
+    final DateTime nextMaintenanceDate =
+        DateTime.parse(json['next_maintenance_date']);
+    final DateTime lastMaintenanceDate =
+        DateTime.parse(json['last_maintenance_date']);
+    final String locale = LocaleService.currentLocale;
+
     return ElevatorModel(
       id: json['elevator_id'],
       buildingId: json['building_id'],
@@ -54,10 +61,10 @@ class ElevatorModel {
           : null,
       status: ElevatorStatusExtension.fromString(json['status']),
       lastMaintenanceDate: json['last_maintenance_date'] != null
-          ? DateFormat("yyyy-MM-dd").parse(json['last_maintenance_date'])
+          ? DateFormat('d MMMM', locale).format(lastMaintenanceDate)
           : null,
       nextMaintenanceDate: json['next_maintenance_date'] != null
-          ? DateTime.parse(json['next_maintenance_date'])
+          ? DateFormat('d MMMM', locale).format(nextMaintenanceDate)
           : null,
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),

@@ -5,8 +5,8 @@ import 'package:UpDown/features/elevators/presentation/widgets/elevators_section
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class ElevatorsBox extends StatelessWidget {
-  const ElevatorsBox({super.key, required this.elevator});
+class ElevatorBox extends StatelessWidget {
+  const ElevatorBox({super.key, required this.elevator});
 
   final ElevatorSummaryModel elevator;
 

@@ -17,6 +17,13 @@
   "issueType_button_not_responding": "Button Not Responding",
   "issueType_above_floor": "Above Floor",
   "issueType_other": "Other",
+  "issueTypeDoorNotOpeningPriority": "Critical",
+  "issueTypeStuckBetweenFloorsPriority": "Critical",
+  "issueTypeNoisePriority": "Low",
+  "issueTypeNotRespondingPriority": "Critical",
+  "issueTypeButtonNotRespondingPriority": "Moderate",
+  "issueTypeAboveFloorPriority": "Critical",
+  "issueTypeOtherPriority": "Unknown",
 
   "issueStatus_not_fixed": "Not Fixed",
   "issueStatus_needs_parts": "Needs Parts",
@@ -39,6 +46,12 @@
   "reportArrivedDescription": "The technician has arrived",
   "reportInProgressDescription": "In progress",
   "reportResolvedDescription": "The issue has been resolved",
+
+  "unit_engine_name": "Engine",
+  "unit_cabine_name": "Cabine",
+  "unit_counter_name": "Counter",
+  "unit_wires_name": "Wires",
+  "unit_control_name": "Control control",
 
   "unit_active": "Active",
   "unit_needs_maintenance": "Needs Maintenance",

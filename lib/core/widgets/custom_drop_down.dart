@@ -63,7 +63,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 color: hasError ? AppTheme.red : AppTheme.grey,
               ),
             ),
-      dropdownColor: AppTheme.accent,
+      dropdownColor: AppTheme.background,
       value: widget.value,
       menuMaxHeight: 250,
       iconEnabledColor: AppTheme.grey,

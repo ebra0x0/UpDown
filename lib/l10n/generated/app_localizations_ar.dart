@@ -60,6 +60,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get issueType_other => 'أخرى';
 
   @override
+  String get issueTypeDoorNotOpeningPriority => 'حرج';
+
+  @override
+  String get issueTypeStuckBetweenFloorsPriority => 'حرج';
+
+  @override
+  String get issueTypeNoisePriority => 'منخفض';
+
+  @override
+  String get issueTypeNotRespondingPriority => 'حرج';
+
+  @override
+  String get issueTypeButtonNotRespondingPriority => 'متوسط';
+
+  @override
+  String get issueTypeAboveFloorPriority => 'حرج';
+
+  @override
+  String get issueTypeOtherPriority => 'غير محدد';
+
+  @override
   String get issueStatus_not_fixed => 'لم يتم الإصلاح';
 
   @override
@@ -102,7 +123,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get report_resolved => 'تم إصلاح العطل';
 
   @override
-  String get reportPendingDescription => 'التقرير في الانتظار ولم يتم التعامل معه بعد';
+  String get reportPendingDescription =>
+      'التقرير في الانتظار ولم يتم التعامل معه بعد';
 
   @override
   String get reportReportedDescription => 'تم الإبلاغ عن العطل';
@@ -118,6 +140,21 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reportResolvedDescription => 'تم إصلاح العطل';
+
+  @override
+  String get unit_engine_name => 'الماكينة';
+
+  @override
+  String get unit_cabine_name => 'الكابينة';
+
+  @override
+  String get unit_counter_name => 'التقل';
+
+  @override
+  String get unit_wires_name => 'الحبال';
+
+  @override
+  String get unit_control_name => 'الكنترول';
 
   @override
   String get unit_active => 'نشط';

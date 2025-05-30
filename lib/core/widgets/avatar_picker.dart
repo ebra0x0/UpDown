@@ -46,7 +46,7 @@ class _AvatarPickerState extends State<AvatarPicker> {
           onTap: _pickImage,
           child: CircleAvatar(
             radius: 76.h,
-            backgroundColor: AppTheme.accent,
+            backgroundColor: AppTheme.background,
             backgroundImage:
                 imagePath != null ? Image.file(File(imagePath)).image : null,
             child: imagePath == null ? Styles.cameraIcon : null,

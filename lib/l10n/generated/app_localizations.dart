@@ -197,6 +197,48 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get issueType_other;
 
+  /// No description provided for @issueTypeDoorNotOpeningPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get issueTypeDoorNotOpeningPriority;
+
+  /// No description provided for @issueTypeStuckBetweenFloorsPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get issueTypeStuckBetweenFloorsPriority;
+
+  /// No description provided for @issueTypeNoisePriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get issueTypeNoisePriority;
+
+  /// No description provided for @issueTypeNotRespondingPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get issueTypeNotRespondingPriority;
+
+  /// No description provided for @issueTypeButtonNotRespondingPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get issueTypeButtonNotRespondingPriority;
+
+  /// No description provided for @issueTypeAboveFloorPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get issueTypeAboveFloorPriority;
+
+  /// No description provided for @issueTypeOtherPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get issueTypeOtherPriority;
+
   /// No description provided for @issueStatus_not_fixed.
   ///
   /// In en, this message translates to:
@@ -316,6 +358,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The issue has been resolved'**
   String get reportResolvedDescription;
+
+  /// No description provided for @unit_engine_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine'**
+  String get unit_engine_name;
+
+  /// No description provided for @unit_cabine_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Cabine'**
+  String get unit_cabine_name;
+
+  /// No description provided for @unit_counter_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Counter'**
+  String get unit_counter_name;
+
+  /// No description provided for @unit_wires_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Wires'**
+  String get unit_wires_name;
+
+  /// No description provided for @unit_control_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Control control'**
+  String get unit_control_name;
 
   /// No description provided for @unit_active.
   ///

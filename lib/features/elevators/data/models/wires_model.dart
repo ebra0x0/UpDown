@@ -26,8 +26,8 @@ class WiresModel extends ElevatorUnitModel {
       status: UnitStatusExtension.fromString(json['status']),
       name: json['name'],
       elevatorId: json['elevator_id'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
       count: json['details']['count'],
       lastChangeDate:
           DateFormat("yyyy-MM-dd").parse(json['details']['last_change_date']),

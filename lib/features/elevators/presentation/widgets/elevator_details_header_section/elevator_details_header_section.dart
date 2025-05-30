@@ -1,57 +1,72 @@
-import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
-import 'package:UpDown/core/widgets/attributes_section.dart';
+import 'package:UpDown/core/widgets/bubble_icon.dart';
+import 'package:UpDown/core/widgets/date_and_bubble_text_row.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
-import 'package:UpDown/features/elevators/presentation/widgets/elevator_details_header_section/alert_banner_issue.dart';
+import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class ElevatorDetailsHeaderSection extends StatelessWidget {
-  const ElevatorDetailsHeaderSection({
+class ElevatorDetailsAlertIssue extends StatelessWidget {
+  const ElevatorDetailsAlertIssue({
     super.key,
     required this.state,
   });
 
   final ElevatorDetailsLoaded state;
-
-  ElevatorStatus get status => state.elevator.status;
-  IssueType? get issueType => state.elevator.activeIssue?.issueType;
-  List<Map<String, dynamic>> get attributes => [
-        {
-          'icon': Styles.reportIcon.icon,
-          'title': state.elevator.issues.length.toString()
-        },
-        {
-          'icon': Styles.maintenanceIcon.icon,
-          'title': state.elevator.nextMaintenanceDate != null
-              ? DateFormat.yMd().format(state.elevator.nextMaintenanceDate!)
-              : "لم يحدد بعد"
-        },
-        {
-          'title': state.elevator.lastMaintenanceDate != null
-              ? DateFormat.yMd().format(state.elevator.lastMaintenanceDate!)
-              : "لا توجد صيانات سابقة",
-          'icon': Styles.calendarIcon.icon,
-        },
-        {
-          'icon': Styles.groupIcon.icon,
-          'title': state.elevator.maxLoad.toString()
-        },
-      ];
+  IssueModel? get activeIssue => state.elevator.activeIssue;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (status != ElevatorStatus.working)
-          AlertBannerIssue(
-            title: status.description(context, issueType),
-            color: status.color,
-          ),
-        const SizedBox(height: 26),
-        AttributesSection(attributes: attributes),
-      ],
+    return Visibility(
+      visible: activeIssue != null,
+      child: Expanded(
+          child: Container(
+        height: 125,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        decoration: BoxDecoration(
+          color: AppTheme.red.withValues(alpha: 0.2),
+          borderRadius: Styles.borderRadius8,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8,
+          children: [
+            BubbleIcon(
+              icon: Styles.errorOutlineIcon.copyWith(
+                size: 24,
+              ),
+              color: AppTheme.red,
+              padding: 10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    activeIssue == null
+                        ? ""
+                        : "عطل ${activeIssue?.issueType.priority(context)}",
+                    style: Styles.textStyle18.copyWith(
+                      color: AppTheme.red,
+                      fontWeight: FontWeight.w900,
+                    )),
+                Text(
+                  activeIssue == null
+                      ? ""
+                      : activeIssue!.issueType.title(context),
+                  style: Styles.textStyle16.copyWith(color: AppTheme.white),
+                ),
+                DateAndbubbleTextRow(
+                    date: activeIssue?.createdAt ?? "",
+                    bubbleText: activeIssue?.status?.title(context) ?? "",
+                    bubbleColor: AppTheme.red),
+              ],
+            )
+          ],
+        ),
+      )),
     );
   }
 }

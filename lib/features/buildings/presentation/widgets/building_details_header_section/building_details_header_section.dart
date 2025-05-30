@@ -1,5 +1,6 @@
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/attributes_section.dart';
+import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
 import 'package:flutter/material.dart';
 
@@ -8,20 +9,25 @@ class BuildingDetailsHeaderSection extends StatelessWidget {
 
   final BuildingDetailsLoaded state;
 
+  BuildingModel get building => state.building;
+
   List<Map<String, dynamic>> get attributes => [
         {
-          'icon': Styles.reportIcon.icon,
-          'title': state.building.reports.isEmpty
+          'name': 'التقارير',
+          'icon': Styles.reportIcon,
+          'value': state.building.reports.isEmpty
               ? "0"
-              : state.building.reports.length.toString()
+              : building.reports.length.toString()
         },
         {
-          'icon': Styles.stairsIcon.icon,
-          'title': state.building.floors.length.toString()
+          'name': 'الطوابق',
+          'icon': Styles.stairsIcon,
+          'value': building.floors.length.toString()
         },
         {
-          'icon': Styles.elevatorIcon.icon,
-          'title': state.building.elevators.length.toString()
+          'name': 'المصاعد',
+          'icon': Styles.elevatorIcon,
+          'value': building.elevators.length.toString()
         },
       ];
 

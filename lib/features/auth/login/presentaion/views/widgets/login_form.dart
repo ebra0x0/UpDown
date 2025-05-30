@@ -33,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
     validator: Validator().loginPasswordValidator,
   );
 
-  void _submit() {
+  void _submit() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       FocusScope.of(context).unfocus();
