@@ -18,7 +18,7 @@ class AuthRepoImp implements AuthRepo {
       if (session != null && session.isExpired) {
         String? savedRefToken = await getRefreshToken();
 
-        final refreshedSession =
+        final Session? refreshedSession =
             await refreshSession(refreshToken: savedRefToken);
 
         if (refreshedSession != null) {
@@ -32,10 +32,9 @@ class AuthRepoImp implements AuthRepo {
 
   @override
   Future<Session?> refreshSession({String? refreshToken}) async {
-    await _api
+    return await _api
         .refreshToken(refreshToken: refreshToken)
         .fold((_) => null, (session) => session);
-    return null;
   }
 
   @override

@@ -27,14 +27,16 @@ class CustomListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 16, right: 8),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.sp),
       shape: RoundedRectangleBorder(borderRadius: Styles.borderRadius8),
+      enabled: isLoading,
+      tileColor: AppTheme.background,
       onTap: isLoading ? null : onTap,
       title: Text(
         title,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
-        style: Styles.textStyle14,
+        style: Styles.textStyle14.copyWith(color: AppTheme.white),
       ),
       subtitle: subtitle == null
           ? null

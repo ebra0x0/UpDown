@@ -9,7 +9,7 @@ class HeaderText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 0),
+      padding: const EdgeInsets.only(bottom: 12, right: 16, left: 16),
       child: Text(title, style: textStyle),
     );
   }

@@ -33,8 +33,8 @@ class FloorModel {
       buildingId: json['building_id'],
       floorNumber: json['floor_number'],
       isClosed: json['is_closed'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 }

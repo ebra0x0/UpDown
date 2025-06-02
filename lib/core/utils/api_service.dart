@@ -72,7 +72,8 @@ class ApiService {
   Future<Either<Failure, Session?>> refreshToken({String? refreshToken}) async {
     try {
       if (_supabase.auth.currentSession == null) return const Right(null);
-      final newSession = await _supabase.auth.refreshSession(refreshToken);
+      final AuthResponse newSession =
+          await _supabase.auth.refreshSession(refreshToken);
 
       return Right(newSession.session);
     } on AuthException catch (e) {

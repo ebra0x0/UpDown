@@ -9,7 +9,7 @@ class ElevatorsGridSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
+    return SliverGrid.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
         crossAxisSpacing: 8,
@@ -17,13 +17,11 @@ class ElevatorsGridSection extends StatelessWidget {
         childAspectRatio: 1 / .4,
       ),
       itemCount: state.elevators.length,
-      physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return ElevatorBox(
           elevator: state.elevators[index],
         );
       },
-      padding: EdgeInsets.zero,
     );
   }
 }

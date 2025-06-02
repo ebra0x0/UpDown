@@ -8,7 +8,7 @@ class BuildingModel {
   final String address;
   final String ownerId;
   final List<FloorModel> floors;
-  final List<FloorModel> closedFloors;
+  final List<FloorModel>? closedFloors;
   final DateTime createdAt;
   final DateTime updatedAt;
   final List<ElevatorSummaryModel> elevators;
@@ -21,7 +21,7 @@ class BuildingModel {
     required this.address,
     required this.ownerId,
     required this.floors,
-    required this.closedFloors,
+    this.closedFloors,
     required this.createdAt,
     required this.updatedAt,
     required this.elevators,
@@ -47,7 +47,7 @@ class BuildingModel {
       address: json['address'],
       ownerId: json['owner_id'],
       floors: (json['floors'] as List<dynamic>)
-          .map((f) => FloorModel.fromJson(f as Map<String, dynamic>))
+          .map((f) => FloorModel.fromJson(f))
           .toList(),
       closedFloors: (json['closed_floors'] as List<dynamic>)
           .map((cf) => FloorModel.fromJson(cf as Map<String, dynamic>))

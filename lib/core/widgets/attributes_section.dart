@@ -34,28 +34,26 @@ class AttributeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: CustomCard(
-          padding: 16,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              BubbleIcon(
-                icon: attribute['icon'] as Icon,
-              ),
-              Text(
-                attribute['name'],
-                style: Styles.textStyle14,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                attribute['value'],
-                style: Styles.textStyle16.copyWith(fontWeight: FontWeight.w900),
-                textAlign: TextAlign.center,
-              )
-            ],
-          )),
-    );
+    return CustomCard(
+        padding: 16,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            BubbleIcon(
+              icon: attribute['icon'] as Icon,
+            ),
+            Text(
+              attribute['name'],
+              style: Styles.textStyle14,
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              attribute['value'],
+              style: Styles.textStyle16.copyWith(fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ));
   }
 }

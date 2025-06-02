@@ -19,13 +19,10 @@ class ElevatorBoxContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 16,
-      ),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppTheme.background,
-        borderRadius: Styles.borderRadius8,
+        borderRadius: Styles.borderRadius18,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

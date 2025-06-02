@@ -1,5 +1,6 @@
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/extensions/ext_box_border.dart';
 import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
@@ -21,13 +22,15 @@ class ElevatorDetailsAlertIssue extends StatelessWidget {
   Widget build(BuildContext context) {
     return Visibility(
       visible: activeIssue != null,
-      child: Expanded(
-          child: Container(
+      child: Container(
+        width: double.infinity,
         height: 125,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppTheme.red.withValues(alpha: 0.2),
-          borderRadius: Styles.borderRadius8,
+          border: Styles.generalBoxBorder
+              .copyWith(color: AppTheme.red.withValues(alpha: 0.2)),
+          borderRadius: Styles.borderRadius18,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +51,7 @@ class ElevatorDetailsAlertIssue extends StatelessWidget {
                     activeIssue == null
                         ? ""
                         : "عطل ${activeIssue?.issueType.priority(context)}",
-                    style: Styles.textStyle18.copyWith(
+                    style: Styles.textStyle16.copyWith(
                       color: AppTheme.red,
                       fontWeight: FontWeight.w900,
                     )),
@@ -56,7 +59,7 @@ class ElevatorDetailsAlertIssue extends StatelessWidget {
                   activeIssue == null
                       ? ""
                       : activeIssue!.issueType.title(context),
-                  style: Styles.textStyle16.copyWith(color: AppTheme.white),
+                  style: Styles.textStyle14.copyWith(color: AppTheme.white),
                 ),
                 DateAndbubbleTextRow(
                     date: activeIssue?.createdAt ?? "",
@@ -66,7 +69,7 @@ class ElevatorDetailsAlertIssue extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }

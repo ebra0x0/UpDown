@@ -14,17 +14,20 @@ class ElevatorsGridSectionBuilder extends StatelessWidget {
     return BlocBuilder<ElevatorsCubit, ElevatorsState>(
       builder: (context, state) {
         if (state is ElevatorsError) {
-          return Center(
-            child: Text(state.error),
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text(state.error),
+            ),
           );
         } else if (state is ElevatorsLoaded) {
           return ElevatorsGridSection(
             state: state,
           );
         } else if (state is ElevatorsEmpty) {
-          return Center(child: Text("لا توجد مصاعد"));
+          return SliverToBoxAdapter(
+              child: Center(child: Text("لا توجد مصاعد")));
         }
-        return DataLoadingIndicator();
+        return SliverToBoxAdapter(child: DataLoadingIndicator());
       },
     );
   }

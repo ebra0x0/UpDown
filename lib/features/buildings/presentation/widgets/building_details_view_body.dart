@@ -1,6 +1,8 @@
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/back_nav_button.dart';
+import 'package:UpDown/core/widgets/header_section.dart';
 import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
+import 'package:UpDown/features/buildings/presentation/widgets/building_floors_section/building_floors_section.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/elevators_grid_section_builder.dart';
 import 'package:flutter/material.dart';
 
@@ -33,8 +35,21 @@ class BuildingDetailsViewBody extends StatelessWidget {
         SliverToBoxAdapter(child: SizedBox(height: 12)),
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverFillRemaining(
-            child: ElevatorsGridSectionBuilder(),
+          sliver: ElevatorsGridSectionBuilder(),
+        ),
+        SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverToBoxAdapter(
+                child: HeaderSection(
+              title: "الطوابق",
+              actionText: "عرض الكل",
+              titleStyle: Styles.textStyle18,
+              onActionTap: () {},
+            ))),
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          sliver: BuildingFloorsSection(
+            floors: state.building.floors,
           ),
         ),
       ],

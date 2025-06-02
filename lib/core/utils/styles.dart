@@ -254,14 +254,14 @@ abstract class Styles {
   );
 
   // Border
-  static final BoxBorder generalBoxBorder = Border.all(
-    color: AppTheme.grey.withValues(
+  static final Border generalBoxBorder = Border.all(
+    color: AppTheme.red.withValues(
       alpha: 0.2,
     ),
     width: 1.8.w,
   );
 
-  static final BoxBorder errorBoxBorder = Border.all(
+  static final Border errorBoxBorder = Border.all(
     color: AppTheme.red.withValues(
       alpha: 0.2,
     ),

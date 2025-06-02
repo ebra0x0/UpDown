@@ -1,4 +1,3 @@
-import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +22,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'أنت تدير',
-            style: Styles.textStyle24,
-          ),
-        ),
-        body: const HomeViewBody());
+    return Scaffold(body: const HomeViewBody());
   }
 }
