@@ -18,35 +18,61 @@ class RootView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-            create: (context) => BuildingsCubit(gitIt.get<BuildingsRepoImp>())),
-        BlocProvider(
-            create: (context) => ElevatorsCubit(gitIt.get<ElevatorRepoImp>())),
-        BlocProvider(
-            create: (context) => IssuesCubit(gitIt.get<IssuesRepoImp>())),
-      ],
-      child: Scaffold(
-        body: navigationShell,
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            splashFactory: NoSplash.splashFactory,
-          ),
-          child: BottomNavigationBar(
-            currentIndex: navigationShell.currentIndex,
-            onTap: (index) => navigationShell.goBranch(index),
-            selectedItemColor: AppTheme.primary,
-            unselectedItemColor: AppTheme.grey,
-            items: [
-              BottomNavigationBarItem(icon: Styles.homeIcon, label: 'الرئيسية'),
-              BottomNavigationBarItem(icon: Styles.addIcon, label: 'إنشاء عطل'),
-              BottomNavigationBarItem(icon: Styles.userIcon, label: 'الحساب'),
+        providers: [
+          BlocProvider(
+              create: (context) =>
+                  BuildingsCubit(gitIt.get<BuildingsRepoImp>())),
+          BlocProvider(
+              create: (context) =>
+                  ElevatorsCubit(gitIt.get<ElevatorRepoImp>())),
+          BlocProvider(
+              create: (context) => IssuesCubit(gitIt.get<IssuesRepoImp>())),
+        ],
+        child: Scaffold(
+          body: Stack(
+            children: [
+              navigationShell,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppTheme.tabBar.withValues(alpha: 0),
+                        AppTheme.tabBar,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashFactory: NoSplash.splashFactory,
+                    ),
+                    child: BottomNavigationBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      currentIndex: navigationShell.currentIndex,
+                      onTap: (index) => navigationShell.goBranch(index),
+                      selectedItemColor: AppTheme.primary,
+                      unselectedItemColor:
+                          AppTheme.tabBarItem.withValues(alpha: 0.7),
+                      items: [
+                        BottomNavigationBarItem(
+                            icon: Styles.homeIcon, label: 'الرئيسية'),
+                        BottomNavigationBarItem(
+                            icon: Styles.addIcon, label: 'إنشاء عطل'),
+                        BottomNavigationBarItem(
+                            icon: Styles.userIcon, label: 'الحساب'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

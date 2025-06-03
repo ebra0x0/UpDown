@@ -36,7 +36,7 @@ class CustomListTile extends StatelessWidget {
         title,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
-        style: Styles.textStyle14.copyWith(color: AppTheme.white),
+        style: Styles.textStyle14.copyWith(color: AppTheme.text),
       ),
       subtitle: subtitle == null
           ? null
