@@ -258,35 +258,35 @@ abstract class Styles {
     color: AppTheme.red.withValues(
       alpha: 0.2,
     ),
-    width: 1.8.w,
+    width: 1.3.w,
   );
 
   static final Border errorBoxBorder = Border.all(
     color: AppTheme.red.withValues(
       alpha: 0.2,
     ),
-    width: 1.8.w,
+    width: 1.3.w,
   );
 
   static final OutlineInputBorder generalBorder = OutlineInputBorder(
     borderRadius: Styles.borderRadius8,
     borderSide:
-        BorderSide(color: AppTheme.grey.withValues(alpha: .2), width: 1.8.w),
+        BorderSide(color: AppTheme.grey.withValues(alpha: .2), width: 1.3.w),
   );
 
   static final OutlineInputBorder errorBorder = OutlineInputBorder(
     borderRadius: Styles.borderRadius8,
-    borderSide: BorderSide(color: AppTheme.red, width: 1.8.w),
+    borderSide: BorderSide(color: AppTheme.red, width: 1.3.w),
   );
 
   static final OutlineInputBorder focusedBorder = OutlineInputBorder(
     borderRadius: Styles.borderRadius8,
-    borderSide: BorderSide(color: AppTheme.primary, width: 1.8.w),
+    borderSide: BorderSide(color: AppTheme.primary, width: 1.3.w),
   );
 
   static final OutlineInputBorder enabledBorder = OutlineInputBorder(
     borderRadius: Styles.borderRadius8,
     borderSide:
-        BorderSide(color: AppTheme.grey.withValues(alpha: .2), width: 1.8.w),
+        BorderSide(color: AppTheme.grey.withValues(alpha: .2), width: 1.3.w),
   );
 }
