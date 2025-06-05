@@ -15,7 +15,7 @@ class ProfileView extends StatelessWidget {
       appBar: AppBar(
           title: Text(
         'الملف الشخصي',
-        style: Styles.textStyle24,
+        style: Styles.textStyle22,
       )),
       body: BlocProvider(
         create: (context) => ProfileCubit(gitIt.get<ProfileRepoImp>()),

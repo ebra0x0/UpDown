@@ -12,7 +12,7 @@ class HomeViewBody extends StatelessWidget {
     return CustomScrollView(slivers: [
       SliverAppBar(
         floating: true,
-        title: Text('أنت تدير', style: Styles.textStyle24),
+        title: Text('أنت تدير', style: Styles.textStyle22),
       ),
       SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16),

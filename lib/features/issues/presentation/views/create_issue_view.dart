@@ -29,7 +29,7 @@ class _CreateIssueViewState extends State<CreateIssueView> {
         appBar: AppBar(
           title: Text(
             'الإبلاغ عن عطل جديد',
-            style: Styles.textStyle24,
+            style: Styles.textStyle22,
           ),
         ),
         body: CreateIssueBody(),

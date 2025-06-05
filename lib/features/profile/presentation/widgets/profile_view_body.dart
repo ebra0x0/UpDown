@@ -7,6 +7,7 @@ import 'package:UpDown/core/widgets/custom_list_tile.dart';
 import 'package:UpDown/core/widgets/header_text.dart';
 import 'package:UpDown/features/auth/manager/auth_cubit.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
+import 'package:UpDown/features/profile/presentation/widgets/persolnal_info_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,30 +34,7 @@ class ProfileViewBody extends StatelessWidget {
             const SizedBox(height: 22),
             HeaderText(
                 title: "المعلومات الشخصية", textStyle: Styles.textStyle16),
-            CustomListTile(
-              title: "الاسم",
-              subtitle: profile.name,
-              leading: Styles.userIcon.copyWith(
-                color: AppTheme.grey,
-              ),
-            ),
-            Visibility(
-                visible: profile.email != null,
-                child: CustomListTile(
-                  title: "البريد الإلكتروني",
-                  subtitle: profile.email,
-                  leading: Styles.emailIcon,
-                )),
-            CustomListTile(
-              title: "رقم الهاتف",
-              subtitle: profile.phone,
-              leading: Styles.phoneIcon,
-            ),
-            CustomListTile(
-              title: "المدينة",
-              subtitle: profile.address,
-              leading: Styles.locationIcon,
-            ),
+            PersonalInfoList(profile: profile),
             const SizedBox(height: 22),
             HeaderText(title: "الحساب", textStyle: Styles.textStyle16),
             CustomListTile(
