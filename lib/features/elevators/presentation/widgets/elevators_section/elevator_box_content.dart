@@ -3,6 +3,7 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/bubble_status.dart';
 import 'package:UpDown/core/widgets/date_and_bubble_text_row.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
@@ -82,15 +83,11 @@ class ElevatorBoxHeader extends StatelessWidget {
             style: Styles.textStyle16,
           ),
         ]),
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: elevator.status.color.withValues(alpha: 0.2),
-          ),
-          child: elevator.status.icon.copyWith(
+        BubbleIcon(
+          icon: elevator.status.icon.copyWith(
             color: elevator.status.color,
           ),
+          color: elevator.status.color,
         )
       ],
     );

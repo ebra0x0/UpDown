@@ -14,23 +14,33 @@ class CustomListTile extends StatelessWidget {
     this.onTap,
     this.isLoading = false,
     this.loadingColor,
+    this.isThreeLine = false,
+    this.footer,
+    this.padding,
+    this.backgroundColor,
   });
 
   final String title;
   final String? subtitle;
   final Widget? leading;
   final Widget? trailing;
+  final Widget? footer;
   final VoidCallback? onTap;
   final bool isLoading;
   final Color? loadingColor;
+  final bool isThreeLine;
+  final EdgeInsets? padding;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.sp),
+      isThreeLine: isThreeLine,
+      contentPadding:
+          padding ?? EdgeInsets.symmetric(horizontal: 16.sp, vertical: 8.sp),
       shape: RoundedRectangleBorder(borderRadius: Styles.borderRadius8),
       enabled: isLoading,
-      tileColor: AppTheme.background,
+      tileColor: backgroundColor ?? AppTheme.background,
       onTap: isLoading ? null : onTap,
       title: Text(
         title,

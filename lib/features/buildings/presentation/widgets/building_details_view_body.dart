@@ -52,13 +52,6 @@ class BuildingDetailsViewBody extends StatelessWidget {
             floors: state.building.floors,
           ),
         ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          sliver: BuildingFloorsSection(
-            floors: state.building.floors,
-          ),
-        ),
-        SliverFillRemaining()
       ],
     );
   }

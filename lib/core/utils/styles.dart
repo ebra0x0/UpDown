@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract class Styles {
+  static final TextStyle textStyle10 = TextStyle(
+    fontSize: 10.sp,
+    fontWeight: FontWeight.w400,
+  );
   static final TextStyle textStyle12 = TextStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.w400,
@@ -247,10 +251,10 @@ abstract class Styles {
 
   // Box Shadow
 
-  static const BoxShadow boxShadow = BoxShadow(
-    color: Color(0xFFE0E0E0),
-    blurRadius: 5,
-    offset: Offset(0, 4),
+  static BoxShadow boxShadow = BoxShadow(
+    color: Color(0xFFE0E0E0).withValues(alpha: 0.3),
+    blurRadius: 10,
+    offset: Offset(0, 2),
   );
 
   // Border
