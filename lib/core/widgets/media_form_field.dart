@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/ext_icon.dart';
+import 'package:UpDown/core/utils/function/is_file_size_acceptable.dart';
 import 'package:flutter/material.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/normalization.dart';

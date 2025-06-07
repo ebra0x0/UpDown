@@ -27,7 +27,7 @@ class CreateIssueFormBody extends StatefulWidget {
 }
 
 class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
-  void onMediaSelected(File file, MediaType mediaType) {
+  void onMediaSelected(File file, MediaType mediaType) async {
     context.read<CreateIssueCubit>().selectMedia(file: file, type: mediaType);
   }
 

@@ -23,33 +23,106 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
 
   final ImagePicker _picker = ImagePicker();
 
+  // Future<void> pickMedia() async {
+  //   if (isLoading) return;
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   final XFile? media = await _picker.pickMedia();
+
+  //   if (media != null) {
+  //     final File file = File(media.path);
+
+  //     if (_regexImage.hasMatch(media.path)) {
+  //       final bool isUnder5MB = await isFileSizeAcceptable(
+  //           file: file, limitSize: 5, context: context);
+  //       if (!isUnder5MB) {
+  //         setState(() {
+  //           isLoading = false;
+  //         });
+  //         return;
+  //       }
+  //       setState(() {
+  //         _image = File(media.path);
+  //       });
+  //       widget.onMediaSelected(file, MediaType.image);
+  //     } else if (_regexVideo.hasMatch(media.path)) {
+  //       final bool isUnder20MB = await isFileSizeAcceptable(
+  //           file: file, limitSize: 20, context: context);
+  //       if (!isUnder20MB) {
+  //         setState(() {
+  //           isLoading = false;
+  //           return;
+  //         });
+  //       }
+  //       setState(() {
+  //         _video = File(media.path);
+  //       });
+  //       widget.onMediaSelected(file, MediaType.video);
+  //     }
+  //     widget.field.didChange(file);
+  //   }
+
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
+
   Future<void> pickMedia() async {
     if (isLoading) return;
+
     setState(() {
       isLoading = true;
     });
-    final XFile? media = await _picker.pickMedia();
 
-    if (media != null) {
-      final File file = File(media.path);
+    try {
+      final XFile? media = await _picker.pickMedia();
+
+      if (media == null) return;
+
+      final file = File(media.path);
+
+      // تحديد النوع والحجم المطلوب
+      late final MediaType type;
+      late final int limitSizeMB;
 
       if (_regexImage.hasMatch(media.path)) {
-        setState(() {
-          _image = File(media.path);
-        });
-        widget.onMediaSelected(file, MediaType.image);
+        type = MediaType.image;
+        limitSizeMB = 5;
       } else if (_regexVideo.hasMatch(media.path)) {
-        setState(() {
-          _video = File(media.path);
-        });
-        widget.onMediaSelected(file, MediaType.video);
+        type = MediaType.video;
+        limitSizeMB = 20;
+      } else {
+        return; // ملف غير مدعوم
       }
-      widget.field.didChange(file);
-    }
+      if (!context.mounted) return;
 
-    setState(() {
-      isLoading = false;
-    });
+      final isAcceptable = await isFileSizeAcceptable(
+        file: file,
+        limitSize: limitSizeMB,
+        // ignore: use_build_context_synchronously
+        context: context,
+      );
+
+      if (!isAcceptable) return;
+
+      setState(() {
+        if (type == MediaType.image) {
+          _image = file;
+        } else {
+          _video = file;
+        }
+      });
+
+      widget.onMediaSelected(file, type);
+      widget.field.didChange(file);
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -74,7 +147,8 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Styles.checkIcon.copyWith(
-                            size: 32.w,
+                            size: 52.w,
+                            color: AppTheme.green,
                           ),
                           Text(
                             'تم تحميل الفيديو',
