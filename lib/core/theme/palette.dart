@@ -6,7 +6,7 @@ abstract class Palette {
   static const Color lightPrimary = Color(0xFF7C83FF);
   static const Color lightScaffold = Color(0xFFF3F4F6);
   static const Color lightBackground = Color(0xFFFFFFFF);
-  static const Color lightSurface = Color(0xFFF9FAFB);
+  static const Color lightSurface = Color(0xFFF4F9FD);
   static const Color lightGrey = Color(0xFF9C9C9C);
   static const Color lightWhite = Color(0xFFFFFFFF);
   static const Color lightBlack = Color(0xFF000000);

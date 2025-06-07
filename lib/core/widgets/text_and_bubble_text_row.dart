@@ -2,15 +2,15 @@ import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/widgets.dart';
 
-class DateAndbubbleTextRow extends StatelessWidget {
-  const DateAndbubbleTextRow({
+class TextAndbubbleTextRow extends StatelessWidget {
+  const TextAndbubbleTextRow({
     super.key,
-    required this.date,
+    required this.text,
     required this.bubbleText,
     this.bubbleColor,
   });
 
-  final String date;
+  final String text;
   final String bubbleText;
   final Color? bubbleColor;
 
@@ -35,7 +35,7 @@ class DateAndbubbleTextRow extends StatelessWidget {
           ),
         ),
         Text(
-          date,
+          text,
           style: Styles.textStyle12.copyWith(
             color: AppTheme.grey,
           ),

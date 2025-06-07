@@ -6,7 +6,7 @@ import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/bubble_status.dart';
-import 'package:UpDown/core/widgets/date_and_bubble_text_row.dart';
+import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
 import 'package:UpDown/core/widgets/card_tile.dart';
 import 'package:flutter/material.dart';
@@ -72,8 +72,8 @@ class _ElevatorCardFooter extends StatelessWidget {
     final String? issueDate = elevator.issueDate;
     return Visibility(
         visible: issueType != null && issueDate != null,
-        child: DateAndbubbleTextRow(
-          date: issueDate ?? "",
+        child: TextAndbubbleTextRow(
+          text: issueDate ?? "",
           bubbleText: elevator.issueType?.priority(context) ?? "",
           bubbleColor: AppTheme.red,
         ));

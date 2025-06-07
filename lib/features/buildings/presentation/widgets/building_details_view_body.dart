@@ -5,6 +5,7 @@ import 'package:UpDown/features/buildings/presentation/manager/building_details_
 import 'package:UpDown/features/buildings/presentation/widgets/building_floors_section/building_floors_section.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/elevators_grid_section_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'building_details_header_section/building_details_header_section.dart';
 
@@ -19,26 +20,26 @@ class BuildingDetailsViewBody extends StatelessWidget {
       slivers: [
         SliverAppBar(
           floating: true,
-          leading: BackButtonNavigation(),
+          leading: const BackButtonNavigation(),
           title: Text(state.building.name,
-              style: Styles.textStyle24,
+              style: Styles.textStyle22,
               overflow: TextOverflow.ellipsis,
               maxLines: 1),
           centerTitle: true,
         ),
-        SliverToBoxAdapter(child: SizedBox(height: 12)),
+        SliverToBoxAdapter(child: const SizedBox(height: 12)),
         SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 8.sp),
             sliver: BuildingDetailsHeaderSection(
               state: state,
             )),
-        SliverToBoxAdapter(child: SizedBox(height: 12)),
+        SliverToBoxAdapter(child: const SizedBox(height: 12)),
         SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          sliver: ElevatorsGridSectionBuilder(),
+          padding: EdgeInsets.symmetric(horizontal: 8.sp),
+          sliver: const ElevatorsGridSectionBuilder(),
         ),
         SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 8.sp),
             sliver: SliverToBoxAdapter(
                 child: HeaderSection(
               title: "الطوابق",
@@ -47,7 +48,7 @@ class BuildingDetailsViewBody extends StatelessWidget {
               onActionTap: () {},
             ))),
         SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 8.sp),
           sliver: BuildingFloorsSection(
             floors: state.building.floors,
           ),

@@ -11,17 +11,8 @@ class IssueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "تفاصيل العطل",
-            style: Styles.textStyle24,
-          ),
-          leading: BackButtonNavigation(),
-        ),
-        body: IssueViewBody(issue: issue),
-      ),
+    return Scaffold(
+      body: IssueViewBody(issue: issue),
     );
   }
 }

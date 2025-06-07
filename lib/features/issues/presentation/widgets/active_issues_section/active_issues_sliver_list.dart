@@ -5,7 +5,7 @@ import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
-import 'package:UpDown/core/widgets/date_and_bubble_text_row.dart';
+import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:UpDown/core/widgets/card_tile.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +41,8 @@ class ActiveIssuesSliverList extends StatelessWidget {
               style: Styles.textStyle12.copyWith(
                 color: AppTheme.grey,
               )),
-          footer: DateAndbubbleTextRow(
-              date: issue.createdAt ?? "",
+          footer: TextAndbubbleTextRow(
+              text: issue.createdAt ?? "",
               bubbleText: issue.status?.title(context) ?? "",
               bubbleColor: AppTheme.red),
           onTap: () => context.push(AppRouter.kissueView, extra: issue),

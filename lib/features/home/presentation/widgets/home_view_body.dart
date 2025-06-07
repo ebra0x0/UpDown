@@ -15,10 +15,10 @@ class HomeViewBody extends StatelessWidget {
         title: Text('أنت تدير', style: Styles.textStyle22),
       ),
       SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           sliver: BuildingsGridSectionBuilder()),
       SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         sliver: SliverToBoxAdapter(
             child: HeaderSection(
           title: "الأعطال الحالية",
@@ -28,7 +28,7 @@ class HomeViewBody extends StatelessWidget {
         )),
       ),
       SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           sliver: ActiveIssuesSectionBuilder()),
     ]);
   }

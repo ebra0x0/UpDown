@@ -1,3 +1,5 @@
+import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_info_section.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +14,13 @@ class IssueViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: IssueInfoSection(issue: issue),
+    return CustomScrollView(slivers: [
+      SliverAppBar(
+        leading: BackButtonNavigation(),
+        floating: true,
+        title: Text("تفاصيل العطل", style: Styles.textStyle22),
       ),
-    );
+      SliverToBoxAdapter(child: IssueInfoSection(issue: issue)),
+    ]);
   }
 }

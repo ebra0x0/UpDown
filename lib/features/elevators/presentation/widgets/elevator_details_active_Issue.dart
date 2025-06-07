@@ -4,7 +4,7 @@ import 'package:UpDown/core/utils/extensions/ext_box_border.dart';
 import 'package:UpDown/core/utils/extensions/ext_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
-import 'package:UpDown/core/widgets/date_and_bubble_text_row.dart';
+import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/core/widgets/card_tile.dart';
@@ -47,8 +47,8 @@ class ElevatorDetailsActiveIssue extends StatelessWidget {
         activeIssue == null ? "" : activeIssue!.issueType.title(context),
         style: Styles.textStyle14.copyWith(color: AppTheme.text),
       ),
-      footer: DateAndbubbleTextRow(
-          date: activeIssue?.createdAt ?? "",
+      footer: TextAndbubbleTextRow(
+          text: activeIssue?.createdAt ?? "",
           bubbleText: activeIssue?.status?.title(context) ?? "",
           bubbleColor: AppTheme.red),
     );

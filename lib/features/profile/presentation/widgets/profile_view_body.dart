@@ -21,32 +21,29 @@ class ProfileViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthCubit authCubit = context.watch<AuthCubit>();
 
-    return Padding(
-      padding: EdgeInsets.all(16.sp),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AvatarPicker(
-              image: profile.imagePath,
-              onImageSelected: (file) =>
-                  context.read<ProfileCubit>().updateAvatar(file),
-            ),
-            const SizedBox(height: 22),
-            HeaderText(
-                title: "المعلومات الشخصية", textStyle: Styles.textStyle16),
-            PersonalInfoList(profile: profile),
-            SizedBox(height: 22.sp),
-            HeaderText(title: "الحساب", textStyle: Styles.textStyle16),
-            CustomListTile(
-              isLoading: authCubit.state.status == AuthStatus.loading,
-              loadingColor: AppTheme.red,
-              title: "تسجيل الخروج",
-              leading: Styles.logoutIcon.copyWith(color: AppTheme.red),
-              onTap: () async => await authCubit.signOut(),
-            ),
-          ],
-        ),
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 8.sp),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AvatarPicker(
+            image: profile.imagePath,
+            onImageSelected: (file) =>
+                context.read<ProfileCubit>().updateAvatar(file),
+          ),
+          SizedBox(height: 22.sp),
+          HeaderText(title: "المعلومات الشخصية", textStyle: Styles.textStyle16),
+          PersonalInfoList(profile: profile),
+          SizedBox(height: 22.sp),
+          HeaderText(title: "الحساب", textStyle: Styles.textStyle16),
+          CustomListTile(
+            isLoading: authCubit.state.status == AuthStatus.loading,
+            loadingColor: AppTheme.red,
+            title: "تسجيل الخروج",
+            leading: Styles.logoutIcon.copyWith(color: AppTheme.red),
+            onTap: () async => await authCubit.signOut(),
+          ),
+        ],
       ),
     );
   }

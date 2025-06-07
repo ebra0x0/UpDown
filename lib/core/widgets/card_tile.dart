@@ -35,7 +35,7 @@ class CardTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        height: 125,
+        height: 125.sp,
         padding: padding ?? EdgeInsets.all(16.sp),
         decoration: decoration ??
             BoxDecoration(
