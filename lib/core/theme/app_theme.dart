@@ -31,10 +31,12 @@ class AppTheme {
       _isDark ? Palette.darkSurface : Palette.lightSurface;
   static Color get text => _isDark ? Palette.darkWhite : Palette.lightBlack;
   static Color get white => _isDark ? Palette.darkWhite : Palette.lightWhite;
+  static Color get black => _isDark ? Palette.darkBlack : Palette.lightBlack;
   static Color get tabBar =>
       _isDark ? Palette.darkBlack : Palette.lightScaffold;
   static Color get tabBarItem =>
       _isDark ? Palette.darkWhite : Palette.lightBlack;
+  static Color get shadow => _isDark ? Palette.darkBlack : Palette.lightGrey;
   static Color get red => _isDark ? Palette.darkRed : Palette.lightRed;
   static Color get green => _isDark ? Palette.darkGreen : Palette.lightGreen;
   static Color get blue => _isDark ? Palette.darkBlue : Palette.lightBlue;

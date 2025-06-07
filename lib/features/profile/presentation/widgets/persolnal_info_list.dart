@@ -4,6 +4,7 @@ import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_list_tile.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PersonalInfoList extends StatelessWidget {
   const PersonalInfoList({
@@ -15,7 +16,7 @@ class PersonalInfoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(spacing: 12, children: [
+    return Column(spacing: 8.sp, children: [
       CustomListTile(
         title: "الاسم",
         subtitle: profile.name,

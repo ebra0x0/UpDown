@@ -3,21 +3,24 @@ import 'package:UpDown/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key, required this.child, this.padding = 16.0});
+  const CustomCard(
+      {super.key,
+      required this.child,
+      this.padding = const EdgeInsets.all(16)});
 
   final Widget child;
-  final double padding;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: Styles.borderRadius8),
       elevation: 5,
-      shadowColor: AppTheme.scaffold.withValues(
-        alpha: .3,
+      shadowColor: AppTheme.shadow.withValues(
+        alpha: .1,
       ),
       child: Padding(
-        padding: EdgeInsets.all(padding),
+        padding: padding,
         child: Center(child: child),
       ),
     );

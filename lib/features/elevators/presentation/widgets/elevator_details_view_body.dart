@@ -1,7 +1,7 @@
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
-import 'package:UpDown/features/elevators/presentation/widgets/elevator_details_header_section/elevator_details_header_section.dart';
+import 'package:UpDown/features/elevators/presentation/widgets/elevator_details_active_Issue.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevator_details_units_section/elevator_details_units_section.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,9 @@ class ElevatorDetailsViewBody extends StatelessWidget {
         SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
-                child: ElevatorDetailsAlertIssue(state: state))),
+                child: Visibility(
+                    visible: state.elevator.activeIssue != null,
+                    child: ElevatorDetailsActiveIssue(state: state)))),
         SliverToBoxAdapter(child: SizedBox(height: 36)),
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 16),

@@ -1,4 +1,4 @@
-import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/building_box.dart';
+import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/building_card.dart';
 import 'package:flutter/widgets.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
 

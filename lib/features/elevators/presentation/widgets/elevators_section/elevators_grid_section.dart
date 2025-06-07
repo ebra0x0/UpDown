@@ -1,5 +1,5 @@
 import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
-import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/elevator_box.dart';
+import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/elevator_card.dart';
 import 'package:flutter/widgets.dart';
 
 class ElevatorsGridSection extends StatelessWidget {
@@ -18,7 +18,7 @@ class ElevatorsGridSection extends StatelessWidget {
       ),
       itemCount: state.elevators.length,
       itemBuilder: (context, index) {
-        return ElevatorBox(
+        return ElevatorCard(
           elevator: state.elevators[index],
         );
       },

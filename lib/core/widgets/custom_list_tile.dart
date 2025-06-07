@@ -35,9 +35,10 @@ class CustomListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      minTileHeight: 50.sp,
       isThreeLine: isThreeLine,
       contentPadding:
-          padding ?? EdgeInsets.symmetric(horizontal: 16.sp, vertical: 8.sp),
+          padding ?? EdgeInsets.symmetric(horizontal: 16.sp, vertical: 2.sp),
       shape: RoundedRectangleBorder(borderRadius: Styles.borderRadius8),
       enabled: isLoading,
       tileColor: backgroundColor ?? AppTheme.background,

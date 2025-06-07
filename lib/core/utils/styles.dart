@@ -252,7 +252,7 @@ abstract class Styles {
   // Box Shadow
 
   static BoxShadow boxShadow = BoxShadow(
-    color: Color(0xFFE0E0E0).withValues(alpha: 0.3),
+    color: AppTheme.shadow.withValues(alpha: 0.1),
     blurRadius: 10,
     offset: Offset(0, 2),
   );

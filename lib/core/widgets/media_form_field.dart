@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/normalization.dart';
 import 'package:UpDown/core/utils/styles.dart';
-import 'package:UpDown/core/widgets/custom_animated_button.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';

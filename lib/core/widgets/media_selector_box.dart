@@ -54,8 +54,8 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAnimatedButton(
-        action: pickMedia,
+    return GestureDetector(
+        onTap: pickMedia,
         child: Container(
             width: double.infinity,
             height: 150.h,

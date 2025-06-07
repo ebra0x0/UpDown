@@ -10,6 +10,7 @@ import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit
 import 'package:UpDown/features/profile/presentation/widgets/persolnal_info_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileViewBody extends StatelessWidget {
   const ProfileViewBody({super.key, required this.profile});
@@ -21,7 +22,7 @@ class ProfileViewBody extends StatelessWidget {
     final AuthCubit authCubit = context.watch<AuthCubit>();
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.sp),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +36,7 @@ class ProfileViewBody extends StatelessWidget {
             HeaderText(
                 title: "المعلومات الشخصية", textStyle: Styles.textStyle16),
             PersonalInfoList(profile: profile),
-            const SizedBox(height: 22),
+            SizedBox(height: 22.sp),
             HeaderText(title: "الحساب", textStyle: Styles.textStyle16),
             CustomListTile(
               isLoading: authCubit.state.status == AuthStatus.loading,

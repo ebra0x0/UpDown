@@ -2,6 +2,7 @@ import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/custom_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AttributesSection extends StatelessWidget {
   const AttributesSection({super.key, required this.attributes});
@@ -35,7 +36,7 @@ class AttributeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-        padding: 16,
+        padding: EdgeInsets.all(16.sp),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
