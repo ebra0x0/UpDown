@@ -1,6 +1,7 @@
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_description_section.dart';
 import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_info_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +33,7 @@ class IssueViewBody extends StatelessWidget {
             issueStatus: issue.status!,
             issueDate: issue.createdAt!,
           ))),
-      SliverToBoxAdapter(child: SizedBox(height: 24.sp)),
+      SliverToBoxAdapter(child: SizedBox(height: 16.sp)),
       SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 8.sp),
           sliver: SliverToBoxAdapter(
@@ -40,6 +41,12 @@ class IssueViewBody extends StatelessWidget {
             elevatorName: issue.elevatorName,
             buildingName: issue.buildingName,
           ))),
+      SliverToBoxAdapter(child: SizedBox(height: 16.sp)),
+      SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: 8.sp),
+          sliver: SliverToBoxAdapter(
+              child: IssueDescriptionSection(
+                  issuerDescription: issue.description))),
     ]);
   }
 }
