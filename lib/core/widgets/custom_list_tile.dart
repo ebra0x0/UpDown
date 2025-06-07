@@ -18,10 +18,14 @@ class CustomListTile extends StatelessWidget {
     this.footer,
     this.padding,
     this.backgroundColor,
+    this.titleStyle,
+    this.subtitleStyle,
   });
 
   final String title;
   final String? subtitle;
+  final TextStyle? titleStyle;
+  final TextStyle? subtitleStyle;
   final Widget? leading;
   final Widget? trailing;
   final Widget? footer;
@@ -47,7 +51,7 @@ class CustomListTile extends StatelessWidget {
         title,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
-        style: Styles.textStyle14.copyWith(color: AppTheme.text),
+        style: titleStyle ?? Styles.textStyle14.copyWith(color: AppTheme.text),
       ),
       subtitle: subtitle == null
           ? null
@@ -55,9 +59,10 @@ class CustomListTile extends StatelessWidget {
               subtitle!,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
-              style: Styles.textStyle12.copyWith(
-                color: AppTheme.grey,
-              ),
+              style: subtitleStyle ??
+                  Styles.textStyle12.copyWith(
+                    color: AppTheme.grey,
+                  ),
             ),
       leading: isLoading
           ? SizedBox(

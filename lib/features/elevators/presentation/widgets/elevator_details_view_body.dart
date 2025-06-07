@@ -2,7 +2,7 @@ import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/core/widgets/header_section.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
-import 'package:UpDown/features/elevators/presentation/widgets/elevator_details_active_Issue.dart';
+import 'package:UpDown/features/elevators/presentation/widgets/elevator_details_active_issue.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevator_details_units_section/elevator_details_units_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

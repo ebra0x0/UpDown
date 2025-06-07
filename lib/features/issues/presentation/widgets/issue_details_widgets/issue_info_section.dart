@@ -1,26 +1,31 @@
 import 'package:UpDown/core/theme/app_theme.dart';
+import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
-import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IssueInfoSection extends StatelessWidget {
   const IssueInfoSection({
     super.key,
-    required this.issue,
+    required this.issueId,
+    required this.issueDate,
+    required this.issueType,
+    required this.issueStatus,
   });
 
-  final IssueModel issue;
-  String? get time => issue.createdAt?.split(',')[0];
-  String? get date => issue.createdAt?.split(',')[1];
+  final String issueId;
+  final String issueDate;
+  final IssueType issueType;
+  final IssueStatus issueStatus;
+  String? get time => issueDate.split(',')[0];
+  String? get date => issueDate.split(',')[1];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(8.sp),
       padding: EdgeInsets.all(16.sp),
       decoration: BoxDecoration(
         color: AppTheme.background,
@@ -41,14 +46,14 @@ class IssueInfoSection extends StatelessWidget {
                   spacing: 8.sp,
                   children: [
                     Text(
-                      issue.issueType.title(context),
+                      issueType.title(context),
                       style: Styles.textStyle18
                           .copyWith(fontWeight: FontWeight.w600),
                     ),
                     TextAndbubbleTextRow(
-                        text: "ID: ${issue.id?.substring(0, 8)}",
-                        bubbleText: issue.status?.title(context) ?? "",
-                        bubbleColor: issue.status?.color),
+                        text: "ID: ${issueId.substring(0, 8)}",
+                        bubbleText: issueStatus.title(context),
+                        bubbleColor: issueStatus.color),
                   ]),
             ],
           ),
