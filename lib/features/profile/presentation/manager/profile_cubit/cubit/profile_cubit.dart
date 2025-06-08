@@ -18,16 +18,23 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     emit(ProfileLoading());
 
-    final res = await _repo.call();
+    final ProfileModel? localData = await _repo.callLocal();
+    if (localData != null) {
+      profile = localData;
+      emit(ProfileLoaded(profile!));
+    }
+
+    final res = await _repo.callRemote();
+
     res.fold(
-      (failure) => emit(ProfileError(failure.errMessage)),
-      (profile) {
-        if (profile == null) {
-          emit(ProfileEmpty());
-          return;
+      (failure) {
+        if (localData == null) emit(ProfileError(failure.errMessage));
+      },
+      (remoteData) async {
+        if (remoteData != null && remoteData != localData) {
+          _repo.save(remoteData);
+          emit(ProfileLoaded(remoteData));
         }
-        this.profile = profile;
-        emit(ProfileLoaded(profile));
       },
     );
   }

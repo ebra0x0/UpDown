@@ -14,12 +14,16 @@ class ProfileRepoImp implements ProfileRepo {
     this._remoteDataSource,
   );
   @override
-  Future<Either<Failure, ProfileModel?>> call() async {
-    final localData = await _localDataSource.call();
-    if (localData != null) {
-      return Right(localData);
-    }
-    return await _remoteDataSource.call();
+  Future<ProfileModel?> callLocal() async {
+    final ProfileModel? localData = await _localDataSource.call();
+
+    return localData;
+  }
+
+  @override
+  Future<Either<Failure, ProfileModel?>> callRemote() {
+    final res = _remoteDataSource.call();
+    return res;
   }
 
   @override
