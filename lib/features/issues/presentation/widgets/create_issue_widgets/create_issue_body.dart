@@ -14,17 +14,17 @@ class CreateIssueBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<CreateIssueCubit, CreateIssueState>(
       listener: (context, state) {
-        if (state is CreateIssueSuccess) {
+        if (state.status == CreateIssueStatus.success) {
           showToast(
               context: context,
               message: "تم الإبلاغ عن العطل ",
               type: ToastType.success);
           context.go(AppRouter.khomeView);
         }
-        if (state is CreateIssueError) {
+        if (state.status == CreateIssueStatus.error) {
           showToast(
             context: context,
-            message: state.error,
+            message: state.error!,
             type: ToastType.error,
           );
         }

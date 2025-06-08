@@ -6,7 +6,6 @@ import 'package:UpDown/core/utils/secure_storage.dart';
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/profile/data/repos/profile_repo.dart';
 import 'package:either_dart/either.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ProfileRepoImp implements ProfileRepo {
   final ApiService _apiService;
@@ -32,15 +31,25 @@ class ProfileRepoImp implements ProfileRepo {
   Future<Either<Failure, ProfileModel?>> _fetchRemoteData() async {
     final response = await _apiService.fetchProfile();
     if (response.isRight) {
-      gitIt.get<SecureStorage>().addAll({
-        "user_data": jsonEncode(response.right!.toJson()),
-      });
+      saveProfile(response.right!);
     }
     return response;
   }
 
   @override
-  Future<Either<Failure, void>> updateAvatar(XFile file) async {
-    return await _apiService.uploadAvatar(file);
+  Future<Either<Failure, void>> updateProfile(ProfileModel profile) async {
+    final response = await _apiService.updateProfile(profile);
+
+    if (response.isRight) {
+      saveProfile(profile);
+    }
+    return response;
+  }
+
+  @override
+  void saveProfile(ProfileModel profile) {
+    gitIt.get<SecureStorage>().addAll({
+      "user_data": jsonEncode(profile.toJson()),
+    });
   }
 }

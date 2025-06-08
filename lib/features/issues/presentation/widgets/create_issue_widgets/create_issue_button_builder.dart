@@ -16,7 +16,7 @@ class CreateIssueButtonBuilder extends StatelessWidget {
     return BlocBuilder<CreateIssueCubit, CreateIssueState>(
       builder: (context, state) => CustomButton(
           title: "إبلاغ",
-          isLoading: state is CreateIssueLoading,
+          isLoading: state.status == CreateIssueStatus.loading,
           onPress: onPress),
     );
   }

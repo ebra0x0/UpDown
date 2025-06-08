@@ -20,6 +20,7 @@ class CustomTextFormField extends StatefulWidget {
     this.maxLines = 1,
     this.maxLength,
     this.formKey,
+    this.isEnabled = true,
   });
   final TextDirection? textDirection;
   final String? labelText;
@@ -35,6 +36,7 @@ class CustomTextFormField extends StatefulWidget {
   final int maxLines;
   final int? maxLength;
   final GlobalKey<FormState>? formKey;
+  final bool isEnabled;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -65,6 +67,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: widget.isEnabled,
       keyboardType: widget.keyType,
       focusNode: _focusNode,
       textDirection: widget.textDirection,

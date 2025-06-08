@@ -15,6 +15,7 @@ class CustomDropDown extends StatefulWidget {
     this.error,
     this.prefixIcon,
     this.isLoading = false,
+    this.isEnabled = true,
     this.onChanged,
   });
   final List<DropDownModel> listItem;
@@ -24,6 +25,7 @@ class CustomDropDown extends StatefulWidget {
   final Icon? prefixIcon;
   final bool isLoading;
   final void Function(Object? value)? onChanged;
+  final bool isEnabled;
 
   @override
   State<CustomDropDown> createState() => _CustomDropDownState();
@@ -79,6 +81,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       isExpanded: true,
       items: widget.listItem.map((drop) {
         return DropdownMenuItem<DropDownModel>(
+          enabled: widget.isEnabled,
           value: drop,
           child: Text(drop.label, maxLines: 1, overflow: TextOverflow.ellipsis),
         );

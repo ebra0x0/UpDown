@@ -149,7 +149,7 @@ class ApiService {
 
       // Upload avatar if exists
       if (profile.imagePath != null) {
-        final uploadResult = await uploadAvatar(XFile(profile.imagePath!));
+        final uploadResult = await _uploadAvatar(XFile(profile.imagePath!));
         if (uploadResult.isLeft) return Left(uploadResult.left);
 
         // Update profile model
@@ -183,7 +183,8 @@ class ApiService {
       }
 
       if (response["image_path"] != null) {
-        final String? avatarPath = await downloadAvatar(response["image_path"]);
+        final String? avatarPath =
+            await _downloadAvatar(response["image_path"]);
 
         if (avatarPath != null) {
           response["image_path"] = avatarPath;
@@ -200,7 +201,7 @@ class ApiService {
     }
   }
 
-  Future<String?> downloadAvatar(String imagePath) async {
+  Future<String?> _downloadAvatar(String imagePath) async {
     try {
       final Uint8List response = await _supabase.storage
           .from(kAvatarsBucket)
@@ -219,7 +220,7 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, String>> uploadAvatar(XFile file) async {
+  Future<Either<Failure, String>> _uploadAvatar(XFile file) async {
     try {
       final User? user = _supabase.auth.currentUser;
       if (user == null) {
@@ -262,7 +263,22 @@ class ApiService {
         return Left(CustomFailure("المستخدم غير مسجل"));
       }
 
-      await _supabase.from('Users').update(profile.toJson()).eq("id", user.id);
+      if (profile.imagePath != null) {
+        final uploadResult = await _uploadAvatar(XFile(profile.imagePath!));
+        if (uploadResult.isLeft) return Left(uploadResult.left);
+
+        final String avatarPath = uploadResult.right.replaceFirst(
+          RegExp(r'^[^/]+/[^/]+/'),
+          '',
+        );
+
+        profile = profile.copyWith(imagePath: avatarPath);
+      }
+
+      await _supabase
+          .from('Users')
+          .update(profile.toJson())
+          .eq("user_id", user.id);
 
       return const Right(null);
     } on PostgrestException catch (e) {

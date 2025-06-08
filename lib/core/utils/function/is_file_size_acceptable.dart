@@ -11,6 +11,7 @@ Future<bool> isFileSizeAcceptable(
   final int maxSizeInBytes = limitSize * 1024 * 1024;
 
   if (sizeInBytes > maxSizeInBytes) {
+    if (!context.mounted) return false;
     showToast(
         context: context,
         message: "الملف حجمه كبير جداً",

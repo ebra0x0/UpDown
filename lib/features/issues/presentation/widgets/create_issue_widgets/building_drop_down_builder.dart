@@ -16,10 +16,13 @@ class BuildingDropDownBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BuildingsCubit, BuildingsState>(
         builder: (context, state) {
-      final CreateIssueCubit cubit = context.read<CreateIssueCubit>();
-      final BuildingSummaryModel? selectedBuilding = cubit.selectedBuilding;
+      final CreateIssueState issueCubitState =
+          context.watch<CreateIssueCubit>().state;
+      final bool isCreating =
+          issueCubitState.status == CreateIssueStatus.loading;
+      final BuildingSummaryModel? selectedBuilding = issueCubitState.building;
       final List<BuildingSummaryModel>? buildings =
-          context.read<BuildingsCubit>().buildings;
+          state is BuildingsLoaded ? state.buildings : null;
 
       final dropDownList = buildings
               ?.map((e) => DropDownModel(
@@ -36,6 +39,7 @@ class BuildingDropDownBuilder extends StatelessWidget {
           );
 
       return CustomDropDown(
+        isEnabled: !isCreating,
         isLoading: state is BuildingsLoading,
         listItem: dropDownList,
         hint: "إختر المبنى",

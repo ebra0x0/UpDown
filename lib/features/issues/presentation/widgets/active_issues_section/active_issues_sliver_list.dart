@@ -25,27 +25,30 @@ class ActiveIssuesSliverList extends StatelessWidget {
       itemCount: min(4, state.activeIssues.length),
       itemBuilder: (context, index) {
         final issue = state.activeIssues[index];
-        return CardTile(
-          leading: BubbleIcon(
-            icon: Styles.errorOutlineIcon.copyWith(
-              size: 22.sp,
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: CardTile(
+            leading: BubbleIcon(
+              icon: Styles.errorOutlineIcon.copyWith(
+                size: 22.sp,
+              ),
+              color: issue.status?.color ?? AppTheme.red,
+              padding: 8.sp,
             ),
-            color: issue.status?.color ?? AppTheme.red,
-            padding: 8.sp,
+            title: Text(
+              issue.issueType.title(context),
+              style: Styles.textStyle16.copyWith(color: AppTheme.text),
+            ),
+            subtitle: Text("${issue.buildingName} - ${issue.elevatorName}",
+                style: Styles.textStyle12.copyWith(
+                  color: AppTheme.grey,
+                )),
+            footer: TextAndbubbleTextRow(
+                text: issue.createdAt ?? "",
+                bubbleText: issue.status?.title(context) ?? "",
+                bubbleColor: AppTheme.red),
+            onTap: () => context.push(AppRouter.kissueView, extra: issue),
           ),
-          title: Text(
-            issue.issueType.title(context),
-            style: Styles.textStyle16.copyWith(color: AppTheme.text),
-          ),
-          subtitle: Text("${issue.buildingName} - ${issue.elevatorName}",
-              style: Styles.textStyle12.copyWith(
-                color: AppTheme.grey,
-              )),
-          footer: TextAndbubbleTextRow(
-              text: issue.createdAt ?? "",
-              bubbleText: issue.status?.title(context) ?? "",
-              bubbleColor: AppTheme.red),
-          onTap: () => context.push(AppRouter.kissueView, extra: issue),
         );
       },
     );

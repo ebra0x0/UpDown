@@ -2,7 +2,6 @@ import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:UpDown/features/profile/data/repos/profile_repo.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
@@ -33,9 +32,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  Future<void> updateAvatar(XFile file) async {
-    await _repo.updateAvatar(file).fold(
-          (f) => emit(AvatarError(f.errMessage, profile: profile!)),
+  Future<void> updateProfile(ProfileModel profile) async {
+    await _repo.updateProfile(profile).fold(
+          (f) => emit(AvatarError(f.errMessage, profile: profile)),
           (_) => null,
         );
   }

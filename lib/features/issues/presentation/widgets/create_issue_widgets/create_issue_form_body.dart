@@ -33,10 +33,15 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
 
   @override
   Widget build(BuildContext context) {
+    final CreateIssueState issueCubitState =
+        context.watch<CreateIssueCubit>().state;
     return Column(
       children: [
         MediaFormField(
+          media: issueCubitState.media,
           onMediaSelected: onMediaSelected,
+          isLock: issueCubitState.status == CreateIssueStatus.loading ||
+              issueCubitState.status == CreateIssueStatus.selectLoading,
         ),
         const SizedBox(height: 24),
         Row(
@@ -50,6 +55,7 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
         IssueDropDownBuilder(),
         const SizedBox(height: 16),
         CustomTextFormField(
+          isEnabled: issueCubitState.status != CreateIssueStatus.loading,
           controller: widget.descriptionController,
           keyType: TextInputType.multiline,
           labelText: "وصف العطل",
@@ -58,8 +64,10 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
           prefixIcon: Styles.descriptionIcon.copyWith(
             color: AppTheme.primary,
           ),
-          onChanged: (value) =>
-              context.read<CreateIssueCubit>().updateDescription(value ?? ''),
+          onChanged: (value) => issueCubitState.status ==
+                  CreateIssueStatus.loading
+              ? null
+              : context.read<CreateIssueCubit>().updateDescription(value ?? ''),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "يرجى كتابة تفاصيل العطل";

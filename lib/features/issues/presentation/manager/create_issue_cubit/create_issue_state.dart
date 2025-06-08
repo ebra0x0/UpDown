@@ -1,47 +1,58 @@
 part of 'create_issue_cubit.dart';
 
-sealed class CreateIssueState {}
-
-final class CreateIssueInitial extends CreateIssueState {}
-
-final class CreateIssueLoading extends CreateIssueState {}
-
-final class CreateIssueError extends CreateIssueState {
-  final String error;
-  CreateIssueError({required this.error});
+enum CreateIssueStatus {
+  initial,
+  loading,
+  error,
+  success,
+  selectLoading,
+  selectSuccess,
 }
 
-final class CreateIssueSuccess extends CreateIssueState {}
-
-final class SelectSuccess extends CreateIssueState {
+class CreateIssueState {
+  final CreateIssueStatus status;
+  final String? error;
   final MediaModel? media;
   final BuildingSummaryModel? building;
   final ElevatorSummaryModel? elevator;
+  final List<ElevatorSummaryModel>? elevators;
   final IssueType? issueType;
   final String? description;
 
-  SelectSuccess(
-      {this.media,
-      this.building,
-      this.elevator,
-      this.issueType,
-      this.description});
+  const CreateIssueState({
+    this.status = CreateIssueStatus.initial,
+    this.error,
+    this.media,
+    this.building,
+    this.elevator,
+    this.elevators,
+    this.issueType,
+    this.description,
+  });
 
-  SelectSuccess copyWith({
+  CreateIssueState copyWith({
+    CreateIssueStatus? status,
+    String? error,
     MediaModel? media,
     BuildingSummaryModel? building,
     ElevatorSummaryModel? elevator,
+    List<ElevatorSummaryModel>? elevators,
     IssueType? issueType,
     String? description,
   }) {
-    return SelectSuccess(
+    return CreateIssueState(
+      status: status ?? this.status,
+      error: error,
       media: media ?? this.media,
       building: building ?? this.building,
       elevator: elevator ?? this.elevator,
+      elevators: elevators ?? this.elevators,
       issueType: issueType ?? this.issueType,
       description: description ?? this.description,
     );
   }
-}
 
-final class SelectLoading extends CreateIssueState {}
+  CreateIssueState reset() {
+    return const CreateIssueState();
+  }
+}

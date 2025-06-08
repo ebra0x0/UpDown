@@ -4,9 +4,13 @@ class _MediaSelectorBox extends StatefulWidget {
   const _MediaSelectorBox({
     required this.onMediaSelected,
     required this.field,
+    this.isDisabled = false,
+    this.media,
   });
   final FormFieldState<File> field;
   final Function(File, MediaType) onMediaSelected;
+  final bool isDisabled;
+  final MediaModel? media;
 
   @override
   State<_MediaSelectorBox> createState() => _MediaSelectorBoxState();
@@ -18,58 +22,38 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
 
   final RegExp _regexImage = Normalization.kImageRegex;
   final RegExp _regexVideo = Normalization.kVideoRegex;
-
   bool isLoading = false;
-
   final ImagePicker _picker = ImagePicker();
 
-  // Future<void> pickMedia() async {
-  //   if (isLoading) return;
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   final XFile? media = await _picker.pickMedia();
+  void _updateMediaState() {
+    if (widget.media == null) {
+      _image = null;
+      _video = null;
+    } else if (widget.media!.type == MediaType.image) {
+      _image = widget.media!.file;
+      _video = null;
+    } else {
+      _video = widget.media!.file;
+      _image = null;
+    }
+  }
 
-  //   if (media != null) {
-  //     final File file = File(media.path);
+  @override
+  void initState() {
+    super.initState();
+    _updateMediaState();
+  }
 
-  //     if (_regexImage.hasMatch(media.path)) {
-  //       final bool isUnder5MB = await isFileSizeAcceptable(
-  //           file: file, limitSize: 5, context: context);
-  //       if (!isUnder5MB) {
-  //         setState(() {
-  //           isLoading = false;
-  //         });
-  //         return;
-  //       }
-  //       setState(() {
-  //         _image = File(media.path);
-  //       });
-  //       widget.onMediaSelected(file, MediaType.image);
-  //     } else if (_regexVideo.hasMatch(media.path)) {
-  //       final bool isUnder20MB = await isFileSizeAcceptable(
-  //           file: file, limitSize: 20, context: context);
-  //       if (!isUnder20MB) {
-  //         setState(() {
-  //           isLoading = false;
-  //           return;
-  //         });
-  //       }
-  //       setState(() {
-  //         _video = File(media.path);
-  //       });
-  //       widget.onMediaSelected(file, MediaType.video);
-  //     }
-  //     widget.field.didChange(file);
-  //   }
-
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  // }
+  @override
+  void didUpdateWidget(covariant _MediaSelectorBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.media != oldWidget.media) {
+      setState(_updateMediaState);
+    }
+  }
 
   Future<void> pickMedia() async {
-    if (isLoading) return;
+    if (isLoading || widget.isDisabled) return;
 
     setState(() {
       isLoading = true;
@@ -82,7 +66,6 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
 
       final file = File(media.path);
 
-      // تحديد النوع والحجم المطلوب
       late final MediaType type;
       late final int limitSizeMB;
 
@@ -93,7 +76,7 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
         type = MediaType.video;
         limitSizeMB = 20;
       } else {
-        return; // ملف غير مدعوم
+        return;
       }
       if (!context.mounted) return;
 
@@ -141,7 +124,9 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
               border: Styles.generalBoxBorder,
             ),
             child: isLoading
-                ? LoadingIndicator()
+                ? LoadingIndicator(
+                    size: 26.sp,
+                  )
                 : _video != null
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

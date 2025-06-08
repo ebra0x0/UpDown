@@ -27,10 +27,11 @@ class ProfileViewBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AvatarPicker(
-            image: profile.imagePath,
-            onImageSelected: (file) =>
-                context.read<ProfileCubit>().updateAvatar(file),
-          ),
+              image: profile.imagePath,
+              onImageSelected: (file) {
+                final profileWithImage = profile.copyWith(imagePath: file.path);
+                context.read<ProfileCubit>().updateProfile(profileWithImage);
+              }),
           SizedBox(height: 22.sp),
           HeaderText(title: "المعلومات الشخصية", textStyle: Styles.textStyle16),
           PersonalInfoList(profile: profile),

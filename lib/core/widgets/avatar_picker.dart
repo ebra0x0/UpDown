@@ -26,16 +26,16 @@ class _AvatarPickerState extends State<AvatarPicker> {
   Future<void> _pickImage() async {
     if (_isPicking) return;
     _isPicking = true;
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
     _isPicking = false;
 
-    setState(() {
-      _image = pickedFile != null ? XFile(pickedFile.path) : null;
-    });
+    if (pickedFile == null) return;
 
-    if (_image != null && widget.onImageSelected != null) {
-      widget.onImageSelected!(_image!);
-    }
+    setState(() {
+      _image = pickedFile;
+    });
+    widget.onImageSelected!(pickedFile);
   }
 
   @override

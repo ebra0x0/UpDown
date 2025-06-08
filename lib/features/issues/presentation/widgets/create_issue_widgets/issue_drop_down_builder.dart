@@ -14,8 +14,9 @@ class IssueDropDownBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final IssueType? selectedIssueType =
-        context.watch<CreateIssueCubit>().selectedIssueType;
+    final CreateIssueState issueCubitState =
+        context.watch<CreateIssueCubit>().state;
+    final bool isCreating = issueCubitState.status == CreateIssueStatus.loading;
 
     final dropDownList = IssueType.values
         .map((e) => DropDownModel(
@@ -25,11 +26,12 @@ class IssueDropDownBuilder extends StatelessWidget {
         .toList();
 
     final matchValue = dropDownList.cast<DropDownModel?>().firstWhere(
-          (e) => e!.value == selectedIssueType,
+          (e) => e!.value == issueCubitState.issueType,
           orElse: () => null,
         );
 
     return CustomDropDown(
+      isEnabled: !isCreating,
       listItem: dropDownList,
       hint: "إختر نوع العطل",
       value: matchValue,

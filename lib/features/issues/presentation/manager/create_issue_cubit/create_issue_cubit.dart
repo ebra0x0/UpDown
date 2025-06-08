@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
@@ -11,95 +10,90 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'create_issue_state.dart';
 
 class CreateIssueCubit extends Cubit<CreateIssueState> {
-  CreateIssueCubit(
-    this._repo,
-  ) : super(CreateIssueInitial());
+  CreateIssueCubit(this._repo) : super(const CreateIssueState());
 
   final IssuesRepoImp _repo;
 
-  List<ElevatorSummaryModel>? elevators;
-
-  MediaModel? media;
-  BuildingSummaryModel? selectedBuilding;
-  ElevatorSummaryModel? selectedElevator;
-  IssueType? selectedIssueType;
-  String? description;
-
   Future<void> createIssue() async {
-    emit(CreateIssueLoading());
+    emit(state.copyWith(status: CreateIssueStatus.loading));
 
-    final IssueModel issueModel = IssueModel.fromJson({
-      "media": media,
-      "building_name": selectedBuilding?.name,
-      "elevator_name": selectedElevator?.name,
-      "issue_type": selectedIssueType,
-      "description": description,
-      "building_id": selectedBuilding?.id,
-      "elevator_id": selectedElevator?.id,
+    final issueModel = IssueModel.fromJson({
+      "media": state.media,
+      "building_name": state.building?.name,
+      "elevator_name": state.elevator?.name,
+      "issue_type": state.issueType,
+      "description": state.description,
+      "building_id": state.building?.id,
+      "elevator_id": state.elevator?.id,
     });
 
     final result = await _repo.createIssue(issueModel);
 
-    result.fold((errMsg) => emit(CreateIssueError(error: errMsg.errMessage)),
-        (response) => emit(CreateIssueSuccess()));
+    result.fold(
+      (err) => emit(state.copyWith(
+        status: CreateIssueStatus.error,
+        error: err.errMessage,
+      )),
+      (_) {
+        emit(state.copyWith(status: CreateIssueStatus.success));
+        reset();
+      },
+    );
   }
 
   void selectMedia({required File file, required MediaType type}) {
-    final currentState = state is SelectSuccess ? state as SelectSuccess : null;
-    media = MediaModel.fromJson({
+    final media = MediaModel.fromJson({
       "type": type,
       "url": file.path,
       "file": file,
     });
 
-    emit(SelectSuccess(
+    emit(state.copyWith(
+      status: CreateIssueStatus.selectSuccess,
       media: media,
-      building: currentState?.building,
-      elevator: currentState?.elevator,
-      issueType: currentState?.issueType,
     ));
   }
 
   Future<void> selectBuilding(BuildingSummaryModel building) async {
-    if (building.id == selectedBuilding?.id) return;
-    final currentState = state is SelectSuccess ? state as SelectSuccess : null;
-    selectedBuilding = building;
+    if (building.id == state.building?.id) return;
 
-    emit(SelectLoading());
-    final res = await _repo.fetchElevators(building.id);
+    emit(state.copyWith(status: CreateIssueStatus.selectLoading));
 
-    res.fold((failure) => null, (res) {
-      elevators = res;
-      emit(SelectSuccess(
-        building: building,
-        elevator: currentState?.elevator,
-        issueType: currentState?.issueType,
-      ));
-    });
+    final result = await _repo.fetchElevators(building.id);
+
+    result.fold(
+      (_) => null,
+      (res) {
+        emit(state.copyWith(
+          status: CreateIssueStatus.selectSuccess,
+          building: building,
+          elevators: res,
+        ));
+      },
+    );
   }
 
   void selectElevator(ElevatorSummaryModel elevator) {
-    final currentState = state is SelectSuccess ? state as SelectSuccess : null;
-    selectedElevator = elevator;
-
-    emit(SelectSuccess(
-      building: currentState?.building,
-      issueType: currentState?.issueType,
+    emit(state.copyWith(
+      status: CreateIssueStatus.selectSuccess,
       elevator: elevator,
     ));
   }
 
-  void selectIssueType(IssueType value) {
-    final currentState = state is SelectSuccess ? state as SelectSuccess : null;
-    selectedIssueType = value;
-
-    emit(SelectSuccess(
-        building: currentState?.building,
-        elevator: currentState?.elevator,
-        issueType: value));
+  void selectIssueType(IssueType type) {
+    emit(state.copyWith(
+      status: CreateIssueStatus.selectSuccess,
+      issueType: type,
+    ));
   }
 
-  void updateDescription(String value) {
-    description = value;
+  void updateDescription(String desc) {
+    emit(state.copyWith(
+      description: desc,
+    ));
+  }
+
+  void reset() {
+    emit(state.reset());
   }
 }

@@ -15,9 +15,10 @@ class ElevatorDropDownBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CreateIssueCubit, CreateIssueState>(
       builder: (context, state) {
-        final CreateIssueCubit cubit = context.read<CreateIssueCubit>();
-        final List<ElevatorSummaryModel>? elevators = cubit.elevators;
-        final ElevatorSummaryModel? selectedElevator = cubit.selectedElevator;
+        final bool isCreating = state.status == CreateIssueStatus.loading;
+        // final CreateIssueCubit cubit = context.read<CreateIssueCubit>();
+        final List<ElevatorSummaryModel>? elevators = state.elevators;
+        final ElevatorSummaryModel? selectedElevator = state.elevator;
 
         final dropDownList = elevators
                 ?.map((e) => DropDownModel(
@@ -34,7 +35,8 @@ class ElevatorDropDownBuilder extends StatelessWidget {
             );
 
         return CustomDropDown(
-          isLoading: state is SelectLoading,
+          isEnabled: !isCreating,
+          isLoading: state.status == CreateIssueStatus.selectLoading,
           listItem: dropDownList,
           hint: "إختر المصعد",
           value: matchValue,

@@ -34,8 +34,8 @@ class IssueModel {
   });
 
   factory IssueModel.fromJson(Map<String, dynamic> json) {
-    final DateTime? createdAt = DateTime.tryParse(json['created_at']);
-    final DateTime? updatedAt = DateTime.tryParse(json['updated_at']);
+    final DateTime? createdAt = DateTime.tryParse(json['created_at'] ?? '');
+    final DateTime? updatedAt = DateTime.tryParse(json['updated_at'] ?? '');
     final String locale = LocaleService.currentLocale;
 
     return IssueModel(
