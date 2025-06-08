@@ -9,9 +9,8 @@ class ProfileLocalDataSourceImp implements ProfileLocalDataSource {
   ProfileLocalDataSourceImp() {
     _init();
   }
-
-  Future<void> _init() async {
-    _profileBox = await Hive.openBox<ProfileModel>(kProfileBox);
+  void _init() async {
+    _profileBox = Hive.box(kProfileBox);
   }
 
   @override
