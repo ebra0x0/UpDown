@@ -9,6 +9,8 @@ import 'package:UpDown/features/issues/data/repo/issues_repo_imp.dart';
 import 'package:UpDown/features/buildings/data/repo/buildings_repo_imp.dart';
 import 'package:UpDown/features/elevators/data/repo/elevator_repo_imp.dart';
 import 'package:UpDown/features/home/data/repo/home_repo_imp.dart';
+import 'package:UpDown/features/profile/data/data_sources/local_data_source/local_data_source_imp.dart';
+import 'package:UpDown/features/profile/data/data_sources/remote_data_source/remote_data_source_imp.dart';
 import 'package:UpDown/features/profile/data/repos/profile_repo_imp.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -17,7 +19,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 final gitIt = GetIt.instance;
 
-Future<void> setupServiceLocator() async {
+Future<void> serviceLocatorSetup() async {
   // AppRouter
   gitIt.registerSingleton<AppRouter>(AppRouter());
   // ApiService
@@ -28,8 +30,9 @@ Future<void> setupServiceLocator() async {
   gitIt.registerSingleton<AccountSetupRepoImp>(
       AccountSetupRepoImp(gitIt.get<ApiService>()));
   // ProfileRepo
-  gitIt.registerSingleton<ProfileRepoImp>(
-      ProfileRepoImp(gitIt.get<ApiService>()));
+  gitIt.registerSingleton<ProfileRepoImp>(ProfileRepoImp(
+      ProfileLocalDataSourceImp(),
+      ProfileRemoteDataSourceImp(gitIt.get<ApiService>())));
   // HomeRepo
   gitIt.registerSingleton<HomeRepoImp>(HomeRepoImp(gitIt.get<ApiService>()));
   // IssuesRepo

@@ -1,11 +1,31 @@
+import 'package:hive/hive.dart';
+
+part 'profile_model.g.dart';
+
+@HiveType(typeId: 1)
 class ProfileModel {
+  @HiveField(0)
   final String? id;
+
+  @HiveField(1)
   final String name;
+
+  @HiveField(2)
   final String phone;
+
+  @HiveField(3)
   final String address;
+
+  @HiveField(4)
   final String? imagePath;
+
+  @HiveField(5)
   final String? email;
+
+  @HiveField(6)
   final DateTime? createdAt;
+
+  @HiveField(7)
   final DateTime? updatedAt;
 
   ProfileModel({

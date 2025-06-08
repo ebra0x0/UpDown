@@ -33,7 +33,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> updateProfile(ProfileModel profile) async {
-    await _repo.updateProfile(profile).fold(
+    await _repo.update(profile).fold(
           (f) => emit(AvatarError(f.errMessage, profile: profile)),
           (_) => null,
         );
