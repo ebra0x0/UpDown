@@ -1,6 +1,7 @@
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
+import 'package:UpDown/features/elevators/data/repo/elevator_repo_imp.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo_imp.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/issues/presentation/widgets/create_issue_widgets/create_issue_body.dart';
@@ -24,7 +25,8 @@ class _CreateIssueViewState extends State<CreateIssueView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CreateIssueCubit(gitIt.get<IssuesRepoImp>()),
+      create: (context) => CreateIssueCubit(
+          gitIt.get<IssuesRepoImp>(), gitIt.get<ElevatorRepoImp>()),
       child: Scaffold(
         appBar: AppBar(
           title: Text(

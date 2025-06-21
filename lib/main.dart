@@ -6,7 +6,7 @@ import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/features/auth/repos/auth_repo_imp.dart';
 import 'package:UpDown/features/auth/manager/auth_cubit.dart';
 import 'package:UpDown/updown.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {

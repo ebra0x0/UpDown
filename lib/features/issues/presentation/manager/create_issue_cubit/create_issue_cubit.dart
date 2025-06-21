@@ -1,33 +1,29 @@
 import 'dart:io';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/elevators/data/repo/elevator_repo_imp.dart';
+import 'package:UpDown/features/issues/data/models/create_issue_model.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo_imp.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'create_issue_state.dart';
 
 class CreateIssueCubit extends Cubit<CreateIssueState> {
-  CreateIssueCubit(this._repo) : super(const CreateIssueState());
+  CreateIssueCubit(this._repo, this._elevatorRepo)
+      : super(const CreateIssueState());
 
   final IssuesRepoImp _repo;
+  final ElevatorRepoImp _elevatorRepo;
 
-  Future<void> createIssue() async {
+  Future<void> createIssue(BuildContext context) async {
     emit(state.copyWith(status: CreateIssueStatus.loading));
 
-    final issueModel = IssueModel.fromJson({
-      "media": state.media,
-      "building_name": state.building?.name,
-      "elevator_name": state.elevator?.name,
-      "issue_type": state.issueType,
-      "description": state.description,
-      "building_id": state.building?.id,
-      "elevator_id": state.elevator?.id,
-    });
+    final request = state.toRequest(context);
 
-    final result = await _repo.createIssue(issueModel);
+    final result = await _repo.create(request);
 
     result.fold(
       (err) => emit(state.copyWith(
@@ -59,7 +55,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
 
     emit(state.copyWith(status: CreateIssueStatus.selectLoading));
 
-    final result = await _repo.fetchElevators(building.id);
+    final result = await _elevatorRepo.fetchElevatorsByBuilding(building.id);
 
     result.fold(
       (_) => null,
@@ -87,7 +83,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
     ));
   }
 
-  void updateDescription(String desc) {
+  void setDescription(String desc) {
     emit(state.copyWith(
       description: desc,
     ));

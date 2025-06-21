@@ -6,7 +6,7 @@ part 'profile_model.g.dart';
 @HiveType(typeId: 1)
 class ProfileModel extends Equatable {
   @HiveField(0)
-  final String? id;
+  final String id;
 
   @HiveField(1)
   final String name;
@@ -24,32 +24,30 @@ class ProfileModel extends Equatable {
   final String? email;
 
   @HiveField(6)
-  final DateTime? createdAt;
+  final DateTime createdAt;
 
   @HiveField(7)
   final DateTime? updatedAt;
 
   const ProfileModel({
-    this.id,
+    required this.id,
     required this.name,
     required this.phone,
     required this.address,
     this.imagePath,
     this.email,
-    this.createdAt,
+    required this.createdAt,
     this.updatedAt,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
-        id: json["user_id"],
+        id: json["id"],
         name: json["name"],
         phone: json["phone"],
         address: json["address"],
         email: json["email"],
         imagePath: json["image_path"],
-        createdAt: json["created_at"] == null
-            ? null
-            : DateTime.parse(json["created_at"]),
+        createdAt: DateTime.parse(json["created_at"]),
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
@@ -77,7 +75,7 @@ class ProfileModel extends Equatable {
     );
   }
 
-  Map<String, dynamic> toJson({bool isRemote = false}) {
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{
       "name": name,
       "email": email,
@@ -85,11 +83,6 @@ class ProfileModel extends Equatable {
       "address": address,
       "image_path": imagePath,
     };
-    if (!isRemote) {
-      data["user_id"] = id;
-      data["created_at"] = createdAt?.toIso8601String();
-      data["updated_at"] = updatedAt?.toIso8601String();
-    }
     return data;
   }
 

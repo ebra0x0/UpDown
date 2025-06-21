@@ -27,19 +27,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get elevatorWorkingDescription => 'The elevator\'s working';
 
   @override
-  String get elevatorBrokenDescription =>
-      'The elevator\'s broken and cannot be used';
+  String get elevatorBrokenDescription => 'The elevator\'s broken and cannot be used';
 
   @override
   String get elevatorRepairDescription => 'The elevator\'s under repair';
 
   @override
-  String get elevatorMaintenanceDescription =>
-      'The elevator\'s under maintenance';
+  String get elevatorMaintenanceDescription => 'The elevator\'s under maintenance';
 
   @override
-  String get elevatorDisabledDescription =>
-      'The elevator\'s currently unavailable';
+  String get elevatorDisabledDescription => 'The elevator\'s currently unavailable';
 
   @override
   String get issueType_door_not_opening => 'Door Not Opening';
@@ -96,15 +93,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get issueStatus_fixed => 'Fixed';
 
   @override
-  String get issueStatusNotFixedDescription =>
-      'The issue has not been fixed yet';
+  String get issueStatusNotFixedDescription => 'The issue has not been fixed yet';
 
   @override
   String get issueStatusNeedsPartsDescription => 'The issue needs parts';
 
   @override
-  String get issueStatusEscalatedDescription =>
-      'The issue has been escalated to another technecian';
+  String get issueStatusEscalatedDescription => 'The issue has been escalated to another technecian';
 
   @override
   String get issueStatusFixedDescription => 'The issue has been fixed';
@@ -128,8 +123,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get report_resolved => 'Resolved';
 
   @override
-  String get reportPendingDescription =>
-      'The report is pending and hasn\'t been handled yet';
+  String get reportPendingDescription => 'The report is pending and hasn\'t been handled yet';
 
   @override
   String get reportReportedDescription => 'The issue has been reported';
@@ -150,7 +144,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unit_engine_name => 'Engine';
 
   @override
-  String get unit_cabine_name => 'Cabine';
+  String get unit_cabin_name => 'Cabin';
 
   @override
   String get unit_counter_name => 'Counter';
@@ -159,7 +153,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unit_wires_name => 'Wires';
 
   @override
-  String get unit_control_name => 'Control Panel';
+  String get unit_control_name => 'Control control';
 
   @override
   String get unit_active => 'Active';

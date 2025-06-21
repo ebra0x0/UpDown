@@ -1,5 +1,5 @@
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/extensions/ext_icon.dart';
+import 'package:UpDown/core/utils/extensions/ex_icon.dart';
 import 'package:UpDown/core/utils/model/drop_down_model.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/loading_indicator.dart';

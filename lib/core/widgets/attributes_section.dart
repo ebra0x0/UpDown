@@ -1,7 +1,7 @@
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/custom_card.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AttributesSection extends StatelessWidget {
@@ -20,7 +20,9 @@ class AttributesSection extends StatelessWidget {
         ),
         itemCount: attributes.length,
         itemBuilder: (context, index) {
-          return AttributeCard(attribute: attributes[index]);
+          return AttributeCard(
+            attribute: attributes[index],
+          );
         });
   }
 }
@@ -29,9 +31,11 @@ class AttributeCard extends StatelessWidget {
   const AttributeCard({
     super.key,
     required this.attribute,
+    this.isLoading = false,
   });
 
   final Map<String, dynamic> attribute;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {

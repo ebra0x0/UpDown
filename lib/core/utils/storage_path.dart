@@ -1,11 +1,11 @@
 import 'package:UpDown/core/utils/localization/constants.dart';
-import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/issues/data/models/create_issue_model.dart';
 
 class StoragePath {
   final String path;
   const StoragePath(this.path);
 
-  factory StoragePath.fromIssue({required IssueModel issue}) {
+  factory StoragePath.fromIssue({required CreateIssueModel issue}) {
     final fileName = issue.media!.file!.path.split('/').last;
     final mediaTypeFolder = issue.media!.type.name;
     return StoragePath(

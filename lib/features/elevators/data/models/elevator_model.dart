@@ -1,73 +1,49 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/localization/local_service.dart';
-import 'package:UpDown/features/issues/data/models/issue_model.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_unit_model.dart';
-import 'package:intl/intl.dart';
 
 class ElevatorModel {
   final String id;
   final String buildingId;
   final String name;
   final ElevatorStatus status;
-  final String? lastMaintenanceDate;
-  final String? nextMaintenanceDate;
-  final int maxLoad;
+  final DateTime? lastMaintenanceDate;
+  final DateTime? nextMaintenanceDate;
+  final int capacity;
+  final List<int> floorsServed;
   final DateTime createdAt;
-  final DateTime updatedAt;
-
-  // Dependencies
-  final List<IssueModel> issues;
-  final IssueModel? activeIssue;
-  final List<ElevatorUnitModel> units;
+  final DateTime? updatedAt;
 
   ElevatorModel({
     required this.id,
     required this.buildingId,
     required this.name,
     required this.status,
+    required this.capacity,
+    required this.floorsServed,
     required this.lastMaintenanceDate,
     required this.nextMaintenanceDate,
-    required this.maxLoad,
     required this.createdAt,
     required this.updatedAt,
-    required this.issues,
-    required this.activeIssue,
-    required this.units,
   });
 
   factory ElevatorModel.fromJson(Map<String, dynamic> json) {
-    final DateTime nextMaintenanceDate =
-        DateTime.parse(json['next_maintenance_date']);
-    final DateTime lastMaintenanceDate =
-        DateTime.parse(json['last_maintenance_date']);
-    final String locale = LocaleService.currentLocale;
-
     return ElevatorModel(
-      id: json['elevator_id'],
+      id: json['id'],
       buildingId: json['building_id'],
-      name: json['elevator_name'],
-      maxLoad: json['max_load'],
-      units: (json['units'] as List<dynamic>?)
-              ?.map((u) => ElevatorUnitModel.fromJson(u))
-              .toList() ??
-          [],
-      issues: (json['issues'] as List<dynamic>?)
-              ?.map((i) => IssueModel.fromJson(i as Map<String, dynamic>))
-              .toList() ??
-          [],
-      activeIssue: json['active_issue'] != null
-          ? IssueModel.fromJson(json['active_issue'])
-          : null,
+      name: json['name'],
+      capacity: json['capacity'],
       status: ElevatorStatusExtension.fromString(json['status']),
       lastMaintenanceDate: json['last_maintenance_date'] != null
-          ? DateFormat('d MMMM', locale).format(lastMaintenanceDate)
+          ? DateTime.parse(json['last_maintenance_date'])
           : null,
+      floorsServed: (json['floors_served'] as List<dynamic>).cast<int>(),
       nextMaintenanceDate: json['next_maintenance_date'] != null
-          ? DateFormat('d MMMM', locale).format(nextMaintenanceDate)
+          ? DateTime.parse(json['next_maintenance_date'])
           : null,
       createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      updatedAt: json['updated_at'] == null
+          ? null
+          : DateTime.parse(json['updated_at']),
     );
   }
 

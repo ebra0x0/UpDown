@@ -30,6 +30,22 @@ class CreateIssueState {
     this.description,
   });
 
+  CreateIssueModel toRequest(BuildContext context) {
+    return CreateIssueModel(
+      media: media,
+      buildingName: building!.name,
+      elevatorName: elevator!.name,
+      issueType: issueType!,
+      priority: IssuePriority.values.firstWhere(
+        (element) => element.name == issueType!.name,
+        orElse: () => IssuePriority.low,
+      ),
+      description: description,
+      buildingId: building!.id,
+      elevatorId: elevator!.id,
+    );
+  }
+
   CreateIssueState copyWith({
     CreateIssueStatus? status,
     String? error,

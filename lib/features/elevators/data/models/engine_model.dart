@@ -1,7 +1,7 @@
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_unit_model.dart';
+import 'package:UpDown/features/elevators/data/models/unit_model.dart';
 
-class EngineModel extends ElevatorUnitModel {
+class EngineModel extends UnitModel {
   final DateTime lastOiledDate;
   final bool isOilGood;
   final bool isFanOn;

@@ -1,4 +1,3 @@
-// theme_cubit.dart
 import 'package:UpDown/core/utils/service_locator.dart';
 import 'package:UpDown/core/utils/shared_pref.dart';
 import 'package:flutter/material.dart';

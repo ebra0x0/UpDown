@@ -1,9 +1,10 @@
-import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/utils/extensions/ex_date_time.dart';
 import 'package:UpDown/core/widgets/back_nav_button.dart';
+import 'package:UpDown/core/widgets/custom_sliver_app_bar.dart';
 import 'package:UpDown/features/issues/data/models/issue_model.dart';
 import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_description_section.dart';
 import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_info_section.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'issue_elevator_info_section.dart';
@@ -19,19 +20,18 @@ class IssueViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(slivers: [
-      SliverAppBar(
-        leading: BackButtonNavigation(),
-        floating: true,
-        title: Text("تفاصيل العطل", style: Styles.textStyle22),
+      CustomSliverAppBar(
+        title: "تفاصيل العطل",
+        leading: const BackButtonNavigation(),
       ),
       SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 8.sp),
           sliver: SliverToBoxAdapter(
               child: IssueInfoSection(
-            issueId: issue.id!,
+            issueId: issue.id,
             issueType: issue.issueType,
-            issueStatus: issue.status!,
-            issueDate: issue.createdAt!,
+            issueStatus: issue.status,
+            issueDate: issue.createdAt.toDateTimeFormat(),
           ))),
       SliverToBoxAdapter(child: SizedBox(height: 16.sp)),
       SliverPadding(
@@ -46,7 +46,7 @@ class IssueViewBody extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8.sp),
           sliver: SliverToBoxAdapter(
               child: IssueDescriptionSection(
-                  issuerDescription: issue.description))),
+                  issuerDescription: issue.description ?? ""))),
     ]);
   }
 }

@@ -1,11 +1,11 @@
-import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
+import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/elevator_card.dart';
 import 'package:flutter/widgets.dart';
 
-class ElevatorsGridSection extends StatelessWidget {
-  const ElevatorsGridSection({super.key, required this.state});
+class ElevatorsSliverGridSection extends StatelessWidget {
+  const ElevatorsSliverGridSection({super.key, required this.elevators});
 
-  final ElevatorsLoaded state;
+  final List<ElevatorSummaryModel> elevators;
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +14,12 @@ class ElevatorsGridSection extends StatelessWidget {
         crossAxisCount: 1,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
-        childAspectRatio: 1 / .4,
+        childAspectRatio: 1 / .37,
       ),
-      itemCount: state.elevators.length,
+      itemCount: elevators.length,
       itemBuilder: (context, index) {
         return ElevatorCard(
-          elevator: state.elevators[index],
+          elevator: elevators[index],
         );
       },
     );

@@ -1,15 +1,16 @@
 import 'package:UpDown/core/errors/failures.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
-import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/issues/data/models/create_issue_model.dart';
+import 'package:UpDown/features/issues/data/models/issue_summary_model.dart';
 import 'package:either_dart/either.dart';
 
 abstract class IssuesRepo {
-  IssuesRepo();
+  Future<Either<Failure, void>> create(CreateIssueModel issueModel);
 
-  Future<Either<Failure, void>> createIssue(IssueModel issueModel);
+  Future<Either<Failure, List<IssueSummaryModel>?>> fetchAllActiveIssues();
 
-  Future<Either<Failure, List<ElevatorSummaryModel>?>> fetchElevators(
-      String buildingId);
+  Future<Either<Failure, List<IssueSummaryModel>?>>
+      fetchActiveIssuesForBuilding(String buildingId);
 
-  Future<Either<Failure, List<IssueModel>?>> fetchActiveIssues();
+  Future<Either<Failure, List<IssueSummaryModel>?>>
+      fetchActiveIssuesForElevator(String elevatorId);
 }

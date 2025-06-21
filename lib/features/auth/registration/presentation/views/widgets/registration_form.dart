@@ -5,7 +5,7 @@ import 'package:UpDown/core/utils/model/form_field_model.dart';
 import 'package:UpDown/features/auth/manager/auth_cubit.dart';
 import 'package:UpDown/features/auth/registration/presentation/views/widgets/registration_submit_builder.dart';
 import 'package:UpDown/features/auth/validators/validator.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegistrationForm extends StatefulWidget {

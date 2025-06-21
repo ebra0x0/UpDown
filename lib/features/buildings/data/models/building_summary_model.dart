@@ -1,11 +1,13 @@
 class BuildingSummaryModel {
   final String id;
   final String name;
+  final String ownerId;
   final int elevatorsCount;
   final bool hasActiveReport;
 
-  BuildingSummaryModel({
+  const BuildingSummaryModel({
     required this.id,
+    required this.ownerId,
     required this.name,
     required this.elevatorsCount,
     required this.hasActiveReport,
@@ -13,12 +15,21 @@ class BuildingSummaryModel {
 
   factory BuildingSummaryModel.fromJson(Map<String, dynamic> json) {
     return BuildingSummaryModel(
-      id: json['building_id'],
-      name: json['building_name'],
+      id: json['id'],
+      ownerId: json['owner_id'],
+      name: json['name'],
       elevatorsCount: json['elevators_count'],
       hasActiveReport: json['has_active_report'],
     );
   }
+
+  factory BuildingSummaryModel.empty() => const BuildingSummaryModel(
+        id: "",
+        ownerId: "",
+        name: "",
+        elevatorsCount: 0,
+        hasActiveReport: false,
+      );
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{

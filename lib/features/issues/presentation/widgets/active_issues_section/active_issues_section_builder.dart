@@ -1,8 +1,9 @@
-import 'package:UpDown/core/widgets/data_loading_shimmer.dart';
-import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
-import 'package:UpDown/features/issues/presentation/widgets/active_issues_section/active_issues_section.dart';
+import 'package:UpDown/core/utils/manager/active_issues_cubit/active_issues_cubit.dart';
+import 'package:UpDown/core/widgets/screen_echo.dart';
+import 'package:UpDown/features/issues/presentation/widgets/active_issues_section/active_issues_sliver_list_section.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ActiveIssuesSectionBuilder extends StatelessWidget {
   const ActiveIssuesSectionBuilder({
@@ -11,20 +12,21 @@ class ActiveIssuesSectionBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IssuesCubit, IssuesState>(builder: (context, state) {
-      if (state is IssuesLoaded) {
-        return ActiveIssuesSection(state: state);
-      } else if (state is IssuesError) {
+    return BlocBuilder<ActiveIssuesCubit, ActiveIssuesState>(
+        builder: (context, state) {
+      if (state.status == ActiveIssuesStatus.error) {
         return SliverToBoxAdapter(
-          child: Center(
-            child: Text(state.error),
-          ),
+          child: ScreenEcho(message: state.errorMsg!),
         );
-      } else if (state is IssuesEmpty) {
-        return SliverToBoxAdapter(
-            child: Visibility(visible: false, child: SizedBox()));
+      } else if (state.status == ActiveIssuesStatus.empty) {
+        return SliverToBoxAdapter(child: null);
       }
-      return SliverToBoxAdapter(child: DataLoadingIndicator());
+      return Skeletonizer.sliver(
+        enabled: state.status == ActiveIssuesStatus.loading,
+        child: ActiveIssuesSliverListSection(
+            issues:
+                state.status == ActiveIssuesStatus.loaded ? state.issues! : []),
+      );
     });
   }
 }

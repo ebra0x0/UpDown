@@ -1,6 +1,6 @@
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/header_text.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'registration_form.dart';
 

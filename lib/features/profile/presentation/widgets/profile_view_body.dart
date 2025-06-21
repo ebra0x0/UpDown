@@ -1,5 +1,5 @@
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/extensions/ext_icon.dart';
+import 'package:UpDown/core/utils/extensions/ex_icon.dart';
 import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/avatar_picker.dart';
@@ -8,7 +8,7 @@ import 'package:UpDown/core/widgets/header_text.dart';
 import 'package:UpDown/features/auth/manager/auth_cubit.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
 import 'package:UpDown/features/profile/presentation/widgets/persolnal_info_list.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

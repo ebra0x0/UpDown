@@ -1,19 +1,27 @@
 part of 'elevators_cubit.dart';
 
-sealed class ElevatorsState {}
+enum ElevatorsStates { initial, loading, loaded, error }
 
-final class ElevatorsInitial extends ElevatorsState {}
+class ElevatorsState {
+  final ElevatorsStates status;
+  final String? errorMsg;
+  final List<ElevatorSummaryModel>? elevators;
 
-final class ElevatorsLoading extends ElevatorsState {}
+  ElevatorsState({
+    this.status = ElevatorsStates.initial,
+    this.errorMsg,
+    this.elevators,
+  });
 
-final class ElevatorsLoaded extends ElevatorsState {
-  final List<ElevatorSummaryModel> elevators;
-  ElevatorsLoaded({required this.elevators});
-}
-
-final class ElevatorsEmpty extends ElevatorsState {}
-
-final class ElevatorsError extends ElevatorsState {
-  final String error;
-  ElevatorsError({required this.error});
+  ElevatorsState copyWith({
+    ElevatorsStates? status,
+    String? errorMsg,
+    List<ElevatorSummaryModel>? elevators,
+  }) {
+    return ElevatorsState(
+      status: status ?? this.status,
+      errorMsg: errorMsg ?? this.errorMsg,
+      elevators: elevators ?? this.elevators,
+    );
+  }
 }

@@ -2,29 +2,30 @@ import 'dart:math';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/extensions/ext_icon.dart';
+import 'package:UpDown/core/utils/extensions/ex_date_time.dart';
+import 'package:UpDown/core/utils/extensions/ex_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
-import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:UpDown/core/widgets/card_tile.dart';
-import 'package:flutter/material.dart';
+import 'package:UpDown/features/issues/data/models/issue_summary_model.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class ActiveIssuesSliverList extends StatelessWidget {
-  const ActiveIssuesSliverList({
+class ActiveIssuesSliverListSection extends StatelessWidget {
+  const ActiveIssuesSliverListSection({
     super.key,
-    required this.state,
+    required this.issues,
   });
-  final IssuesLoaded state;
+  final List<IssueSummaryModel> issues;
 
   @override
   Widget build(BuildContext context) {
     return SliverList.builder(
-      itemCount: min(4, state.activeIssues.length),
+      itemCount: min(4, issues.length),
       itemBuilder: (context, index) {
-        final issue = state.activeIssues[index];
+        final issue = issues[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: CardTile(
@@ -32,10 +33,12 @@ class ActiveIssuesSliverList extends StatelessWidget {
               icon: Styles.errorOutlineIcon.copyWith(
                 size: 22.sp,
               ),
-              color: issue.status?.color ?? AppTheme.red,
+              color: issue.status.color,
               padding: 8.sp,
             ),
             title: Text(
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               issue.issueType.title(context),
               style: Styles.textStyle16.copyWith(color: AppTheme.text),
             ),
@@ -44,8 +47,8 @@ class ActiveIssuesSliverList extends StatelessWidget {
                   color: AppTheme.grey,
                 )),
             footer: TextAndbubbleTextRow(
-                text: issue.createdAt ?? "",
-                bubbleText: issue.status?.title(context) ?? "",
+                text: issue.createdAt.toDateTimeFormat(),
+                bubbleText: issue.status.title(context),
                 bubbleColor: AppTheme.red),
             onTap: () => context.push(AppRouter.kissueView, extra: issue),
           ),

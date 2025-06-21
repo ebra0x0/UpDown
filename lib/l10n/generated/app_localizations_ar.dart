@@ -123,8 +123,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get report_resolved => 'تم إصلاح العطل';
 
   @override
-  String get reportPendingDescription =>
-      'التقرير في الانتظار ولم يتم التعامل معه بعد';
+  String get reportPendingDescription => 'التقرير في الانتظار ولم يتم التعامل معه بعد';
 
   @override
   String get reportReportedDescription => 'تم الإبلاغ عن العطل';
@@ -145,7 +144,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get unit_engine_name => 'الماكينة';
 
   @override
-  String get unit_cabine_name => 'الكابينة';
+  String get unit_cabin_name => 'الكابينة';
 
   @override
   String get unit_counter_name => 'التقل';

@@ -1,7 +1,7 @@
 import 'package:UpDown/core/errors/failures.dart';
 import 'package:UpDown/core/utils/api_service.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
-import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/issues/data/models/create_issue_model.dart';
+import 'package:UpDown/features/issues/data/models/issue_summary_model.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo.dart';
 import 'package:either_dart/either.dart';
 
@@ -11,31 +11,24 @@ class IssuesRepoImp implements IssuesRepo {
   IssuesRepoImp(this._api);
 
   @override
-  Future<Either<Failure, void>> createIssue(IssueModel issueModel) async {
-    final result = await _api.createIssue(issueModel);
-
-    return result.fold(
-      (errMsg) => Left(errMsg),
-      (response) => Right(response),
-    );
+  Future<Either<Failure, void>> create(CreateIssueModel issueModel) async {
+    return await _api.createIssue(issueModel);
   }
 
   @override
-  Future<Either<Failure, List<IssueModel>?>> fetchActiveIssues() async {
-    final result = await _api.fetchActiveIssues();
-    return result.fold(
-      (errMsg) => Left(errMsg),
-      (response) => Right(response),
-    );
+  Future<Either<Failure, List<IssueSummaryModel>?>>
+      fetchActiveIssuesForBuilding(String buildingId) async {
+    return await _api.fetchActiveIssuesForBuilding(buildingId);
   }
 
   @override
-  Future<Either<Failure, List<ElevatorSummaryModel>?>> fetchElevators(
-      String buildingId) {
-    final res = _api.fetchElevators(buildingId: buildingId);
-    return res.fold(
-      (failure) => Left(failure),
-      (elevators) => Right(elevators),
-    );
+  Future<Either<Failure, List<IssueSummaryModel>?>>
+      fetchActiveIssuesForElevator(String elevatorId) async {
+    return await _api.fetchActiveIssuesForElevator(elevatorId);
+  }
+
+  @override
+  Future<Either<Failure, List<IssueSummaryModel>?>> fetchAllActiveIssues() {
+    return _api.fetchAllActiveIssues();
   }
 }

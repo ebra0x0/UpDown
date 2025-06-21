@@ -1,19 +1,25 @@
 part of 'elevator_details_cubit.dart';
 
-sealed class ElevatorDetailsState {}
+class ElevatorDetailsState {
+  final ContentStatus status;
+  final String? errorMsg;
+  final ElevatorModel? elevator;
 
-final class ElevatorDetailsInitial extends ElevatorDetailsState {}
+  ElevatorDetailsState({
+    this.status = ContentStatus.initial,
+    this.errorMsg,
+    this.elevator,
+  });
 
-final class ElevatorDetailsLoading extends ElevatorDetailsState {}
-
-final class ElevatorDetailsLoaded extends ElevatorDetailsState {
-  final ElevatorModel elevator;
-  ElevatorDetailsLoaded({required this.elevator});
+  ElevatorDetailsState copyWith({
+    ContentStatus? status,
+    String? errorMsg,
+    ElevatorModel? elevator,
+  }) {
+    return ElevatorDetailsState(
+      status: status ?? this.status,
+      errorMsg: errorMsg ?? this.errorMsg,
+      elevator: elevator ?? this.elevator,
+    );
+  }
 }
-
-final class ElevatorDetailsError extends ElevatorDetailsState {
-  final String error;
-  ElevatorDetailsError({required this.error});
-}
-
-final class ElevatorDetailsEmpty extends ElevatorDetailsState {}

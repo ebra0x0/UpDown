@@ -1,11 +1,11 @@
 import 'package:UpDown/core/utils/app_router.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/building_card_content.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-class BuildingBox extends StatelessWidget {
-  const BuildingBox({
+class BuildingCard extends StatelessWidget {
+  const BuildingCard({
     super.key,
     required this.building,
   });

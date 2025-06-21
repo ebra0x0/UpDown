@@ -1,6 +1,6 @@
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/styles.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CardTile extends StatelessWidget {
@@ -44,22 +44,18 @@ class CardTile extends StatelessWidget {
               boxShadow: [Styles.boxShadow],
             ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 8.sp,
           children: [
-            Visibility(
-                visible: leading != null, child: leading ?? SizedBox.shrink()),
+            if (leading != null) leading!,
             _CardTileContent(
               title: title,
               subtitle: subtitle,
               body: body,
               footer: footer,
             ),
-            Spacer(),
-            Visibility(
-                visible: trailing != null,
-                child: trailing ?? SizedBox.shrink()),
+            if (trailing != null) ...[Spacer(), trailing!]
           ],
         ),
       ),
@@ -91,8 +87,10 @@ class _CardTileContent extends StatelessWidget {
         ),
         Spacer(),
         Visibility(visible: body != null, child: body ?? SizedBox.shrink()),
-        Spacer(),
-        Visibility(visible: footer != null, child: footer ?? SizedBox.shrink()),
+        if (footer != null) ...[
+          Spacer(),
+          footer!,
+        ],
       ],
     );
   }

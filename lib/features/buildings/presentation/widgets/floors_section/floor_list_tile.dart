@@ -7,10 +7,7 @@ import 'package:UpDown/features/buildings/data/models/floor_model.dart';
 import 'package:flutter/widgets.dart';
 
 class FloorListTile extends StatelessWidget {
-  const FloorListTile({
-    super.key,
-    required this.floor,
-  });
+  const FloorListTile({super.key, required this.floor});
 
   final FloorModel floor;
 

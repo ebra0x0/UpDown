@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:video_compress/video_compress.dart';
+// import 'package:video_compress/video_compress.dart';
 
 Future<File?> prepareMediaFile(File file, MediaType type) async {
   File? resultFile;
@@ -10,7 +10,7 @@ Future<File?> prepareMediaFile(File file, MediaType type) async {
   if (type == MediaType.image) {
     resultFile = await compressImage(file);
   } else if (type == MediaType.video) {
-    resultFile = await compressVideo(XFile(file.path));
+    // resultFile = await compressVideo(XFile(file.path));
   }
 
   if (resultFile != null && isUnder512KB(resultFile)) {
@@ -36,15 +36,15 @@ Future<File?> compressImage(File file) async {
   return result != null ? File(result.path) : null;
 }
 
-Future<File?> compressVideo(XFile file) async {
-  try {
-    final MediaInfo? info = await VideoCompress.compressVideo(
-      file.path,
-      quality: VideoQuality.LowQuality,
-      deleteOrigin: false,
-    );
-    return info?.file;
-  } catch (e) {
-    return null;
-  }
-}
+// Future<File?> compressVideo(XFile file) async {
+//   try {
+//     final MediaInfo? info = await VideoCompress.compressVideo(
+//       file.path,
+//       quality: VideoQuality.LowQuality,
+//       deleteOrigin: false,
+//     );
+//     return info?.file;
+//   } catch (e) {
+//     return null;
+//   }
+// }

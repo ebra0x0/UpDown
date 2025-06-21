@@ -1,9 +1,9 @@
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/extensions/ext_icon.dart';
+import 'package:UpDown/core/utils/extensions/ex_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_card.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class BuildingCardContent extends StatelessWidget {
   const BuildingCardContent({

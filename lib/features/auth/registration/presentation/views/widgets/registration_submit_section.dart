@@ -1,6 +1,6 @@
 import 'package:UpDown/core/widgets/custom_button.dart';
 import 'package:UpDown/features/auth/manager/auth_cubit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class RegistrationSubmitSection extends StatelessWidget {
   const RegistrationSubmitSection(

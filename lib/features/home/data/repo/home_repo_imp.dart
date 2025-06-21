@@ -1,29 +1,23 @@
 import 'package:UpDown/core/errors/failures.dart';
-import 'package:UpDown/core/utils/api_service.dart';
-import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/buildings/data/repo/buildings_repo.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/home/data/repo/home_repo.dart';
+import 'package:UpDown/features/issues/data/models/issue_summary_model.dart';
+import 'package:UpDown/features/issues/data/repo/issues_repo.dart';
 import 'package:either_dart/either.dart';
 
 class HomeRepoImp implements HomeRepo {
-  HomeRepoImp(this._api);
-  final ApiService _api;
+  HomeRepoImp(this._buildingsRepo, this._issuesRepo);
+  final BuildingsRepo _buildingsRepo;
+  final IssuesRepo _issuesRepo;
 
   @override
   Future<Either<Failure, List<BuildingSummaryModel>?>> fetchBuildings() async {
-    final result = await _api.fetchBuildings();
-    return result.fold(
-      (errMsg) => Left(errMsg),
-      (response) => Right(response),
-    );
+    return await _buildingsRepo.fetchBuildings();
   }
 
   @override
-  Future<Either<Failure, List<IssueModel>?>> fetchActiveIssues() async {
-    final result = await _api.fetchActiveIssues();
-    return result.fold(
-      (errMsg) => Left(errMsg),
-      (response) => Right(response),
-    );
+  Future<Either<Failure, List<IssueSummaryModel>?>> fetchActiveIssues() async {
+    return await _issuesRepo.fetchAllActiveIssues();
   }
 }

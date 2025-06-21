@@ -35,7 +35,7 @@ abstract class Palette {
       brightness: Brightness.light,
       scaffoldBackgroundColor: lightScaffold,
       primaryColor: lightPrimary,
-      cardTheme: CardTheme(
+      cardTheme: const CardThemeData(
         color: lightBackground,
         shadowColor: Color(0xFFE0E0E0),
       ),
@@ -62,7 +62,7 @@ abstract class Palette {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: darkScaffold,
       primaryColor: darkPrimary,
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         color: darkBackground,
       ),
       appBarTheme: const AppBarTheme(

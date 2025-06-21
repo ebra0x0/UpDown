@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/extensions/ext_icon.dart';
+import 'package:UpDown/core/utils/extensions/ex_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
@@ -67,7 +67,7 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
           onChanged: (value) => issueCubitState.status ==
                   CreateIssueStatus.loading
               ? null
-              : context.read<CreateIssueCubit>().updateDescription(value ?? ''),
+              : context.read<CreateIssueCubit>().setDescription(value ?? ''),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "يرجى كتابة تفاصيل العطل";

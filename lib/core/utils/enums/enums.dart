@@ -1,3 +1,5 @@
+enum ContentStatus { initial, loading, loaded, error, empty }
+
 enum ElevatorStatus {
   working("Working"),
   broken("Broken"),
@@ -34,9 +36,18 @@ enum IssueType {
   const IssueType(this.name);
 }
 
+enum IssuePriority {
+  critical("Critical"),
+  moderate("Moderate"),
+  low("Low");
+
+  final String name;
+  const IssuePriority(this.name);
+}
+
 enum UnitName {
   engine("engine"),
-  cabine("cabine"),
+  cabin("cabin"),
   counter("counter"),
   wires("wires"),
   control("control");
@@ -45,7 +56,14 @@ enum UnitName {
   const UnitName(this.name);
 }
 
-enum UnitStatus { active, needsMaintenance, outOfService }
+enum UnitStatus {
+  active("Active"),
+  needsMaintenance("Needs_Maintenance"),
+  outOfService("Out_Of_Service");
+
+  final String name;
+  const UnitStatus(this.name);
+}
 
 enum MediaType {
   image("image"),

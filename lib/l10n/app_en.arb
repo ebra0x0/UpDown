@@ -48,7 +48,7 @@
   "reportResolvedDescription": "The issue has been resolved",
 
   "unit_engine_name": "Engine",
-  "unit_cabine_name": "Cabine",
+  "unit_cabin_name": "Cabin",
   "unit_counter_name": "Counter",
   "unit_wires_name": "Wires",
   "unit_control_name": "Control control",

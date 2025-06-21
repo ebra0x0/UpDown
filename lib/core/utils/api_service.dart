@@ -6,12 +6,15 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/function/media_compressor.dart';
 import 'package:UpDown/core/utils/model/profile_model.dart';
 import 'package:UpDown/core/utils/storage_path.dart';
-import 'package:UpDown/features/issues/data/models/issue_model.dart';
+import 'package:UpDown/features/elevators/data/models/unit_model.dart';
+import 'package:UpDown/features/elevators/data/models/unit_model_factory.dart';
+import 'package:UpDown/features/issues/data/models/create_issue_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
 import 'package:UpDown/core/utils/model/user_credentials_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
+import 'package:UpDown/features/issues/data/models/issue_summary_model.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -19,10 +22,16 @@ import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ApiService {
-  ApiService(this._supabase);
   final SupabaseClient _supabase;
+  User? get _user => _supabase.auth.currentUser;
+
+  ApiService(this._supabase);
 
   // Auth Functions
+
+  Stream<Session?> get onAuthStateChanged =>
+      _supabase.auth.onAuthStateChange.map((data) => data.session);
+
   Future<Either<Failure, Session?>> signUp(UserCredentialsModel user) async {
     try {
       final AuthResponse res = await _supabase.auth.signUp(
@@ -113,9 +122,6 @@ class ApiService {
     }
   }
 
-  Stream<Session?> get onAuthStateChanged =>
-      _supabase.auth.onAuthStateChange.map((data) => data.session);
-
   Future<Either<Failure, bool>> isNewAccount() async {
     try {
       final bool isNewAccount = await _supabase.rpc("check_new_account");
@@ -131,16 +137,11 @@ class ApiService {
   // User Functions
   Future<Either<Failure, void>> createProfile(ProfileModel profile) async {
     try {
-      final user = _supabase.auth.currentUser;
-      if (user == null) {
-        return Left(CustomFailure("المستخدم غير مسجل"));
-      }
-
       // Check if profile already exists
       final Map<String, dynamic>? existingProfile = await _supabase
           .from('Users')
           .select()
-          .eq('user_id', user.id)
+          .eq('user_id', _user!.id)
           .maybeSingle();
 
       if (existingProfile != null) {
@@ -160,7 +161,9 @@ class ApiService {
         profile = profile.copyWith(email: userEmail, imagePath: avatarPath);
       }
 
-      await _supabase.from('Users').insert(profile.toJson(isRemote: true));
+      await _supabase
+          .from('Users')
+          .insert(profile.toJson()); // removed is remote
       return const Right(null);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
@@ -169,18 +172,10 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, ProfileModel?>> fetchProfile() async {
+  Future<Either<Failure, ProfileModel>> fetchProfile() async {
     try {
-      final user = _supabase.auth.currentUser;
-      if (user == null) {
-        return Left(CustomFailure("المستخدم غير مسجل"));
-      }
-      final Map<String, dynamic>? response = await _supabase
-          .rpc("get_user_assets", params: {"u_id": user.id}).maybeSingle();
-
-      if (response == null || response.isEmpty) {
-        return const Right(null);
-      }
+      final Map<String, dynamic> response =
+          await _supabase.from('Users').select().eq('id', _user!.id).single();
 
       if (response["image_path"] != null) {
         final String? avatarPath =
@@ -236,7 +231,7 @@ class ApiService {
       }
 
       // Upload avatar
-      final uploadResult = await uploadMedia(
+      final uploadResult = await _uploadMedia(
         bucketName: kAvatarsBucket,
         filePath: compressedFile.path,
         path: StoragePath.fromAvatar(
@@ -258,11 +253,6 @@ class ApiService {
 
   Future<Either<Failure, void>> updateProfile(ProfileModel profile) async {
     try {
-      final user = _supabase.auth.currentUser;
-      if (user == null) {
-        return Left(CustomFailure("المستخدم غير مسجل"));
-      }
-
       if (profile.imagePath != null) {
         final uploadResult = await _uploadAvatar(XFile(profile.imagePath!));
         if (uploadResult.isLeft) return Left(uploadResult.left);
@@ -278,7 +268,7 @@ class ApiService {
       await _supabase
           .from('Users')
           .update(profile.toJson())
-          .eq("user_id", user.id);
+          .eq("user_id", _user!.id);
 
       return const Right(null);
     } on PostgrestException catch (e) {
@@ -289,21 +279,12 @@ class ApiService {
   }
 
   // Buildings
-  Future<Either<Failure, List<BuildingSummaryModel>?>> fetchBuildings() async {
+  Future<Either<Failure, List<BuildingSummaryModel>>> fetchBuildings() async {
     try {
-      final User? user = _supabase.auth.currentUser;
-      if (user == null) {
-        return Left(CustomFailure("المستخدم غير مسجل"));
-      }
+      final User user = _supabase.auth.currentUser!;
 
-      final String userId = user.id;
-
-      final List<dynamic> response = await _supabase
-          .rpc("get_user_buildings_summary", params: {"user_id": userId});
-
-      if (response.isEmpty) {
-        return Right(null);
-      }
+      final List<dynamic> response =
+          await _supabase.rpc("get_buildings", params: {"user_id": user.id});
 
       final List<BuildingSummaryModel> buildings =
           response.map((b) => BuildingSummaryModel.fromJson(b)).toList();
@@ -316,16 +297,14 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, BuildingModel?>> fetchBuildingDetails(
+  Future<Either<Failure, BuildingModel>> fetchBuildingDetails(
       {required String buildingId}) async {
     try {
-      final Map<String, dynamic>? response = await _supabase.rpc(
-          'get_building_by_id',
-          params: {"b_id": buildingId}).maybeSingle();
-
-      if (response == null) {
-        return Right(null);
-      }
+      final Map<String, dynamic> response = await _supabase
+          .from('Buildings')
+          .select()
+          .eq('id', buildingId)
+          .single();
 
       return Right(BuildingModel.fromJson(response));
     } on PostgrestException catch (e) {
@@ -336,17 +315,31 @@ class ApiService {
   }
 
   // Elevators
-  Future<Either<Failure, List<ElevatorSummaryModel>?>> fetchElevators(
+
+  Future<Either<Failure, ElevatorModel>> fetchElevatorDetails(
+      {required String elevatorId}) async {
+    try {
+      final Map<String, dynamic> response = await _supabase
+          .from('Elevators')
+          .select()
+          .eq('id', elevatorId)
+          .single();
+
+      return Right(ElevatorModel.fromJson(response));
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصعد"));
+    }
+  }
+
+  Future<Either<Failure, List<ElevatorSummaryModel>>> fetchElevatorsByBuilding(
       {required String buildingId}) async {
     try {
-      final List<dynamic> response = await _supabase.rpc(
-        "get_building_elevators_summary",
-        params: {"b_id": buildingId},
-      );
-
-      if (response.isEmpty) {
-        return Right(null);
-      }
+      final List<Map<String, dynamic>> response = await _supabase
+          .from('elevators_summary_view')
+          .select()
+          .eq('building_id', buildingId);
 
       final List<ElevatorSummaryModel> elevators = response.map((e) {
         return ElevatorSummaryModel.fromJson(e);
@@ -360,31 +353,69 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, ElevatorModel?>> fetchElevatorDetails(
-      {required String elevatorId}) async {
+  Future<Either<Failure, List<ElevatorSummaryModel>>> fetchElevatorsByBuildings(
+      {required List<String> buildingIds}) async {
     try {
-      final Map<String, dynamic>? response = await _supabase.rpc(
-          "get_elevator_by_id",
-          params: {"e_id": elevatorId}).maybeSingle();
+      final List<Map<String, dynamic>> response = await _supabase
+          .from('elevators_summary_view')
+          .select()
+          .inFilter('building_id', buildingIds);
 
-      if (response == null) {
-        return Right(null);
-      }
+      final List<ElevatorSummaryModel> elevators = response.map((e) {
+        return ElevatorSummaryModel.fromJson(e);
+      }).toList();
 
-      return Right(ElevatorModel.fromJson(response));
+      return Right(elevators);
     } on PostgrestException catch (e) {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
-      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصعد"));
+      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
+    }
+  }
+
+  Future<Either<Failure, List<UnitModel>>> fetchElevatorUnits(
+      {required String elevatorId}) async {
+    try {
+      final List<Map<String, dynamic>> response = await _supabase
+          .from('elevator_units_summary_view')
+          .select()
+          .eq('elevator_id', elevatorId);
+
+      final List<UnitModel> units = response.map((u) {
+        return UnitModel.fromJson(u);
+      }).toList();
+
+      return Right(units);
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطاء اثناء طلب وحدات المصعد"));
+    }
+  }
+
+  Future<Either<Failure, UnitModel>> fetchUnitDetails(
+      {required String unitId}) async {
+    try {
+      final Map<String, dynamic> response = await _supabase
+          .from('Elevator_Units')
+          .select()
+          .eq('id', unitId)
+          .single();
+
+      return Right(UnitModelFactory.createUnitModel(response));
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
     }
   }
 
   // Issues
-  Future<Either<Failure, void>> createIssue(IssueModel issueModel) async {
+  Future<Either<Failure, void>> createIssue(CreateIssueModel issueModel) async {
     try {
       // Create issue
       final Map<String, dynamic>? issueIdRes = await _supabase
-          .rpc("create_issue_with_report", params: issueModel.toJson())
+          .rpc("create_issue", params: issueModel.toJson())
           .maybeSingle();
 
       if (issueIdRes == null) {
@@ -397,7 +428,7 @@ class ApiService {
       if (issueModel.media == null) return const Right(null);
 
       // Create media
-      final mediaResponse = await createIssueMedia(issueModel);
+      final mediaResponse = await _createIssueMedia(issueModel);
 
       if (mediaResponse.isLeft) return Left(mediaResponse.left);
 
@@ -409,7 +440,8 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, void>> createIssueMedia(IssueModel issue) async {
+  Future<Either<Failure, void>> _createIssueMedia(
+      CreateIssueModel issue) async {
     try {
       // Compress file
       final File? compressedFile =
@@ -423,7 +455,7 @@ class ApiService {
       final String storagePath = StoragePath.fromIssue(issue: issue).path;
 
       // Upload media
-      final uploadResult = await uploadMedia(
+      final uploadResult = await _uploadMedia(
         bucketName: kReportsBucket,
         filePath: compressedFile.path,
         path: storagePath,
@@ -450,7 +482,7 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, String>> uploadMedia(
+  Future<Either<Failure, String>> _uploadMedia(
       {required String bucketName,
       required String filePath,
       required String path}) async {
@@ -469,17 +501,20 @@ class ApiService {
     }
   }
 
-  Future<Either<Failure, List<IssueModel>?>> fetchActiveIssues() async {
+  Future<Either<Failure, List<IssueSummaryModel>?>>
+      fetchActiveIssuesForBuilding(String buildingId) async {
     try {
-      final List<Map<String, dynamic>> response =
-          await _supabase.from("active_issues").select();
+      final List<Map<String, dynamic>> response = await _supabase
+          .from('active_issues_summary_view')
+          .select()
+          .eq('building_id', buildingId);
 
       if (response.isEmpty) {
         return Right(null);
       }
 
-      final List<IssueModel> issues = response.map((e) {
-        return IssueModel.fromJson(e);
+      final List<IssueSummaryModel> issues = response.map((e) {
+        return IssueSummaryModel.fromJson(e);
       }).toList();
 
       return Right(issues);
@@ -487,6 +522,54 @@ class ApiService {
       return Left(SupabaseFailure.fromDatabase(e));
     } catch (e) {
       return Left(CustomFailure("حدث حطأ اثناء جلب بيانات الأعطال النشطة"));
+    }
+  }
+
+  Future<Either<Failure, List<IssueSummaryModel>?>>
+      fetchActiveIssuesForElevator(String elevatorId) async {
+    try {
+      final List<Map<String, dynamic>> response = await _supabase
+          .from('active_issues_summary_view')
+          .select()
+          .eq('elevator_id', elevatorId);
+
+      if (response.isEmpty) {
+        return Right(null);
+      }
+
+      final List<IssueSummaryModel> issues = response.map((e) {
+        return IssueSummaryModel.fromJson(e);
+      }).toList();
+
+      return Right(issues);
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث حطاء اثناء جلب بيانات الأعطال النشطة"));
+    }
+  }
+
+  Future<Either<Failure, List<IssueSummaryModel>?>>
+      fetchAllActiveIssues() async {
+    try {
+      final List<Map<String, dynamic>> response = await _supabase
+          .from('active_issues_summary_view')
+          .select()
+          .eq("user_id", _supabase.auth.currentUser!.id);
+
+      if (response.isEmpty) {
+        return Right(null);
+      }
+
+      final List<IssueSummaryModel> issues = response.map((e) {
+        return IssueSummaryModel.fromJson(e);
+      }).toList();
+
+      return Right(issues);
+    } on PostgrestException catch (e) {
+      return Left(SupabaseFailure.fromDatabase(e));
+    } catch (e) {
+      return Left(CustomFailure("حدث حطاء اثناء جلب بيانات الأعطال النشطة"));
     }
   }
 }

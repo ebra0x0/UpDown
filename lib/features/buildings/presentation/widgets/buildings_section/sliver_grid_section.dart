@@ -1,11 +1,14 @@
+import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/building_card.dart';
 import 'package:flutter/widgets.dart';
-import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
 
-class BuildingsGridViewSection extends StatelessWidget {
-  const BuildingsGridViewSection({super.key, required this.state});
+class BuildingsSliverGridViewSection extends StatelessWidget {
+  const BuildingsSliverGridViewSection({
+    super.key,
+    required this.buildings,
+  });
 
-  final BuildingsLoaded state;
+  final List<BuildingSummaryModel> buildings;
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +18,9 @@ class BuildingsGridViewSection extends StatelessWidget {
             crossAxisSpacing: 8,
             mainAxisSpacing: 16,
             childAspectRatio: 1 / .75),
-        itemCount: state.buildings.length,
+        itemCount: buildings.length,
         itemBuilder: (context, index) {
-          return BuildingBox(building: state.buildings[index]);
+          return BuildingCard(building: buildings[index]);
         });
   }
 }

@@ -1,8 +1,8 @@
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/widgets/bubble_status.dart';
 import 'package:UpDown/core/widgets/custom_card.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_unit_model.dart';
-import 'package:flutter/material.dart';
+import 'package:UpDown/features/elevators/data/models/unit_model.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ElevatorUnitCard extends StatelessWidget {
@@ -11,7 +11,7 @@ class ElevatorUnitCard extends StatelessWidget {
     required this.unit,
   });
 
-  final ElevatorUnitModel unit;
+  final UnitModel unit;
 
   @override
   Widget build(BuildContext context) {

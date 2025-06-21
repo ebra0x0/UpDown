@@ -1,19 +1,24 @@
 part of 'building_details_cubit.dart';
 
-sealed class BuildingDetailsState {}
+class BuildingDetailsState {
+  final ContentStatus status;
+  final String? errorMsg;
+  final BuildingModel? building;
 
-final class BuildingDetailsInitial extends BuildingDetailsState {}
+  BuildingDetailsState({
+    this.status = ContentStatus.initial,
+    this.errorMsg,
+    this.building,
+  });
 
-final class BuildingDetailsLoading extends BuildingDetailsState {}
-
-final class BuildingDetailsLoaded extends BuildingDetailsState {
-  final BuildingModel building;
-  BuildingDetailsLoaded({required this.building});
+  BuildingDetailsState copyWith({
+    ContentStatus? status,
+    String? errorMsg,
+    BuildingModel? building,
+  }) =>
+      BuildingDetailsState(
+        status: status ?? this.status,
+        errorMsg: errorMsg ?? this.errorMsg,
+        building: building ?? this.building,
+      );
 }
-
-final class BuildingDetailsError extends BuildingDetailsState {
-  final String error;
-  BuildingDetailsError({required this.error});
-}
-
-final class BuildingDetailsEmpty extends BuildingDetailsState {}

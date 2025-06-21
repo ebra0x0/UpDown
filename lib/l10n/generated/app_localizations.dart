@@ -18,7 +18,7 @@ import 'app_localizations_en.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'gen_l10n/app_localizations.dart';
+/// import 'l10n/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -365,11 +365,11 @@ abstract class AppLocalizations {
   /// **'Engine'**
   String get unit_engine_name;
 
-  /// No description provided for @unit_cabine_name.
+  /// No description provided for @unit_cabin_name.
   ///
   /// In en, this message translates to:
-  /// **'Cabine'**
-  String get unit_cabine_name;
+  /// **'Cabin'**
+  String get unit_cabin_name;
 
   /// No description provided for @unit_counter_name.
   ///

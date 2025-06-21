@@ -1,14 +1,14 @@
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_unit_model.dart';
+import 'package:UpDown/features/elevators/data/models/unit_model.dart';
 
-class CabineModel extends ElevatorUnitModel {
+class CabinModel extends UnitModel {
   final String capacity;
   final bool hasBreak;
   final bool hasLights;
   final bool isChearsGood;
   final String passDeviceModel;
 
-  CabineModel({
+  CabinModel({
     required super.id,
     required super.status,
     required super.model,
@@ -23,8 +23,8 @@ class CabineModel extends ElevatorUnitModel {
     required this.passDeviceModel,
   });
 
-  factory CabineModel.fromJson(Map<String, dynamic> json) {
-    return CabineModel(
+  factory CabinModel.fromJson(Map<String, dynamic> json) {
+    return CabinModel(
       id: json['id'],
       status: UnitStatusExtension.fromString(json['status']),
       model: json['model'],

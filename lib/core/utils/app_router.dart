@@ -17,7 +17,7 @@ import 'package:UpDown/features/issues/presentation/views/issue_view.dart';
 import 'package:UpDown/features/main_shell/root_view.dart';
 import 'package:UpDown/features/profile/presentation/views/profile_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

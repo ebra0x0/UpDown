@@ -4,8 +4,8 @@ import 'package:UpDown/features/buildings/data/models/building_summary_model.dar
 import 'package:either_dart/either.dart';
 
 abstract class BuildingsRepo {
-  Future<Either<Failure, BuildingModel?>> fetchBuildingDetails(
+  Future<Either<Failure, BuildingModel>> fetchBuildingDetails(
       String buildingId);
 
-  Future<Either<Failure, List<BuildingSummaryModel>?>> fetchBuildings();
+  Future<Either<Failure, List<BuildingSummaryModel>>> fetchBuildings();
 }

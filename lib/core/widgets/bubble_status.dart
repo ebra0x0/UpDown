@@ -1,6 +1,6 @@
-import 'package:UpDown/core/utils/extensions/ext_icon.dart';
+import 'package:UpDown/core/utils/extensions/ex_icon.dart';
 import 'package:UpDown/core/utils/styles.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class BubbleStatus extends StatelessWidget {
   const BubbleStatus({super.key, required this.color});

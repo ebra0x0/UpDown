@@ -5,30 +5,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'buildings_state.dart';
 
 class BuildingsCubit extends Cubit<BuildingsState> {
-  BuildingsCubit(this._repo) : super(BuildingsInitial());
+  BuildingsCubit(this._repo) : super(BuildingsState());
   final BuildingsRepo _repo;
 
-  List<BuildingSummaryModel>? buildings;
+  Set<BuildingSummaryModel> buildings = {};
 
   Future<void> call() async {
-    if (state is BuildingsLoading) return;
-    if (buildings != null) {
-      emit(BuildingsLoaded(buildings: buildings!));
+    if (state.status == BuildingsStates.loading) return;
+
+    if (buildings.isNotEmpty) {
+      emit(state.copyWith(
+          status: BuildingsStates.loaded, buildings: buildings.toList()));
       return;
     }
 
-    emit(BuildingsLoading());
+    emit(state.copyWith(status: BuildingsStates.loading));
+
     final result = await _repo.fetchBuildings();
 
     result.fold(
-      (errMsg) => emit(BuildingsError(error: errMsg.errMessage)),
+      (errMsg) => emit(state.copyWith(
+          status: BuildingsStates.error, errorMsg: errMsg.errMessage)),
       (response) {
-        if (response == null) {
-          emit(BuildingsEmpty());
-          return;
-        }
-        buildings = response;
-        emit(BuildingsLoaded(buildings: response));
+        buildings.addAll(response);
+        emit(state.copyWith(
+            status: BuildingsStates.loaded, buildings: response));
       },
     );
   }

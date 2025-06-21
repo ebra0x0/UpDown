@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-extension ExtBoxBorder on Border {
+extension BoxBorderExtension on Border {
   Border copyWith({
     Color? color,
     double? width,

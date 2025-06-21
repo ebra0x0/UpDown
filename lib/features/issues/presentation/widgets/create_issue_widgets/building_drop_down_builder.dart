@@ -4,7 +4,7 @@ import 'package:UpDown/core/widgets/custom_drop_down.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BuildingDropDownBuilder extends StatelessWidget {
@@ -22,7 +22,7 @@ class BuildingDropDownBuilder extends StatelessWidget {
           issueCubitState.status == CreateIssueStatus.loading;
       final BuildingSummaryModel? selectedBuilding = issueCubitState.building;
       final List<BuildingSummaryModel>? buildings =
-          state is BuildingsLoaded ? state.buildings : null;
+          state.status == BuildingsStates.loaded ? state.buildings : null;
 
       final dropDownList = buildings
               ?.map((e) => DropDownModel(
@@ -40,7 +40,7 @@ class BuildingDropDownBuilder extends StatelessWidget {
 
       return CustomDropDown(
         isEnabled: !isCreating,
-        isLoading: state is BuildingsLoading,
+        isLoading: state.status == BuildingsStates.loading,
         listItem: dropDownList,
         hint: "إختر المبنى",
         value: matchValue,

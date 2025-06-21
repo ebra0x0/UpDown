@@ -26,15 +26,6 @@ Future<void> serviceLocatorSetup() async {
   gitIt.registerSingleton<ApiService>(ApiService(Supabase.instance.client));
   // AuthRepo
   gitIt.registerSingleton<AuthRepoImp>(AuthRepoImp(gitIt.get<ApiService>()));
-  // AccountSetupRepo
-  gitIt.registerSingleton<AccountSetupRepoImp>(
-      AccountSetupRepoImp(gitIt.get<ApiService>()));
-  // ProfileRepo
-  gitIt.registerSingleton<ProfileRepoImp>(ProfileRepoImp(
-      ProfileLocalDataSourceImp(),
-      ProfileRemoteDataSourceImp(gitIt.get<ApiService>())));
-  // HomeRepo
-  gitIt.registerSingleton<HomeRepoImp>(HomeRepoImp(gitIt.get<ApiService>()));
   // IssuesRepo
   gitIt
       .registerSingleton<IssuesRepoImp>(IssuesRepoImp(gitIt.get<ApiService>()));
@@ -51,4 +42,14 @@ Future<void> serviceLocatorSetup() async {
       SharedPref(await SharedPreferences.getInstance()));
   // Theme
   gitIt.registerSingleton<AppTheme>(AppTheme());
+  // AccountSetupRepo
+  gitIt.registerSingleton<AccountSetupRepoImp>(
+      AccountSetupRepoImp(gitIt.get<ApiService>()));
+  // ProfileRepo
+  gitIt.registerSingleton<ProfileRepoImp>(ProfileRepoImp(
+      ProfileLocalDataSourceImp(),
+      ProfileRemoteDataSourceImp(gitIt.get<ApiService>())));
+  // HomeRepo
+  gitIt.registerSingleton<HomeRepoImp>(
+      HomeRepoImp(gitIt.get<BuildingsRepoImp>(), gitIt.get<IssuesRepoImp>()));
 }

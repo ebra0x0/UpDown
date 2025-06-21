@@ -1,69 +1,81 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/localization/local_service.dart';
 import 'package:UpDown/features/issues/data/models/media_model.dart';
-import 'package:intl/intl.dart';
 
 class IssueModel {
-  final String? id;
-  final String? reportId;
+  final String id;
+  final String userId;
+  final String reportId;
+  final String buildingId;
   final String elevatorId;
-  final String? buildingId;
   final String buildingName;
   final String elevatorName;
-  final String description;
-  final IssueStatus? status;
+  final String? description;
   final IssueType issueType;
+  final IssuePriority priority;
+  final IssueStatus status;
   final MediaModel? media;
-  final String? createdAt;
-  final String? updatedAt;
+  final int? cost;
+  final String? technicianNote;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final DateTime? resolvedAt;
 
   IssueModel({
-    this.id,
-    this.reportId,
+    required this.id,
+    required this.reportId,
     required this.elevatorId,
-    this.buildingId,
+    required this.buildingId,
     required this.buildingName,
     required this.elevatorName,
     required this.description,
     required this.issueType,
     this.media,
-    this.status,
-    this.createdAt,
-    this.updatedAt,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.priority,
+    this.cost,
+    this.technicianNote,
+    this.resolvedAt,
+    required this.userId,
   });
 
   factory IssueModel.fromJson(Map<String, dynamic> json) {
-    final DateTime? createdAt = DateTime.tryParse(json['created_at'] ?? '');
-    final DateTime? updatedAt = DateTime.tryParse(json['updated_at'] ?? '');
-    final String locale = LocaleService.currentLocale;
-
     return IssueModel(
-      id: json['issue_id'],
+      id: json['id'],
+      userId: json['user_id'],
       reportId: json['report_id'],
       elevatorId: json['elevator_id'],
       buildingId: json['building_id'],
-      issueType: json['issue_type'].runtimeType == String
-          ? IssueTypeExtension.fromString(json['issue_type'])
-          : json["issue_type"],
+      issueType: IssueType.values.firstWhere(
+        (type) => type.name == json['issue_type'],
+        orElse: () => IssueType.other,
+      ),
       media: json['media'],
       elevatorName: json['elevator_name'],
       buildingName: json['building_name'],
       description: json['description'],
-      createdAt: createdAt == null
-          ? null
-          : DateFormat('d MMMM, hh:mm a', locale).format(createdAt),
-      updatedAt: updatedAt == null
-          ? null
-          : DateFormat('d MMMM, hh:mm a', locale).format(updatedAt),
-      status: json['status'] == null
-          ? null
-          : IssueStatusExtension.fromString(json['status']),
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt:
+          json['updated_at'] ?? DateTime.tryParse(json['updated_at'] ?? ''),
+      status: IssueStatus.values.firstWhere(
+        (status) => status.name == json['status'],
+        orElse: () => IssueStatus.notFixed,
+      ),
+      priority: IssuePriority.values.firstWhere(
+        (priority) => priority.name == json['priority'],
+        orElse: () => IssuePriority.low,
+      ),
+      cost: json['cost'],
+      technicianNote: json['technician_note'],
+      resolvedAt:
+          json['resolved_at'] ?? DateTime.tryParse(json['resolved_at'] ?? ''),
     );
   }
 
   IssueModel copyWith({
     String? id,
+    String? userId,
     String? reportId,
     String? elevatorId,
     String? buildingId,
@@ -73,14 +85,19 @@ class IssueModel {
     String? description,
     IssueType? issueType,
     IssueStatus? status,
-    String? createdAt,
-    String? updatedAt,
+    IssuePriority? priority,
+    int? cost,
+    String? technicianNote,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+    DateTime? resolvedAt,
   }) {
     return IssueModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
       buildingName: buildingName ?? this.buildingName,
       elevatorName: elevatorName ?? this.elevatorName,
       media: media ?? this.media,
-      id: id ?? this.id,
       reportId: reportId ?? this.reportId,
       elevatorId: elevatorId ?? this.elevatorId,
       buildingId: buildingId ?? this.buildingId,
@@ -89,17 +106,23 @@ class IssueModel {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      priority: priority ?? this.priority,
+      cost: cost ?? this.cost,
+      technicianNote: technicianNote ?? this.technicianNote,
+      resolvedAt: resolvedAt ?? this.resolvedAt,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'report_id': reportId,
       'building_id': buildingId,
       'elevator_id': elevatorId,
       'description': description,
       'issue_type': issueType.name,
       'building_name': buildingName,
-      'elevator_name': elevatorName
+      'elevator_name': elevatorName,
+      'priority': priority.name,
     };
   }
 }

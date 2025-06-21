@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:UpDown/features/buildings/data/models/floor_model.dart';
-import 'package:UpDown/features/buildings/presentation/widgets/building_floors_section/floor_list_tile.dart';
-import 'package:flutter/material.dart';
+import 'package:UpDown/features/buildings/presentation/widgets/floors_section/floor_list_tile.dart';
+import 'package:flutter/widgets.dart';
 
 class BuildingFloorsSection extends StatelessWidget {
   const BuildingFloorsSection({super.key, required this.floors});

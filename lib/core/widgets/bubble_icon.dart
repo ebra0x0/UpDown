@@ -1,5 +1,5 @@
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/extensions/ext_icon.dart';
+import 'package:UpDown/core/utils/extensions/ex_icon.dart';
 import 'package:flutter/widgets.dart';
 
 class BubbleIcon extends StatelessWidget {

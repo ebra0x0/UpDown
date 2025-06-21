@@ -1,8 +1,8 @@
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_unit_model.dart';
+import 'package:UpDown/features/elevators/data/models/unit_model.dart';
 import 'package:intl/intl.dart';
 
-class CounterModel extends ElevatorUnitModel {
+class CounterModel extends UnitModel {
   final int chairsCount;
   final int weightsCount;
   final DateTime lastOiledDate;

@@ -5,30 +5,70 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'elevators_state.dart';
 
 class ElevatorsCubit extends Cubit<ElevatorsState> {
-  ElevatorsCubit(this._repo) : super(ElevatorsInitial());
+  ElevatorsCubit(this._repo) : super(ElevatorsState());
   final ElevatorRepo _repo;
 
-  List<ElevatorSummaryModel>? elevators;
+  final Set<ElevatorSummaryModel> _elevators = {};
 
-  Future<void> call({required String buildingId}) async {
-    if (state is ElevatorsLoading) return;
-    if (elevators != null && buildingId == elevators![0].buildingId) {
-      emit(ElevatorsLoaded(elevators: elevators!));
+  Future<void> callByBuilding({required String buildingId}) async {
+    if (state.status == ElevatorsStates.loading) return;
+
+    emit(state.copyWith(status: ElevatorsStates.loading));
+    // get the exist elevators if already loaded
+    if (_elevators.isNotEmpty) {
+      final existingElevators = _elevators
+          .where((elevator) => elevator.buildingId == buildingId)
+          .toList();
+
+      if (existingElevators.isNotEmpty) {
+        emit(state.copyWith(
+            status: ElevatorsStates.loaded, elevators: existingElevators));
+        return;
+      }
     }
 
-    emit(ElevatorsLoading());
-
-    final result = await _repo.fetchElevators(buildingId);
+    final result = await _repo.fetchElevatorsByBuilding(buildingId);
 
     result.fold(
-      (errMsg) => emit(ElevatorsError(error: errMsg.errMessage)),
+      (errMsg) => emit(state.copyWith(
+          status: ElevatorsStates.error, errorMsg: errMsg.errMessage)),
       (response) {
-        if (response == null) {
-          emit(ElevatorsEmpty());
-          return;
-        }
-        elevators = response;
-        emit(ElevatorsLoaded(elevators: response));
+        _elevators.addAll(response);
+        emit(state.copyWith(
+            status: ElevatorsStates.loaded, elevators: response));
+      },
+    );
+  }
+
+  Future<void> callByBuildings(List<String> buildingIds) async {
+    if (state.status == ElevatorsStates.loading) return;
+    emit(state.copyWith(status: ElevatorsStates.loading));
+    // get the exist elevators if already loaded
+    if (_elevators.isNotEmpty) {
+      final existingElevators = _elevators
+          .where((elevator) => buildingIds.contains(elevator.buildingId))
+          .toList();
+
+      final hasAllBuildings = buildingIds.every((buildingId) {
+        return _elevators.any((elevator) => elevator.buildingId == buildingId);
+      });
+
+      if (existingElevators.isNotEmpty && hasAllBuildings) {
+        emit(state.copyWith(
+            status: ElevatorsStates.loaded, elevators: existingElevators));
+        return;
+      }
+    }
+
+    final result = await _repo.fetchElevatorsByBuildings(buildingIds);
+
+    result.fold(
+      (errMsg) => emit(state.copyWith(
+          status: ElevatorsStates.error, errorMsg: errMsg.errMessage)),
+      (response) {
+        _elevators.addAll(response);
+        emit(state.copyWith(
+            status: ElevatorsStates.loaded, elevators: response));
       },
     );
   }

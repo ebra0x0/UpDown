@@ -1,4 +1,6 @@
-class FloorModel {
+import 'package:equatable/equatable.dart';
+
+class FloorModel extends Equatable {
   final String floorId;
   final String buildingId;
   final int floorNumber;
@@ -6,7 +8,7 @@ class FloorModel {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  FloorModel({
+  const FloorModel({
     required this.floorId,
     required this.buildingId,
     required this.floorNumber,
@@ -14,6 +16,28 @@ class FloorModel {
     required this.createdAt,
     required this.updatedAt,
   });
+
+  factory FloorModel.fromJson(dynamic json) {
+    return FloorModel(
+      floorId: json['floor_id'],
+      buildingId: json['building_id'],
+      floorNumber: json['floor_number'],
+      isClosed: json['is_closed'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+
+  factory FloorModel.empty() {
+    return FloorModel(
+      floorId: '',
+      buildingId: '',
+      floorNumber: 0,
+      isClosed: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -26,15 +50,13 @@ class FloorModel {
     };
   }
 
-  // factory FloorModel.fromJson(Map<String, dynamic> json) {
-  factory FloorModel.fromJson(dynamic json) {
-    return FloorModel(
-      floorId: json['floor_id'],
-      buildingId: json['building_id'],
-      floorNumber: json['floor_number'],
-      isClosed: json['is_closed'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-    );
-  }
+  @override
+  List<Object?> get props => [
+        floorId,
+        buildingId,
+        floorNumber,
+        isClosed,
+        createdAt,
+        updatedAt,
+      ];
 }

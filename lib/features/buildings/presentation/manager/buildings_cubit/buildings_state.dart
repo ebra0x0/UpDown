@@ -1,21 +1,26 @@
 part of 'buildings_cubit.dart';
 
-sealed class BuildingsState {}
+enum BuildingsStates { initial, loading, loaded, error }
 
-final class BuildingsInitial extends BuildingsState {}
+class BuildingsState {
+  BuildingsStates status;
+  String? errorMsg;
+  List<BuildingSummaryModel>? buildings;
 
-final class BuildingsLoading extends BuildingsState {}
+  BuildingsState({
+    this.status = BuildingsStates.initial,
+    this.errorMsg,
+    this.buildings,
+  });
 
-final class BuildingsLoaded extends BuildingsState {
-  final List<BuildingSummaryModel> buildings;
-  BuildingsLoaded({required this.buildings});
-}
-
-final class BuildingsEmpty extends BuildingsState {
-  BuildingsEmpty();
-}
-
-final class BuildingsError extends BuildingsState {
-  final String error;
-  BuildingsError({required this.error});
+  BuildingsState copyWith({
+    BuildingsStates? status,
+    String? errorMsg,
+    List<BuildingSummaryModel>? buildings,
+  }) =>
+      BuildingsState(
+        status: status ?? this.status,
+        errorMsg: errorMsg ?? this.errorMsg,
+        buildings: buildings ?? this.buildings,
+      );
 }

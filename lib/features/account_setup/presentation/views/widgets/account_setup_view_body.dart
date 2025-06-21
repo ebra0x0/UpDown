@@ -1,7 +1,7 @@
 import 'package:UpDown/core/utils/function/toast.dart';
 import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
 import 'package:UpDown/features/account_setup/presentation/views/widgets/account_setup_form.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountSetupViewBody extends StatelessWidget {

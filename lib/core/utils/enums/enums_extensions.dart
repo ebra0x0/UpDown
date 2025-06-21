@@ -2,7 +2,7 @@ import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/l10n/generated/app_localizations.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // Elevator Status Extension
 extension ElevatorStatusExtension on ElevatorStatus {
@@ -290,8 +290,8 @@ extension UnitNameExtension on UnitName {
     switch (name.toLowerCase()) {
       case "engine":
         return UnitName.engine;
-      case "cabine":
-        return UnitName.cabine;
+      case "cabin":
+        return UnitName.cabin;
       case "counter":
         return UnitName.counter;
       case "wires":
@@ -308,8 +308,8 @@ extension UnitNameExtension on UnitName {
     switch (this) {
       case UnitName.engine:
         return local.unit_engine_name;
-      case UnitName.cabine:
-        return local.unit_cabine_name;
+      case UnitName.cabin:
+        return local.unit_cabin_name;
       case UnitName.counter:
         return local.unit_counter_name;
       case UnitName.wires:

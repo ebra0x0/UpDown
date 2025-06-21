@@ -1,20 +1,20 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/localization/local_service.dart';
-import 'package:intl/intl.dart';
+import 'package:equatable/equatable.dart';
 
-class ElevatorSummaryModel {
+class ElevatorSummaryModel extends Equatable {
   final String id;
   final String buildingId;
-  final ElevatorStatus status;
   final String name;
+  final String buildingName;
+  final ElevatorStatus status;
   final IssueType? issueType;
-  final String? issueDate;
+  final DateTime? issueDate;
 
-  ElevatorSummaryModel({
+  const ElevatorSummaryModel({
     required this.id,
     required this.buildingId,
     required this.name,
+    required this.buildingName,
     required this.status,
     this.issueType,
     this.issueDate,
@@ -22,36 +22,48 @@ class ElevatorSummaryModel {
 
   factory ElevatorSummaryModel.fromJson(Map<String, dynamic> json) {
     final bool hasIssue = json["active_issue"] != null;
-    final DateTime? issueDate = hasIssue
-        ? DateTime.parse(json["active_issue"]["updated_at"] ??
-            json["active_issue"]["created_at"])
-        : null;
-    final String locale = LocaleService.currentLocale;
 
     return ElevatorSummaryModel(
-      id: json["elevator_id"],
+      id: json["id"],
       buildingId: json["building_id"],
+      name: json["name"],
+      buildingName: json["building_name"],
+      status: ElevatorStatus.values.firstWhere(
+        (status) => status.name == json["status"],
+        orElse: () => ElevatorStatus.working,
+      ),
       issueType: hasIssue
-          ? json["active_issue"]["issue_type"].runtimeType == String
-              ? IssueTypeExtension.fromString(
-                  json["active_issue"]["issue_type"])
-              : json["active_issue"]["issue_type"]
+          ? IssueType.values.firstWhere(
+              (type) => type.name == json['active_issue']['issue_type'],
+              orElse: () => IssueType.other,
+            )
           : null,
-      issueDate: issueDate != null
-          ? DateFormat('d MMMM, hh:mm a', locale).format(issueDate)
+      issueDate: hasIssue
+          ? DateTime.parse(
+              json["active_issue"]["issue_date"],
+            )
           : null,
-      name: json["elevator_name"],
-      status: ElevatorStatusExtension.fromString(json["status"]),
     );
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+  factory ElevatorSummaryModel.empty() => const ElevatorSummaryModel(
+        id: "",
+        buildingId: "",
+        name: "",
+        buildingName: "",
+        status: ElevatorStatus.working,
+        issueType: null,
+        issueDate: null,
+      );
 
-    return other is ElevatorSummaryModel && other.id == id;
-  }
-
   @override
-  int get hashCode => id.hashCode;
+  List<Object?> get props => [
+        id,
+        buildingId,
+        name,
+        buildingName,
+        status,
+        issueType,
+        issueDate,
+      ];
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class HeaderText extends StatelessWidget {
   const HeaderText({super.key, required this.title, this.textStyle});

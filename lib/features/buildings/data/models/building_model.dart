@@ -1,72 +1,69 @@
-import 'package:UpDown/features/issues/data/models/report_model.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
 import 'package:UpDown/features/buildings/data/models/floor_model.dart';
 
 class BuildingModel {
   final String id;
+  final String ownerId;
   final String name;
   final String address;
-  final String ownerId;
-  final List<FloorModel> floors;
-  final List<FloorModel>? closedFloors;
+  final int elevatorsCount;
+  final int reportsCount;
   final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<ElevatorSummaryModel> elevators;
-  final List<ReportModel> reports;
-  final ReportModel? activeReport;
+  final DateTime? updatedAt;
+
+  // Debendincies
+  final List<FloorModel> floors;
 
   BuildingModel({
     required this.id,
+    required this.ownerId,
     required this.name,
     required this.address,
-    required this.ownerId,
     required this.floors,
-    this.closedFloors,
     required this.createdAt,
     required this.updatedAt,
-    required this.elevators,
-    this.reports = const [],
-    this.activeReport,
+    required this.elevatorsCount,
+    required this.reportsCount,
   });
 
   factory BuildingModel.fromJson(Map<String, dynamic> json) {
     return BuildingModel(
-      reports: (json['reports'] as List<dynamic>)
-          .map((dynamic r) => ReportModel.fromJson(r as Map<String, dynamic>))
-          .toList(),
-      activeReport: (json['active_report'] as Map<String, dynamic>?) != null
-          ? ReportModel.fromJson(json['active_report'] as Map<String, dynamic>)
-          : null,
-      elevators: (json['elevators'] as List<dynamic>)
-          .map(
-            (e) => ElevatorSummaryModel.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
-      id: json['building_id'],
-      name: json['building_name'],
-      address: json['address'],
+      id: json['id'],
       ownerId: json['owner_id'],
+      name: json['name'],
+      address: json['address'],
       floors: (json['floors'] as List<dynamic>)
           .map((f) => FloorModel.fromJson(f))
           .toList(),
-      closedFloors: (json['closed_floors'] as List<dynamic>)
-          .map((cf) => FloorModel.fromJson(cf as Map<String, dynamic>))
-          .toList(),
+      elevatorsCount: json['elevators_count'],
+      reportsCount: json['reports_count'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 
+  factory BuildingModel.empty() {
+    return BuildingModel(
+      id: '',
+      ownerId: '',
+      name: '',
+      address: '',
+      floors: [],
+      createdAt: DateTime.now(),
+      updatedAt: null,
+      elevatorsCount: 0,
+      reportsCount: 0,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
-      'building_id': id,
-      'building_name': name,
-      'address': address,
+      'id': id,
       'owner_id': ownerId,
+      'name': name,
+      'address': address,
       'floors': floors,
-      'closed_floors': closedFloors,
       'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
     };
   }
 }
