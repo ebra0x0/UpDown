@@ -1,5 +1,9 @@
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_radius.dart';
+import 'package:UpDown/core/theme/app_spacing.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,9 +45,9 @@ class CustomListTile extends StatelessWidget {
     return ListTile(
       minTileHeight: 50.sp,
       isThreeLine: isThreeLine,
-      contentPadding:
-          padding ?? EdgeInsets.symmetric(horizontal: 16.sp, vertical: 2.sp),
-      shape: RoundedRectangleBorder(borderRadius: Styles.borderRadius8),
+      contentPadding: padding ??
+          AppInsets.h16.copyWith(top: AppSpacing.s2, bottom: AppSpacing.s2),
+      shape: RoundedRectangleBorder(borderRadius: AppRadius.borderRadius8),
       enabled: isLoading,
       tileColor: backgroundColor ?? AppTheme.background,
       onTap: isLoading ? null : onTap,
@@ -51,7 +55,8 @@ class CustomListTile extends StatelessWidget {
         title,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
-        style: titleStyle ?? Styles.textStyle14.copyWith(color: AppTheme.text),
+        style: titleStyle ??
+            AppTextStyles.textStyle14.copyWith(color: AppTheme.text),
       ),
       subtitle: subtitle == null
           ? null
@@ -60,7 +65,7 @@ class CustomListTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: subtitleStyle ??
-                  Styles.textStyle12.copyWith(
+                  AppTextStyles.textStyle12.copyWith(
                     color: AppTheme.grey,
                   ),
             ),

@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class FloorModel extends Equatable {
+class FloorModel {
   final String floorId;
   final String buildingId;
   final int floorNumber;
@@ -49,14 +47,4 @@ class FloorModel extends Equatable {
       'updated_at': updatedAt.toIso8601String(),
     };
   }
-
-  @override
-  List<Object?> get props => [
-        floorId,
-        buildingId,
-        floorNumber,
-        isClosed,
-        createdAt,
-        updatedAt,
-      ];
 }

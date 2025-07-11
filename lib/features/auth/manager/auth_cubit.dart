@@ -1,15 +1,24 @@
+import 'package:UpDown/core/utils/model/user_credentials_model.dart';
 import 'package:UpDown/features/auth/repos/auth_repo.dart';
+import 'package:UpDown/features/auth/repos/token_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit({required this.authRepo}) : super(AuthState());
-  final AuthRepo authRepo;
+  AuthCubit({required AuthRepo authRepo, required TokenRepository tokenRepo})
+      : _authRepo = authRepo,
+        _tokenRepo = tokenRepo,
+        super(AuthState()) {
+    sessionMonitor();
+  }
+
+  final AuthRepo _authRepo;
+  final TokenRepository _tokenRepo;
 
   void sessionMonitor() {
-    authRepo.sessionMonitor.listen((session) async {
+    _authRepo.sessionMonitor.listen((session) async {
       if (session == null) {
         emit(state.copyWith(status: AuthStatus.unAuthenticated));
         return;
@@ -20,46 +29,63 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
       await checkAccountStatus(session: session);
+    }, onError: (error) {
+      emit(
+          state.copyWith(status: AuthStatus.error, errorMsg: error.toString()));
     });
   }
 
   Future<void> signOut() async {
     emit(state.copyWith(status: AuthStatus.loading));
-    final res = await authRepo.signOut();
-    resetState();
+    final res = await _authRepo.signOut();
     res.fold(
         (failure) => emit(state.copyWith(
-            status: AuthStatus.error, errorMsg: failure.errMessage)),
-        (success) => emit(state.copyWith(status: AuthStatus.unAuthenticated)));
+            status: AuthStatus.error,
+            errorMsg: failure.errMessage)), (success) async {
+      await _tokenRepo.clearTokens();
+      resetState();
+      emit(state.copyWith(status: AuthStatus.unAuthenticated));
+    });
   }
 
   Future<void> signIn({required String email, required String password}) async {
     emit(state.copyWith(status: AuthStatus.loading));
-    final res =
-        await authRepo.signInWithPassword(email: email, password: password);
+    final UserCredentialsModel credentials =
+        UserCredentialsModel(email: email, password: password);
+
+    final res = await _authRepo.signInWithPassword(credentials: credentials);
+
     res.fold(
         (failure) => emit(state.copyWith(
             status: AuthStatus.error, errorMsg: failure.errMessage)),
-        (session) => null);
+        (session) async => await _tokenRepo.setTokens(
+            accessToken: session.accessToken,
+            refreshToken: session.refreshToken));
   }
 
   Future<void> signUp({required String email, required String password}) async {
     emit(state.copyWith(status: AuthStatus.loading));
-    final res = await authRepo.signUp(email: email, password: password);
+    final UserCredentialsModel credentials =
+        UserCredentialsModel(email: email, password: password);
+
+    final res = await _authRepo.signUp(credentials: credentials);
+
     res.fold(
         (failure) => emit(state.copyWith(
             status: AuthStatus.error,
-            errorMsg: failure.errMessage)), (session) {
+            errorMsg: failure.errMessage)), (session) async {
       if (session == null) {
         emit(state.copyWith(status: AuthStatus.unconfirmed, email: email));
         return;
       }
+      await _tokenRepo.setTokens(
+          accessToken: session.accessToken, refreshToken: session.refreshToken);
     });
   }
 
   Future<void> sendConfirmationEmail({required String email}) async {
     emit(state.copyWith(status: AuthStatus.loading));
-    final res = await authRepo.sendConfirmationEmail(email);
+    final res = await _authRepo.sendConfirmationEmail(email);
     res.fold(
         (failure) => emit(state.copyWith(
             status: AuthStatus.error,
@@ -69,7 +95,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> checkAccountStatus({required Session session}) async {
-    final res = await authRepo.isNewAccount();
+    final res = await _authRepo.isNewAccount();
     return res.fold(
         (failure) => emit(state.copyWith(
             status: AuthStatus.error, errorMsg: failure.errMessage)), (isNew) {

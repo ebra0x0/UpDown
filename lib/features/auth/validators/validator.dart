@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/normalization.dart';
+import 'package:UpDown/core/utils/constants/regex.dart';
 
 class Validator {
   Validator({this.password});
@@ -6,7 +6,7 @@ class Validator {
   String? password;
 
   String? emailValidator(String? email) {
-    final regex = Normalization.kEmailRegex;
+    final regex = Regex.kEmailRegex;
     if (email == null || !regex.hasMatch(email)) {
       return ("إيميل غير صحيح.");
     } else {
@@ -15,7 +15,7 @@ class Validator {
   }
 
   String? regestrationPasswordValidator(String? password) {
-    final RegExp regex = Normalization.kPasswordRegex;
+    final RegExp regex = Regex.kPasswordRegex;
     if (password == null || !regex.hasMatch(password)) {
       return ("كلمة مرور ضعيفة.");
     } else {

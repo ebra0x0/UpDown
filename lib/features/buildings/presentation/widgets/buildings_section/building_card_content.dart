@@ -1,6 +1,8 @@
+import 'package:UpDown/core/theme/app_icons.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/ex_icon.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/custom_card.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:flutter/widgets.dart';
@@ -52,18 +54,18 @@ class _BuildingCardHeader extends StatelessWidget {
             children: [
               Text(
                 buildingName,
-                style: Styles.textStyle18,
+                style: AppTextStyles.textStyle18,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
                 "$elevatorsCount مصعد",
-                style: Styles.textStyle14.copyWith(color: AppTheme.grey),
+                style: AppTextStyles.textStyle14.copyWith(color: AppTheme.grey),
               ),
             ],
           ),
         ),
-        Styles.apartmentIcon.copyWith(
+        AppIcons.apartmentIcon.copyWith(
           color: hasActiveReport ? AppTheme.red : null,
         )
       ],
@@ -87,10 +89,10 @@ class _BuildingCardFooter extends StatelessWidget {
           visible: hasActiveReport,
           child: Text(
             "يوجد عطل",
-            style: Styles.textStyle14.copyWith(color: AppTheme.red),
+            style: AppTextStyles.textStyle14.copyWith(color: AppTheme.red),
           ),
         ),
-        Styles.forwardIcon.copyWith(
+        AppIcons.forwardIcon.copyWith(
           color: hasActiveReport ? AppTheme.red : null,
         )
       ],

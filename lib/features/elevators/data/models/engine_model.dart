@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/elevators/data/models/unit_model.dart';
 
 class EngineModel extends UnitModel {
@@ -22,7 +22,7 @@ class EngineModel extends UnitModel {
   factory EngineModel.fromJson(Map<String, dynamic> json) {
     return EngineModel(
       id: json['id'],
-      status: UnitStatusExtension.fromString(json['status']),
+      status: UnitStatus.values.firstWhere((e) => e.name == json['status']),
       model: json['model'],
       name: json['name'],
       elevatorId: json['elevator_id'],

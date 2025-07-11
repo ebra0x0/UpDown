@@ -1,5 +1,7 @@
-import 'package:UpDown/core/utils/normalization.dart';
-import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/theme/app_icons.dart';
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/utils/constants/regex.dart';
+
 import 'package:UpDown/core/widgets/avatar_picker.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
@@ -23,8 +25,8 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
 
-  final _phoneRegex = Normalization.kPhoneRegex;
-  final _nameRegex = Normalization.kNameRegex;
+  final _phoneRegex = Regex.kPhoneRegex;
+  final _nameRegex = Regex.kNameRegex;
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
@@ -57,7 +59,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 26.h),
+              padding: AppInsets.top26,
               child: AvatarPicker(onImageSelected: (XFile image) {
                 context.read<AccountSetupCubit>().setAvatar(image);
               }),
@@ -67,7 +69,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
               onChanged: (value) =>
                   context.read<AccountSetupCubit>().setName(value),
               labelText: "الاسم",
-              prefixIcon: Styles.badgeIcon,
+              prefixIcon: AppIcons.badgeIcon,
               validator: (value) {
                 if (!_nameRegex.hasMatch(value!)) {
                   return 'الاسم غير صالح';
@@ -80,7 +82,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
               onChanged: (value) =>
                   context.read<AccountSetupCubit>().setPhone(value),
               labelText: "رقم الهاتف",
-              prefixIcon: Styles.phoneIcon,
+              prefixIcon: AppIcons.phoneIcon,
               validator: (value) {
                 if (!_phoneRegex.hasMatch(value!)) {
                   return 'رقم الهاتف غير صالح';
@@ -93,7 +95,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
               onChanged: (value) =>
                   context.read<AccountSetupCubit>().setAddress(value),
               labelText: "العنوان",
-              prefixIcon: Styles.locationIcon,
+              prefixIcon: AppIcons.locationIcon,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'العنوان مطلوب';

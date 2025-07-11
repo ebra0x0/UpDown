@@ -1,4 +1,5 @@
-import 'package:UpDown/core/utils/function/toast.dart';
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/utils/helper/toast.dart';
 import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
 import 'package:UpDown/features/account_setup/presentation/views/widgets/account_setup_form.dart';
 import 'package:flutter/widgets.dart';
@@ -21,8 +22,8 @@ class AccountSetupViewBody extends StatelessWidget {
               type: ToastType.success);
         }
       },
-      child: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Padding(
+        padding: AppInsets.h16,
         child: AccountSetupForm(),
       ),
     );

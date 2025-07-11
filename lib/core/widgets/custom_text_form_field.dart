@@ -1,6 +1,8 @@
+import 'package:UpDown/core/theme/app_borders.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/ex_icon.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatefulWidget {
@@ -93,7 +95,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       },
       decoration: InputDecoration(
         labelText: widget.labelText,
-        labelStyle: Styles.textStyle14.copyWith(
+        labelStyle: AppTextStyles.textStyle14.copyWith(
           color: hasError
               ? AppTheme.red
               : isFocused
@@ -112,10 +114,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         ),
         suffixIcon: widget.suffixIcon,
         errorStyle: const TextStyle(height: 0),
-        border: Styles.generalBorder,
-        enabledBorder: Styles.enabledBorder,
-        focusedBorder: Styles.focusedBorder,
-        errorBorder: Styles.errorBorder,
+        border: AppBorders.generalBorder,
+        enabledBorder: AppBorders.enabledBorder,
+        focusedBorder: AppBorders.focusedBorder,
+        errorBorder: AppBorders.errorBorder,
       ),
     );
   }

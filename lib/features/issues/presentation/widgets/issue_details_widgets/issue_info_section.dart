@@ -1,7 +1,12 @@
+import 'package:UpDown/core/theme/app_icons.dart';
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_radius.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/utils/extensions/ex_icon.dart';
+
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
 import 'package:flutter/widgets.dart';
@@ -26,10 +31,10 @@ class IssueInfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.sp),
+      padding: AppInsets.all16,
       decoration: BoxDecoration(
         color: AppTheme.background,
-        borderRadius: Styles.borderRadius14,
+        borderRadius: AppRadius.borderRadius14,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,23 +43,28 @@ class IssueInfoSection extends StatelessWidget {
             spacing: 8.sp,
             children: [
               BubbleIcon(
-                icon: Styles.errorOutlineIcon,
+                icon: AppIcons.errorOutlineIcon.copyWith(
+                  size: 26.sp,
+                  color: issueStatus.color,
+                ),
                 color: AppTheme.red,
               ),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.sp,
-                  children: [
-                    Text(
-                      issueType.title(context),
-                      style: Styles.textStyle18
-                          .copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    TextAndbubbleTextRow(
-                        text: "ID: ${issueId.substring(0, 8)}",
-                        bubbleText: issueStatus.title(context),
-                        bubbleColor: issueStatus.color),
-                  ]),
+              Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8.sp,
+                    children: [
+                      Text(
+                        issueType.title(context),
+                        style: AppTextStyles.textStyle18
+                            .copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      TextAndbubbleTextRow(
+                          text: "ID: #${issueId.substring(0, 8)}",
+                          bubbleText: issueStatus.title(context),
+                          bubbleColor: issueStatus.color),
+                    ]),
+              ),
             ],
           ),
           SizedBox(height: 14.sp),
@@ -63,14 +73,14 @@ class IssueInfoSection extends StatelessWidget {
             children: [
               Expanded(
                 child: _DateTile(
-                  icon: Styles.calendarIcon,
+                  icon: AppIcons.calendarIcon,
                   label: 'تاريخ الإبلاغ',
                   value: time ?? '',
                 ),
               ),
               Expanded(
                 child: _DateTile(
-                  icon: Styles.timeIcon,
+                  icon: AppIcons.timeIcon,
                   label: 'وقت النشر',
                   value: date ?? '',
                 ),
@@ -97,10 +107,10 @@ class _DateTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.sp),
+      padding: AppInsets.all16,
       decoration: BoxDecoration(
         color: AppTheme.surface,
-        borderRadius: Styles.borderRadius12,
+        borderRadius: AppRadius.borderRadius12,
       ),
       child: Column(
         spacing: 4.sp,
@@ -111,13 +121,13 @@ class _DateTile extends StatelessWidget {
               icon,
               Text(
                 label,
-                style: Styles.textStyle12,
+                style: AppTextStyles.textStyle12,
               ),
             ],
           ),
           Text(
             value,
-            style: Styles.textStyle14,
+            style: AppTextStyles.textStyle14,
           )
         ],
       ),

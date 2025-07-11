@@ -1,13 +1,16 @@
-import 'package:UpDown/core/utils/service_locator.dart';
-import 'package:UpDown/core/utils/shared_pref.dart';
+import 'package:UpDown/core/storage/hive/hive_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
-  ThemeCubit() : super(ThemeMode.system);
+  ThemeCubit() : super(ThemeMode.system) {
+    getTheme();
+  }
 
   void getTheme() {
-    final String? theme = gitIt<SharedPref>().get('theme');
+    final String? theme =
+        Hive.box(HiveConstants.settingsBox).get(HiveConstants.settingsThemeKey);
 
     if (theme == null) {
       emit(ThemeMode.system);
@@ -25,7 +28,8 @@ class ThemeCubit extends Cubit<ThemeMode> {
   }
 
   void toggleTheme() {
-    gitIt<SharedPref>().add('theme', state.name.toString());
+    Hive.box(HiveConstants.settingsBox)
+        .put(HiveConstants.settingsThemeKey, state.name.toString());
 
     switch (state) {
       case ThemeMode.system:

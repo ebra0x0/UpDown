@@ -1,5 +1,5 @@
+import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection(
@@ -17,7 +17,7 @@ class HeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 12.sp),
+      padding: AppInsets.v12,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

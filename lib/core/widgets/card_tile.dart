@@ -1,5 +1,8 @@
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_radius.dart';
+import 'package:UpDown/core/theme/app_shadows.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -36,12 +39,12 @@ class CardTile extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 125.sp,
-        padding: padding ?? EdgeInsets.all(16.sp),
+        padding: padding ?? AppInsets.all16,
         decoration: decoration ??
             BoxDecoration(
               color: AppTheme.background,
-              borderRadius: Styles.borderRadius18,
-              boxShadow: [Styles.boxShadow],
+              borderRadius: AppRadius.borderRadius18,
+              boxShadow: [AppShadows.boxShadow],
             ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,

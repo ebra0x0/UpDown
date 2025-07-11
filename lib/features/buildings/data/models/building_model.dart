@@ -45,8 +45,8 @@ class BuildingModel {
     return BuildingModel(
       id: '',
       ownerId: '',
-      name: '',
-      address: '',
+      name: 'اسم المبنى',
+      address: 'عنوان المبنى',
       floors: [],
       createdAt: DateTime.now(),
       updatedAt: null,

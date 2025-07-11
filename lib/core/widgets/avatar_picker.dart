@@ -1,6 +1,7 @@
 import 'dart:io';
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -49,7 +50,7 @@ class _AvatarPickerState extends State<AvatarPicker> {
             backgroundColor: AppTheme.background,
             backgroundImage:
                 imagePath != null ? Image.file(File(imagePath)).image : null,
-            child: imagePath == null ? Styles.cameraIcon : null,
+            child: imagePath == null ? AppIcons.cameraIcon : null,
           )),
     );
   }

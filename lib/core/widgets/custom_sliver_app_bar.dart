@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomSliverAppBar extends StatelessWidget {
@@ -23,7 +23,7 @@ class CustomSliverAppBar extends StatelessWidget {
       leading: leading,
       title: Text(
         title,
-        style: titleStyle ?? Styles.textStyle22,
+        style: titleStyle ?? AppTextStyles.textStyle22,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),

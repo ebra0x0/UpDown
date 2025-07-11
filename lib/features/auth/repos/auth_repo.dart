@@ -1,4 +1,5 @@
-import 'package:UpDown/core/errors/failures.dart';
+import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/core/utils/model/user_credentials_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -8,12 +9,12 @@ abstract class AuthRepo {
   Future<Either<Failure, void>> signOut();
 
   Future<Either<Failure, Session>> signInWithPassword(
-      {required String email, required String password});
+      {required UserCredentialsModel credentials});
 
   Future<Either<Failure, Session?>> signUp(
-      {required String email, required String password});
+      {required UserCredentialsModel credentials});
 
-  Future<Session?> refreshSession({String? refreshToken});
+  Future<Session?> refreshSession(String refreshToken);
 
   Future<Either<Failure, void>> resetPassword({required String email});
 

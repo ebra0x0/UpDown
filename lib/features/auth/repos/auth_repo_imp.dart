@@ -1,7 +1,8 @@
-import 'package:UpDown/core/errors/failures.dart';
-import 'package:UpDown/core/utils/api_service.dart';
-import 'package:UpDown/core/utils/secure_storage.dart';
-import 'package:UpDown/core/utils/service_locator.dart';
+import 'package:UpDown/core/di/dependancy_injection.dart';
+import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/core/network/api_service.dart';
+import 'package:UpDown/core/storage/secure/secure_constants.dart';
+import 'package:UpDown/core/storage/secure/secure_storage.dart';
 import 'package:UpDown/core/utils/model/user_credentials_model.dart';
 import 'package:UpDown/features/auth/repos/auth_repo.dart';
 import 'package:either_dart/either.dart';
@@ -16,104 +17,66 @@ class AuthRepoImp implements AuthRepo {
   Stream<Session?> get sessionMonitor async* {
     yield* _api.onAuthStateChanged.asyncMap((session) async {
       if (session != null && session.isExpired) {
-        String? savedRefToken = await getRefreshToken();
+        try {
+          // Attempt to refresh the session using the saved refresh token
+          String? savedRefToken = await getRefreshToken();
 
-        final Session? refreshedSession =
-            await refreshSession(refreshToken: savedRefToken);
+          if (savedRefToken == null) {
+            return null; // No refresh token available
+          }
 
-        if (refreshedSession != null) {
-          setRefreshToken(refreshedSession.refreshToken!);
+          final Session? refreshedSession = await refreshSession(savedRefToken);
+
+          if (refreshedSession != null) {
+            setRefreshToken(refreshedSession.refreshToken!);
+          }
+          return refreshedSession;
+        } catch (e) {
+          rethrow;
         }
-        return refreshedSession;
       }
       return session;
     });
   }
 
   @override
-  Future<Session?> refreshSession({String? refreshToken}) async {
+  Future<Session?> refreshSession(String refreshToken) async {
     return await _api
-        .refreshToken(refreshToken: refreshToken)
+        .refreshToken(refreshToken)
         .fold((_) => null, (session) => session);
   }
 
   @override
-  Future<Either<Failure, void>> resetPassword({required String email}) {
-    var res = _api.resetPassword(email: email);
-
-    return res.fold(
-      (failure) => Left(failure),
-      (res) => Right(res),
-    );
-  }
+  Future<Either<Failure, void>> resetPassword({required String email}) async =>
+      await _api.resetPassword(email: email);
 
   @override
   Future<Either<Failure, Session>> signInWithPassword(
-      {required String email, required String password}) async {
-    final UserCredentialsModel credentials =
-        UserCredentialsModel(email: email, password: password);
-
-    var session = await _api.signInWithPassword(credentials);
-
-    return session.fold((failure) => Left(failure), (session) {
-      gitIt.get<SecureStorage>().addAll({
-        "access_token": session.accessToken,
-        "refresh_token": session.refreshToken!,
-        "user_id": session.user.id,
-      });
-      return Right(session);
-    });
-  }
+          {required UserCredentialsModel credentials}) async =>
+      await _api.signInWithPassword(credentials);
 
   @override
-  Future<Either<Failure, void>> signOut() async {
-    var res = await _api.signOut();
-    gitIt.get<SecureStorage>().addAll({
-      "access_token": "",
-      "refresh_token": "",
-      "user_id": "",
-    });
-
-    return res.fold(
-      (failure) => Left(failure),
-      (res) => Right(res),
-    );
-  }
+  Future<Either<Failure, void>> signOut() async => await _api.signOut();
 
   @override
-  Future<String?> getRefreshToken() async {
-    return await gitIt.get<SecureStorage>().get("refresh_token");
-  }
+  Future<String?> getRefreshToken() async =>
+      await getIt.get<SecureStorage>().read(SecureConstants.refreshTokenKey);
 
   @override
-  void setRefreshToken(String refreshToken) {
-    gitIt.get<SecureStorage>().add("refresh_token", refreshToken);
-  }
+  void setRefreshToken(String refreshToken) => getIt
+      .get<SecureStorage>()
+      .write(SecureConstants.refreshTokenKey, refreshToken);
 
   @override
-  Future<Either<Failure, bool>> isNewAccount() async {
-    final newUser = await _api.isNewAccount();
-
-    return newUser.fold((failure) => Left(failure), (status) => Right(status));
-  }
+  Future<Either<Failure, bool>> isNewAccount() async =>
+      await _api.isNewAccount();
 
   @override
   Future<Either<Failure, Session?>> signUp(
-      {required String email, required String password}) async {
-    final UserCredentialsModel credentials =
-        UserCredentialsModel(email: email, password: password);
-    return await _api.signUp(credentials).fold(
-          (failure) => Left(failure),
-          (session) => Right(session),
-        );
-  }
+          {required UserCredentialsModel credentials}) async =>
+      await _api.signUp(credentials);
 
   @override
-  Future<Either<Failure, void>> sendConfirmationEmail(String email) async {
-    var res = await _api.sendConfirmationEmail(email);
-    return res.fold(
-      (failure) => Left(failure),
-      (res) => Right(res),
-    );
-  }
+  Future<Either<Failure, void>> sendConfirmationEmail(String email) async =>
+      await _api.sendConfirmationEmail(email);
 }

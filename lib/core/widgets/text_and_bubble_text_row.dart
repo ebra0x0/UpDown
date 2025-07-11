@@ -1,5 +1,9 @@
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_radius.dart';
+import 'package:UpDown/core/theme/app_spacing.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:flutter/widgets.dart';
 
 class TextAndbubbleTextRow extends StatelessWidget {
@@ -21,22 +25,23 @@ class TextAndbubbleTextRow extends StatelessWidget {
       children: [
         Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          padding:
+              AppInsets.h12.copyWith(top: AppSpacing.s4, bottom: AppSpacing.s4),
           decoration: BoxDecoration(
               color: bubbleColor?.withValues(alpha: 0.2) ??
                   AppTheme.primary.withValues(alpha: 0.2),
-              borderRadius: Styles.borderRadius14),
+              borderRadius: AppRadius.borderRadius14),
           child: Text(
             bubbleText,
             textAlign: TextAlign.center,
-            style: Styles.textStyle12.copyWith(
+            style: AppTextStyles.textStyle12.copyWith(
               color: bubbleColor ?? AppTheme.primary,
             ),
           ),
         ),
         Text(
           text,
-          style: Styles.textStyle12.copyWith(
+          style: AppTextStyles.textStyle12.copyWith(
             color: AppTheme.grey,
           ),
         )

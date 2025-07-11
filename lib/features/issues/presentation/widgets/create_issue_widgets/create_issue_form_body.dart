@@ -1,8 +1,9 @@
 import 'dart:io';
+import 'package:UpDown/core/theme/app_icons.dart';
+import 'package:UpDown/core/theme/app_spacing.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/extensions/ex_icon.dart';
-import 'package:UpDown/core/utils/styles.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/issues/presentation/widgets/create_issue_widgets/building_drop_down_builder.dart';
@@ -33,51 +34,54 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
 
   @override
   Widget build(BuildContext context) {
-    final CreateIssueState issueCubitState =
-        context.watch<CreateIssueCubit>().state;
-    return Column(
-      children: [
-        MediaFormField(
-          media: issueCubitState.media,
-          onMediaSelected: onMediaSelected,
-          isLock: issueCubitState.status == CreateIssueStatus.loading ||
-              issueCubitState.status == CreateIssueStatus.selectLoading,
-        ),
-        const SizedBox(height: 24),
-        Row(
-          spacing: 8,
+    return BlocBuilder<CreateIssueCubit, CreateIssueState>(
+      builder: (context, state) {
+        return Column(
           children: [
-            Expanded(child: BuildingDropDownBuilder()),
-            Expanded(child: ElevatorDropDownBuilder()),
+            MediaFormField(
+              media: state.media,
+              onMediaSelected: onMediaSelected,
+              isLock: state.status == CreateIssueStatus.loading ||
+                  state.status == CreateIssueStatus.selectLoading,
+            ),
+            const SizedBox(height: 24),
+            Row(
+              spacing: AppSpacing.s8,
+              children: [
+                Expanded(child: BuildingDropDownBuilder()),
+                Expanded(child: ElevatorDropDownBuilder()),
+              ],
+            ),
+            SizedBox(height: 16),
+            IssueDropDownBuilder(),
+            const SizedBox(height: 16),
+            CustomTextFormField(
+              isEnabled: state.status != CreateIssueStatus.loading,
+              controller: widget.descriptionController,
+              keyType: TextInputType.multiline,
+              labelText: "وصف العطل",
+              maxLines: 6,
+              maxLength: 200,
+              prefixIcon: AppIcons.descriptionIcon.copyWith(
+                color: AppTheme.primary,
+              ),
+              onChanged: (value) => state.status == CreateIssueStatus.loading
+                  ? null
+                  : context
+                      .read<CreateIssueCubit>()
+                      .setDescription(value ?? ''),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "يرجى كتابة تفاصيل العطل";
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 32),
+            CreateIssueButtonBuilder(onPress: () => widget.submit(context)),
           ],
-        ),
-        SizedBox(height: 16),
-        IssueDropDownBuilder(),
-        const SizedBox(height: 16),
-        CustomTextFormField(
-          isEnabled: issueCubitState.status != CreateIssueStatus.loading,
-          controller: widget.descriptionController,
-          keyType: TextInputType.multiline,
-          labelText: "وصف العطل",
-          maxLines: 6,
-          maxLength: 200,
-          prefixIcon: Styles.descriptionIcon.copyWith(
-            color: AppTheme.primary,
-          ),
-          onChanged: (value) => issueCubitState.status ==
-                  CreateIssueStatus.loading
-              ? null
-              : context.read<CreateIssueCubit>().setDescription(value ?? ''),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "يرجى كتابة تفاصيل العطل";
-            }
-            return null;
-          },
-        ),
-        SizedBox(height: 32),
-        CreateIssueButtonBuilder(onPress: () => widget.submit(context)),
-      ],
+        );
+      },
     );
   }
 

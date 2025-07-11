@@ -1,8 +1,8 @@
-import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/custom_card.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AttributesSection extends StatelessWidget {
   const AttributesSection({super.key, required this.attributes});
@@ -40,7 +40,7 @@ class AttributeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-        padding: EdgeInsets.all(16.sp),
+        padding: AppInsets.all16,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,12 +50,13 @@ class AttributeCard extends StatelessWidget {
             ),
             Text(
               attribute['name'],
-              style: Styles.textStyle14,
+              style: AppTextStyles.textStyle14,
               textAlign: TextAlign.center,
             ),
             Text(
               attribute['value'],
-              style: Styles.textStyle16.copyWith(fontWeight: FontWeight.w900),
+              style: AppTextStyles.textStyle16
+                  .copyWith(fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             )
           ],

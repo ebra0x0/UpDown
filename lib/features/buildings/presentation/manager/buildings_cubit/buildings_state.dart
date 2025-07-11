@@ -1,20 +1,18 @@
 part of 'buildings_cubit.dart';
 
-enum BuildingsStates { initial, loading, loaded, error }
-
 class BuildingsState {
-  BuildingsStates status;
+  ContentStatus status;
   String? errorMsg;
   List<BuildingSummaryModel>? buildings;
 
   BuildingsState({
-    this.status = BuildingsStates.initial,
+    this.status = ContentStatus.initial,
     this.errorMsg,
     this.buildings,
   });
 
   BuildingsState copyWith({
-    BuildingsStates? status,
+    ContentStatus? status,
     String? errorMsg,
     List<BuildingSummaryModel>? buildings,
   }) =>

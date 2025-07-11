@@ -1,12 +1,12 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/elevators/data/models/unit_model.dart';
-import 'package:UpDown/features/elevators/data/repo/elevator_repo.dart';
+import 'package:UpDown/features/elevators/data/repo/elevators_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'elevator_units_state.dart';
 
 class ElevatorUnitsCubit extends Cubit<ElevatorUnitsState> {
-  final ElevatorRepo _repo;
+  final ElevatorsRepo _repo;
 
   ElevatorUnitsCubit(this._repo) : super(ElevatorUnitsState());
 

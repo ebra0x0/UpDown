@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/app_router.dart';
+import 'package:UpDown/core/utils/enums/app_route.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/building_card_content.dart';
 import 'package:flutter/widgets.dart';
@@ -16,7 +16,11 @@ class BuildingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: BuildingCardContent(building: building),
-      onTap: () => context.push(AppRouter.kbuildingDetails, extra: building.id),
+      onTap: () {
+        context.push(
+          "${AppRoute.home.path}${AppRoute.building.path}/${building.id}",
+        );
+      },
     );
   }
 }

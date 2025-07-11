@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/function/toast.dart';
+import 'package:UpDown/core/utils/helper/toast.dart';
 import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/features/auth/manager/auth_cubit.dart';
 import 'package:UpDown/features/auth/registration/presentation/views/widgets/registartion_view_body.dart';

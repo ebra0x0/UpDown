@@ -1,5 +1,7 @@
+import 'package:UpDown/core/theme/app_icons.dart';
+import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/model/drop_down_model.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/custom_drop_down.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
@@ -22,7 +24,7 @@ class BuildingDropDownBuilder extends StatelessWidget {
           issueCubitState.status == CreateIssueStatus.loading;
       final BuildingSummaryModel? selectedBuilding = issueCubitState.building;
       final List<BuildingSummaryModel>? buildings =
-          state.status == BuildingsStates.loaded ? state.buildings : null;
+          state.status == ContentStatus.loaded ? state.buildings : null;
 
       final dropDownList = buildings
               ?.map((e) => DropDownModel(
@@ -40,12 +42,12 @@ class BuildingDropDownBuilder extends StatelessWidget {
 
       return CustomDropDown(
         isEnabled: !isCreating,
-        isLoading: state.status == BuildingsStates.loading,
+        isLoading: state.status == ContentStatus.loading,
         listItem: dropDownList,
         hint: "إختر المبنى",
         value: matchValue,
         error: "يرجى إختيار المبنى",
-        prefixIcon: Styles.apartmentIcon,
+        prefixIcon: AppIcons.apartmentIcon,
         onChanged: (value) => onChanged(context, value as DropDownModel?),
       );
     });

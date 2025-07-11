@@ -1,20 +1,18 @@
 part of 'elevator_unit_details_cubit.dart';
 
-enum UnitsStates { initial, loading, empty, loaded, error }
-
 class ElevatorUnitDetailsState {
-  final UnitsStates status;
+  final ContentStatus status;
   final UnitModel? unit;
   final String? errorMsg;
 
   ElevatorUnitDetailsState({
-    this.status = UnitsStates.initial,
+    this.status = ContentStatus.initial,
     this.unit,
     this.errorMsg,
   });
 
   ElevatorUnitDetailsState copyWith({
-    UnitsStates? status,
+    ContentStatus? status,
     UnitModel? unit,
     String? errorMsg,
   }) {

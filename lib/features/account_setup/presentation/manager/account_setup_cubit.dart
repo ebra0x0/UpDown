@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/model/profile_model.dart';
+import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:UpDown/features/account_setup/data/repos/account_setup_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,13 +28,11 @@ class AccountSetupCubit extends Cubit<AccountSetupState> {
   Future<void> call() async {
     emit(state.copyWith(status: AccountSetupStatus.loading));
 
-    final ProfileModel profile = ProfileModel.fromJson(
-      {
-        "name": state.name,
-        "phone": state.phone,
-        "address": state.address,
-        "image_path": state.avatarPath,
-      },
+    final ProfileRequestModel profile = ProfileRequestModel(
+      name: state.name!,
+      phone: state.phone!,
+      address: state.address!,
+      imagePath: state.avatarPath,
     );
     final res = await _repo.setup(profile);
 

@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/enums/enums_extensions.dart';
+import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/elevators/data/models/unit_model.dart';
 import 'package:intl/intl.dart';
 
@@ -23,7 +23,7 @@ class WiresModel extends UnitModel {
     return WiresModel(
       id: json['id'],
       model: json['model'],
-      status: UnitStatusExtension.fromString(json['status']),
+      status: UnitStatus.values.firstWhere((e) => e.name == json['status']),
       name: json['name'],
       elevatorId: json['elevator_id'],
       createdAt: json['created_at'],

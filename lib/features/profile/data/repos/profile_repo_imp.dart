@@ -1,5 +1,6 @@
-import 'package:UpDown/core/errors/failures.dart';
-import 'package:UpDown/core/utils/model/profile_model.dart';
+import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
+import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
 import 'package:UpDown/features/profile/data/data_sources/local_data_source/local_data_source.dart';
 import 'package:UpDown/features/profile/data/data_sources/remote_data_source/remote_data_source.dart';
 import 'package:UpDown/features/profile/data/repos/profile_repo.dart';
@@ -14,32 +15,25 @@ class ProfileRepoImp implements ProfileRepo {
     this._remoteDataSource,
   );
   @override
-  Future<ProfileModel?> callLocal() async {
-    final ProfileModel? localData = await _localDataSource.call();
-
-    return localData;
-  }
+  Future<ProfileResponseModel?> callLocal() async =>
+      await _localDataSource.call();
 
   @override
-  Future<Either<Failure, ProfileModel?>> callRemote() {
-    final res = _remoteDataSource.call();
-    return res;
-  }
+  Future<Either<Failure, ProfileResponseModel?>> callRemote() async =>
+      await _remoteDataSource.call();
 
   @override
-  Future<Either<Failure, void>> update(ProfileModel profile) async {
+  Future<Either<Failure, void>> update(ProfileRequestModel profile) async {
     final res = await _remoteDataSource.update(profile);
-    res.isRight ? save(profile) : null;
+
+    if (res.isRight) await save(res.right);
     return res;
   }
 
   @override
-  void save(ProfileModel profile) async {
-    await _localDataSource.save(profile);
-  }
+  Future<void> save(ProfileResponseModel profile) async =>
+      await _localDataSource.save(profile);
 
   @override
-  void clear() {
-    _localDataSource.clear();
-  }
+  Future<void> clear() async => await _localDataSource.clear();
 }

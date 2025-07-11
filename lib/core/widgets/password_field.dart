@@ -1,6 +1,7 @@
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/ex_icon.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
@@ -32,11 +33,11 @@ class PasswordField extends StatelessWidget {
       labelText: labelText,
       toggleVisibility: toggleVisibility,
       obscureText: obscureText,
-      prefixIcon: Styles.passwordIcon,
+      prefixIcon: AppIcons.passwordIcon,
       suffixIcon: IconButton(
         icon: obscureText
-            ? Styles.hideIcon
-            : Styles.showIcon.copyWith(color: AppTheme.primary),
+            ? AppIcons.hideIcon
+            : AppIcons.showIcon.copyWith(color: AppTheme.primary),
         onPressed: toggleVisibility,
       ),
       validator: validator,

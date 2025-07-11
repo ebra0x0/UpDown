@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,6 +12,6 @@ class BackButtonNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(onPressed: () => context.pop(), icon: Styles.backIcon);
+    return IconButton(onPressed: () => context.pop(), icon: AppIcons.backIcon);
   }
 }

@@ -1,7 +1,10 @@
+import 'package:UpDown/core/theme/app_borders.dart';
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/ex_icon.dart';
 import 'package:UpDown/core/utils/model/drop_down_model.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,12 +41,11 @@ class _CustomDropDownState extends State<CustomDropDown> {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<DropDownModel>(
       decoration: InputDecoration(
-          errorBorder: Styles.errorBorder,
-          enabledBorder: Styles.enabledBorder,
-          border: Styles.generalBorder,
-          focusedBorder: Styles.focusedBorder,
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: 4.sp, vertical: 4.sp),
+          errorBorder: AppBorders.errorBorder,
+          enabledBorder: AppBorders.enabledBorder,
+          border: AppBorders.generalBorder,
+          focusedBorder: AppBorders.focusedBorder,
+          contentPadding: AppInsets.h4,
           errorStyle: TextStyle(height: 0),
           prefixIcon: widget.prefixIcon?.copyWith(
             color: hasError
@@ -61,7 +63,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             )
           : Text(
               widget.hint,
-              style: Styles.textStyle14.copyWith(
+              style: AppTextStyles.textStyle14.copyWith(
                 color: hasError ? AppTheme.red : AppTheme.grey,
               ),
             ),

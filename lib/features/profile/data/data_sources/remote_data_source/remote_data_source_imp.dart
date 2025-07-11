@@ -1,6 +1,7 @@
-import 'package:UpDown/core/errors/failures.dart';
-import 'package:UpDown/core/utils/api_service.dart';
-import 'package:UpDown/core/utils/model/profile_model.dart';
+import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/core/network/api_service.dart';
+import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
+import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
 import 'package:UpDown/features/profile/data/data_sources/remote_data_source/remote_data_source.dart';
 import 'package:either_dart/either.dart';
 
@@ -9,16 +10,11 @@ class ProfileRemoteDataSourceImp implements ProfileRemoteDataSource {
 
   ProfileRemoteDataSourceImp(this._apiService);
   @override
-  Future<Either<Failure, ProfileModel?>> call() async {
-    final response = await _apiService.fetchProfile();
-    if (response.isRight) {
-      return Right(response.right);
-    }
-    return Left(response.left);
-  }
+  Future<Either<Failure, ProfileResponseModel?>> call() async =>
+      await _apiService.fetchProfile();
 
   @override
-  Future<Either<Failure, void>> update(ProfileModel profile) async {
-    return await _apiService.updateProfile(profile);
-  }
+  Future<Either<Failure, ProfileResponseModel>> update(
+          ProfileRequestModel profile) async =>
+      await _apiService.updateProfile(profile);
 }

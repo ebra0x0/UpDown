@@ -1,5 +1,6 @@
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:flutter/widgets.dart';
 
 class ScreenEcho extends StatelessWidget {
@@ -16,6 +17,7 @@ class ScreenEcho extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (image != null)
             Container(
@@ -28,7 +30,8 @@ class ScreenEcho extends StatelessWidget {
             ),
           Text(
             message,
-            style: Styles.textStyle18.copyWith(
+            textAlign: TextAlign.center,
+            style: AppTextStyles.textStyle18.copyWith(
               color: AppTheme.grey,
             ),
           ),

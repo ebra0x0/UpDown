@@ -1,11 +1,11 @@
-import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
+import 'package:UpDown/features/elevators/data/models/elevator_summary_response_model.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/elevator_card.dart';
 import 'package:flutter/widgets.dart';
 
 class ElevatorsSliverGridSection extends StatelessWidget {
   const ElevatorsSliverGridSection({super.key, required this.elevators});
 
-  final List<ElevatorSummaryModel> elevators;
+  final List<ElevatorSummaryResponseModel> elevators;
 
   @override
   Widget build(BuildContext context) {

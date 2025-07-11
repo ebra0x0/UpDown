@@ -1,28 +1,13 @@
+import 'package:UpDown/core/assets/app_assets.dart';
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/l10n/generated/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 
 // Elevator Status Extension
 extension ElevatorStatusExtension on ElevatorStatus {
-  static ElevatorStatus fromString(String status) {
-    switch (status.toLowerCase()) {
-      case "working":
-        return ElevatorStatus.working;
-      case "broken":
-        return ElevatorStatus.broken;
-      case "repair":
-        return ElevatorStatus.repair;
-      case "maintenance":
-        return ElevatorStatus.maintenance;
-      case "disabled":
-        return ElevatorStatus.disabled;
-      default:
-        return ElevatorStatus.working;
-    }
-  }
-
   String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
@@ -73,42 +58,21 @@ extension ElevatorStatusExtension on ElevatorStatus {
   Icon get icon {
     switch (this) {
       case ElevatorStatus.working:
-        return Styles.checkIcon;
+        return AppIcons.checkIcon;
       case ElevatorStatus.broken:
-        return Styles.errorOutlineIcon;
+        return AppIcons.errorOutlineIcon;
       case ElevatorStatus.repair:
-        return Styles.maintenanceIcon;
+        return AppIcons.maintenanceIcon;
       case ElevatorStatus.maintenance:
-        return Styles.maintenanceIcon;
+        return AppIcons.maintenanceIcon;
       case ElevatorStatus.disabled:
-        return Styles.lockIcon;
+        return AppIcons.lockIcon;
     }
   }
 }
 
 // Issue Type Extension
 extension IssueTypeExtension on IssueType {
-  static IssueType fromString(String issueType) {
-    switch (issueType.toLowerCase()) {
-      case "door_not_opening":
-        return IssueType.doorNotOpening;
-      case "stuck_between_floors":
-        return IssueType.stuckBetweenFloors;
-      case "noise":
-        return IssueType.noise;
-      case "not_responding":
-        return IssueType.notResponding;
-      case "button_not_responding":
-        return IssueType.buttonNotResponding;
-      case "above_floor":
-        return IssueType.aboveFloor;
-      case "other":
-        return IssueType.other;
-      default:
-        return IssueType.other;
-    }
-  }
-
   String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
@@ -152,21 +116,6 @@ extension IssueTypeExtension on IssueType {
 
 // Issue Status Extension
 extension IssueStatusExtension on IssueStatus {
-  static IssueStatus fromString(String status) {
-    switch (status.toLowerCase()) {
-      case "not_fixed":
-        return IssueStatus.notFixed;
-      case "needs_parts":
-        return IssueStatus.needsParts;
-      case "escalated":
-        return IssueStatus.escalated;
-      case "fixed":
-        return IssueStatus.fixed;
-      default:
-        return IssueStatus.notFixed;
-    }
-  }
-
   String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
@@ -211,25 +160,6 @@ extension IssueStatusExtension on IssueStatus {
 
 // Report Status Extension
 extension ReportStatusExtension on ReportStatus {
-  static ReportStatus fromString(String status) {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return ReportStatus.pending;
-      case "reported":
-        return ReportStatus.reported;
-      case "coming":
-        return ReportStatus.coming;
-      case "arrived":
-        return ReportStatus.arrived;
-      case "in_progress":
-        return ReportStatus.inProgress;
-      case "resolved":
-        return ReportStatus.resolved;
-      default:
-        return ReportStatus.pending;
-    }
-  }
-
   String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
@@ -286,24 +216,7 @@ extension ReportStatusExtension on ReportStatus {
 
 // Unit Name Extension
 extension UnitNameExtension on UnitName {
-  static UnitName fromString(String name) {
-    switch (name.toLowerCase()) {
-      case "engine":
-        return UnitName.engine;
-      case "cabin":
-        return UnitName.cabin;
-      case "counter":
-        return UnitName.counter;
-      case "wires":
-        return UnitName.wires;
-      case "control":
-        return UnitName.control;
-      default:
-        return UnitName.engine;
-    }
-  }
-
-  String name(BuildContext context) {
+  String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case UnitName.engine:
@@ -318,23 +231,25 @@ extension UnitNameExtension on UnitName {
         return local.unit_control_name;
     }
   }
+
+  String assetPath() {
+    switch (this) {
+      case UnitName.engine:
+        return AppAssets.engine;
+      case UnitName.cabin:
+        return AppAssets.cabin;
+      case UnitName.counter:
+        return AppAssets.counter;
+      case UnitName.wires:
+        return AppAssets.wires;
+      case UnitName.control:
+        return AppAssets.control;
+    }
+  }
 }
 
 // Unit Status Extension
 extension UnitStatusExtension on UnitStatus {
-  static UnitStatus fromString(String status) {
-    switch (status.toLowerCase()) {
-      case "active":
-        return UnitStatus.active;
-      case "needs_maintenance":
-        return UnitStatus.needsMaintenance;
-      case "out_of_service":
-        return UnitStatus.outOfService;
-      default:
-        return UnitStatus.active;
-    }
-  }
-
   String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
@@ -355,22 +270,6 @@ extension UnitStatusExtension on UnitStatus {
         return AppTheme.yellow;
       case UnitStatus.outOfService:
         return AppTheme.red;
-    }
-  }
-}
-
-// Media Type Extension
-extension MediaTypeExtension on MediaType {
-  static MediaType fromString(String type) {
-    switch (type.toLowerCase()) {
-      case "image":
-        return MediaType.image;
-      case "video":
-        return MediaType.video;
-      case "other":
-        return MediaType.other;
-      default:
-        return MediaType.other;
     }
   }
 }

@@ -1,30 +1,17 @@
-import 'package:UpDown/core/utils/app_router.dart';
-import 'package:UpDown/core/utils/function/api_setup.dart';
-import 'package:UpDown/core/utils/function/hive_setup.dart';
-import 'package:UpDown/core/utils/manager/theme_cubit.dart';
-import 'package:UpDown/core/utils/service_locator.dart';
-import 'package:UpDown/features/auth/repos/auth_repo_imp.dart';
-import 'package:UpDown/features/auth/manager/auth_cubit.dart';
+import 'package:UpDown/core/network/api_init.dart';
+import 'package:UpDown/core/network/network_manager.dart';
+import 'package:UpDown/core/storage/hive/hive_setup.dart';
+import 'package:UpDown/core/di/dependancy_injection.dart';
 import 'package:UpDown/updown.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
   // Initialization
   WidgetsFlutterBinding.ensureInitialized();
+  NetworkManager.init();
   await hiveSetup();
-  await apiSetup();
-  await serviceLocatorSetup();
+  await ApiInitializer.init();
+  setupDependancyInjection();
 
-  final AuthCubit authCubit = AuthCubit(authRepo: gitIt.get<AuthRepoImp>());
-  final AppRouter appRouter = gitIt.get<AppRouter>();
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(create: (context) => ThemeCubit()..getTheme()),
-      BlocProvider(create: (context) => authCubit),
-    ],
-    child: UpDown(
-      appRouter: appRouter,
-    ),
-  ));
+  runApp(UpDown());
 }

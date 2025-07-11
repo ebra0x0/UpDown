@@ -1,5 +1,6 @@
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/utils/extensions/ex_icon.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:flutter/widgets.dart';
 
 class BubbleStatus extends StatelessWidget {
@@ -16,6 +17,6 @@ class BubbleStatus extends StatelessWidget {
           shape: BoxShape.circle,
           color: color.withValues(alpha: 0.2),
         ),
-        child: Styles.circleIcon.copyWith(color: color));
+        child: AppIcons.circleIcon.copyWith(color: color));
   }
 }

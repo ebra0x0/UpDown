@@ -1,9 +1,9 @@
+import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/buildings/data/models/floor_model.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/floors_section/floors_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:UpDown/core/widgets/screen_echo.dart';
 import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -22,7 +22,7 @@ class BuildingFloorsSectionBuilder extends StatelessWidget {
               child: ScreenEcho(message: state.errorMsg!));
         }
         return SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 8.sp),
+          padding: AppInsets.h8,
           sliver: Skeletonizer.sliver(
             enabled: state.status == ContentStatus.loading,
             child: BuildingFloorsSection(

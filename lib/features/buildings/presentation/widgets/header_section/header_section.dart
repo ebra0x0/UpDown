@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/widgets/attributes_section.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:flutter/widgets.dart';
@@ -11,17 +11,17 @@ class BuildingDetailsHeaderSection extends StatelessWidget {
   List<Map<String, dynamic>> get attributes => [
         {
           'name': 'التقارير',
-          'icon': Styles.reportIcon,
+          'icon': AppIcons.reportIcon,
           'value': building.reportsCount.toString(),
         },
         {
           'name': 'الطوابق',
-          'icon': Styles.stairsIcon,
+          'icon': AppIcons.stairsIcon,
           'value': building.floors.length.toString(),
         },
         {
           'name': 'المصاعد',
-          'icon': Styles.elevatorIcon,
+          'icon': AppIcons.elevatorIcon,
           'value': building.elevatorsCount.toString(),
         },
       ];

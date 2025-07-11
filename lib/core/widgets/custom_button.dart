@@ -1,5 +1,7 @@
+import 'package:UpDown/core/theme/app_radius.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +26,7 @@ class CustomButton extends StatelessWidget {
           onPressed: isLoading ? null : onPress,
           style: ButtonStyle(
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-              borderRadius: Styles.borderRadius8,
+              borderRadius: AppRadius.borderRadius8,
             )),
             backgroundColor: WidgetStatePropertyAll(AppTheme.primary),
           ),
@@ -33,7 +35,8 @@ class CustomButton extends StatelessWidget {
                   color: Colors.white,
                 )
               : Text(title,
-                  style: Styles.textStyle16.copyWith(color: Colors.white)),
+                  style:
+                      AppTextStyles.textStyle16.copyWith(color: Colors.white)),
         ));
   }
 }

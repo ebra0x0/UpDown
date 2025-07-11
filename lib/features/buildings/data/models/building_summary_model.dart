@@ -26,7 +26,7 @@ class BuildingSummaryModel {
   factory BuildingSummaryModel.empty() => const BuildingSummaryModel(
         id: "",
         ownerId: "",
-        name: "",
+        name: "اسم المبنى",
         elevatorsCount: 0,
         hasActiveReport: false,
       );

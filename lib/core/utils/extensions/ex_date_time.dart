@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/localization/local_service.dart';
+import 'package:UpDown/l10n/local_service.dart';
 import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {

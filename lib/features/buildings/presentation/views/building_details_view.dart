@@ -1,13 +1,12 @@
 import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
-import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/building_details_view_body.dart';
+import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BuildingDetailsView extends StatefulWidget {
-  const BuildingDetailsView({super.key, required this.buildingId});
-
   final String buildingId;
+  const BuildingDetailsView({super.key, required this.buildingId});
 
   @override
   State<BuildingDetailsView> createState() => _BuildingDetailsViewState();

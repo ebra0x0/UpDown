@@ -1,4 +1,4 @@
-import 'package:UpDown/core/theme/palette.dart';
+import 'package:UpDown/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -18,28 +18,33 @@ class AppTheme {
   }
 
   static ThemeData get themeData {
-    return _isDark ? Palette.darkTheme : Palette.lightTheme;
+    return _isDark ? AppColors.darkTheme : AppColors.lightTheme;
   }
 
   static Color get primary =>
-      _isDark ? Palette.darkPrimary : Palette.lightPrimary;
+      _isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
   static Color get scaffold =>
-      _isDark ? Palette.darkScaffold : Palette.lightScaffold;
+      _isDark ? AppColors.darkScaffold : AppColors.lightScaffold;
   static Color get background =>
-      _isDark ? Palette.darkBackground : Palette.lightBackground;
+      _isDark ? AppColors.darkBackground : AppColors.lightBackground;
   static Color get surface =>
-      _isDark ? Palette.darkSurface : Palette.lightSurface;
-  static Color get text => _isDark ? Palette.darkWhite : Palette.lightBlack;
-  static Color get white => _isDark ? Palette.darkWhite : Palette.lightWhite;
-  static Color get black => _isDark ? Palette.darkBlack : Palette.lightBlack;
+      _isDark ? AppColors.darkSurface : AppColors.lightSurface;
+  static Color get text => _isDark ? AppColors.darkWhite : AppColors.lightBlack;
+  static Color get white =>
+      _isDark ? AppColors.darkWhite : AppColors.lightWhite;
+  static Color get black =>
+      _isDark ? AppColors.darkBlack : AppColors.lightBlack;
   static Color get tabBar =>
-      _isDark ? Palette.darkBlack : Palette.lightScaffold;
+      _isDark ? AppColors.darkBlack : AppColors.lightWhite;
   static Color get tabBarItem =>
-      _isDark ? Palette.darkWhite : Palette.lightBlack;
-  static Color get shadow => _isDark ? Palette.darkBlack : Palette.lightGrey;
-  static Color get red => _isDark ? Palette.darkRed : Palette.lightRed;
-  static Color get green => _isDark ? Palette.darkGreen : Palette.lightGreen;
-  static Color get blue => _isDark ? Palette.darkBlue : Palette.lightBlue;
-  static Color get grey => _isDark ? Palette.darkGrey : Palette.lightGrey;
-  static Color get yellow => _isDark ? Palette.darkYellow : Palette.lightYellow;
+      _isDark ? AppColors.darkWhite : AppColors.lightGrey;
+  static Color get shadow =>
+      _isDark ? AppColors.darkBlack : AppColors.lightGrey;
+  static Color get red => _isDark ? AppColors.darkRed : AppColors.lightRed;
+  static Color get green =>
+      _isDark ? AppColors.darkGreen : AppColors.lightGreen;
+  static Color get blue => _isDark ? AppColors.darkBlue : AppColors.lightBlue;
+  static Color get grey => _isDark ? AppColors.darkGrey : AppColors.lightGrey;
+  static Color get yellow =>
+      _isDark ? AppColors.darkYellow : AppColors.lightYellow;
 }

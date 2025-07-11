@@ -6,16 +6,16 @@ enum CreateIssueStatus {
   error,
   success,
   selectLoading,
-  selectSuccess,
+  selected,
 }
 
 class CreateIssueState {
   final CreateIssueStatus status;
   final String? error;
-  final MediaModel? media;
+  final MediaRequestModel? media;
   final BuildingSummaryModel? building;
-  final ElevatorSummaryModel? elevator;
-  final List<ElevatorSummaryModel>? elevators;
+  final ElevatorSummaryResponseModel? elevator;
+  final List<ElevatorSummaryResponseModel>? elevators;
   final IssueType? issueType;
   final String? description;
 
@@ -30,8 +30,8 @@ class CreateIssueState {
     this.description,
   });
 
-  CreateIssueModel toRequest(BuildContext context) {
-    return CreateIssueModel(
+  IssueRequestModel toRequestModel(BuildContext context) {
+    return IssueRequestModel(
       media: media,
       buildingName: building!.name,
       elevatorName: elevator!.name,
@@ -49,10 +49,10 @@ class CreateIssueState {
   CreateIssueState copyWith({
     CreateIssueStatus? status,
     String? error,
-    MediaModel? media,
+    MediaRequestModel? media,
     BuildingSummaryModel? building,
-    ElevatorSummaryModel? elevator,
-    List<ElevatorSummaryModel>? elevators,
+    ElevatorSummaryResponseModel? elevator,
+    List<ElevatorSummaryResponseModel>? elevators,
     IssueType? issueType,
     String? description,
   }) {

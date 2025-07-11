@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/features/elevators/data/repo/elevator_repo_imp.dart';
-import 'package:UpDown/features/issues/data/models/create_issue_model.dart';
-import 'package:UpDown/features/issues/data/models/media_model.dart';
-import 'package:UpDown/features/issues/data/repo/issues_repo_imp.dart';
+import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
+import 'package:UpDown/features/elevators/data/repo/elevators_repo.dart';
+import 'package:UpDown/features/issues/data/models/issue_request_model.dart';
+import 'package:UpDown/features/issues/data/repo/issues_repo.dart';
 import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
+import 'package:UpDown/features/elevators/data/models/elevator_summary_response_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,13 +15,13 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   CreateIssueCubit(this._repo, this._elevatorRepo)
       : super(const CreateIssueState());
 
-  final IssuesRepoImp _repo;
-  final ElevatorRepoImp _elevatorRepo;
+  final IssuesRepo _repo;
+  final ElevatorsRepo _elevatorRepo;
 
   Future<void> createIssue(BuildContext context) async {
     emit(state.copyWith(status: CreateIssueStatus.loading));
 
-    final request = state.toRequest(context);
+    final request = state.toRequestModel(context);
 
     final result = await _repo.create(request);
 
@@ -38,14 +38,14 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   }
 
   void selectMedia({required File file, required MediaType type}) {
-    final media = MediaModel.fromJson({
-      "type": type,
-      "url": file.path,
-      "file": file,
-    });
+    final media = MediaRequestModel(
+      type: type,
+      url: file.path,
+      file: file,
+    );
 
     emit(state.copyWith(
-      status: CreateIssueStatus.selectSuccess,
+      status: CreateIssueStatus.selected,
       media: media,
     ));
   }
@@ -61,7 +61,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
       (_) => null,
       (res) {
         emit(state.copyWith(
-          status: CreateIssueStatus.selectSuccess,
+          status: CreateIssueStatus.selected,
           building: building,
           elevators: res,
         ));
@@ -69,16 +69,16 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
     );
   }
 
-  void selectElevator(ElevatorSummaryModel elevator) {
+  void selectElevator(ElevatorSummaryResponseModel elevator) {
     emit(state.copyWith(
-      status: CreateIssueStatus.selectSuccess,
+      status: CreateIssueStatus.selected,
       elevator: elevator,
     ));
   }
 
   void selectIssueType(IssueType type) {
     emit(state.copyWith(
-      status: CreateIssueStatus.selectSuccess,
+      status: CreateIssueStatus.selected,
       issueType: type,
     ));
   }

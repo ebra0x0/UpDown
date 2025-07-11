@@ -1,11 +1,11 @@
-import 'issue_model.dart';
+import 'issue_response_model.dart';
 
 class ReportModel {
   final String status;
   final String? reportId;
   final String buildingId;
   final String reportedBy;
-  final List<IssueModel> issues;
+  final List<IssueResponseModel> issues;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 

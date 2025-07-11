@@ -3,7 +3,7 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 class UnitModel {
   final String id;
   final String elevatorId;
-  final String name;
+  final UnitName name;
   final UnitStatus status;
   final String? model;
   final String createdAt;
@@ -25,7 +25,8 @@ class UnitModel {
       status: UnitStatus.values
           .firstWhere((element) => element.name == json['status']),
       model: json['model'],
-      name: json['name'],
+      name:
+          UnitName.values.firstWhere((element) => element.name == json['name']),
       elevatorId: json['elevator_id'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
@@ -37,7 +38,7 @@ class UnitModel {
       id: '',
       status: UnitStatus.active,
       model: '',
-      name: 'engine',
+      name: UnitName.engine,
       elevatorId: '',
       createdAt: '',
       updatedAt: '',

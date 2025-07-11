@@ -1,7 +1,8 @@
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/utils/model/drop_down_model.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/custom_drop_down.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_summary_model.dart';
+import 'package:UpDown/features/elevators/data/models/elevator_summary_response_model.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,8 +18,8 @@ class ElevatorDropDownBuilder extends StatelessWidget {
       builder: (context, state) {
         final bool isCreating = state.status == CreateIssueStatus.loading;
         // final CreateIssueCubit cubit = context.read<CreateIssueCubit>();
-        final List<ElevatorSummaryModel>? elevators = state.elevators;
-        final ElevatorSummaryModel? selectedElevator = state.elevator;
+        final List<ElevatorSummaryResponseModel>? elevators = state.elevators;
+        final ElevatorSummaryResponseModel? selectedElevator = state.elevator;
 
         final dropDownList = elevators
                 ?.map((e) => DropDownModel(
@@ -30,7 +31,8 @@ class ElevatorDropDownBuilder extends StatelessWidget {
 
         final matchValue = dropDownList.cast<DropDownModel?>().firstWhere(
               (e) =>
-                  (e!.value as ElevatorSummaryModel).id == selectedElevator?.id,
+                  (e!.value as ElevatorSummaryResponseModel).id ==
+                  selectedElevator?.id,
               orElse: () => null,
             );
 
@@ -41,7 +43,7 @@ class ElevatorDropDownBuilder extends StatelessWidget {
           hint: "إختر المصعد",
           value: matchValue,
           error: "يرجى إختيار المصعد",
-          prefixIcon: Styles.elevatorIcon,
+          prefixIcon: AppIcons.elevatorIcon,
           onChanged: (value) => onChanged(context, value as DropDownModel?),
         );
       },

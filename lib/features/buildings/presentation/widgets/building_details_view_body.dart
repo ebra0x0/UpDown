@@ -1,5 +1,7 @@
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/core/widgets/custom_sliver_app_bar.dart';
 import 'package:UpDown/core/widgets/header_section.dart';
@@ -9,7 +11,6 @@ import 'package:UpDown/features/buildings/presentation/widgets/header_section/he
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/sliver_grid_section_builder.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class BuildingDetailsViewBody extends StatelessWidget {
@@ -42,12 +43,12 @@ class _HeaderSectionBuilder extends StatelessWidget {
         return Skeletonizer.sliver(
           enabled: state.status == ContentStatus.loading,
           child: SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 8.sp),
+              padding: AppInsets.h8,
               sliver: SliverToBoxAdapter(
                 child: HeaderSection(
                   title: "الطوابق",
                   actionText: "عرض الكل",
-                  titleStyle: Styles.textStyle18,
+                  titleStyle: AppTextStyles.textStyle18,
                   onActionTap: () {},
                 ),
               )),

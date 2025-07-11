@@ -1,34 +1,28 @@
 part of 'profile_cubit.dart';
 
-sealed class ProfileState {}
+class ProfileState {
+  final ProfileResponseModel? profile;
+  final String? errorMsg;
+  final ContentStatus status;
+  final bool isAvatarUpdateFailed;
 
-final class ProfileInitial extends ProfileState {}
+  const ProfileState({
+    this.profile,
+    this.errorMsg,
+    this.status = ContentStatus.initial,
+    this.isAvatarUpdateFailed = false,
+  });
 
-final class ProfileLoaded extends ProfileState {
-  final ProfileModel profile;
-
-  ProfileLoaded(this.profile);
-}
-
-final class ProfileError extends ProfileState {
-  final String error;
-
-  ProfileError(this.error);
-}
-
-final class ProfileEmpty extends ProfileState {}
-
-final class ProfileNew extends ProfileState {
-  final ProfileModel? user;
-
-  ProfileNew(this.user);
-}
-
-final class ProfileLoading extends ProfileState {}
-
-final class AvatarError extends ProfileState {
-  final ProfileModel profile;
-  final String error;
-
-  AvatarError(this.error, {required this.profile});
+  ProfileState copyWith({
+    ProfileResponseModel? profile,
+    String? errorMsg,
+    ContentStatus? status,
+    bool? isAvatarUpdateFailed,
+  }) =>
+      ProfileState(
+        profile: profile ?? this.profile,
+        errorMsg: errorMsg ?? this.errorMsg,
+        status: status ?? this.status,
+        isAvatarUpdateFailed: isAvatarUpdateFailed ?? this.isAvatarUpdateFailed,
+      );
 }

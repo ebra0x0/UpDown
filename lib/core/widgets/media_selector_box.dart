@@ -10,7 +10,7 @@ class _MediaSelectorBox extends StatefulWidget {
   final FormFieldState<File> field;
   final Function(File, MediaType) onMediaSelected;
   final bool isDisabled;
-  final MediaModel? media;
+  final MediaRequestModel? media;
 
   @override
   State<_MediaSelectorBox> createState() => _MediaSelectorBoxState();
@@ -20,37 +20,8 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
   File? _image;
   File? _video;
 
-  final RegExp _regexImage = Normalization.kImageRegex;
-  final RegExp _regexVideo = Normalization.kVideoRegex;
   bool isLoading = false;
-  final ImagePicker _picker = ImagePicker();
-
-  void _updateMediaState() {
-    if (widget.media == null) {
-      _image = null;
-      _video = null;
-    } else if (widget.media!.type == MediaType.image) {
-      _image = widget.media!.file;
-      _video = null;
-    } else {
-      _video = widget.media!.file;
-      _image = null;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _updateMediaState();
-  }
-
-  @override
-  void didUpdateWidget(covariant _MediaSelectorBox oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.media != oldWidget.media) {
-      setState(_updateMediaState);
-    }
-  }
+  final MediaPickerService _pickerService = MediaPickerService();
 
   Future<void> pickMedia() async {
     if (isLoading || widget.isDisabled) return;
@@ -60,39 +31,25 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
     });
 
     try {
-      final XFile? media = await _picker.pickMedia();
+      final (file, type) = await _pickerService.pickMedia();
+      if (file == null || type == null || !mounted) return;
 
-      if (media == null) return;
-
-      final file = File(media.path);
-
-      late final MediaType type;
-      late final int limitSizeMB;
-
-      if (_regexImage.hasMatch(media.path)) {
-        type = MediaType.image;
-        limitSizeMB = 5;
-      } else if (_regexVideo.hasMatch(media.path)) {
-        type = MediaType.video;
-        limitSizeMB = 20;
-      } else {
-        return;
-      }
-      if (!context.mounted) return;
-
-      final isAcceptable = await isFileSizeAcceptable(
+      // check file size
+      final limitSizeMB = type == MediaType.image ? 5 : 20;
+      final isAcceptable = await MediaValidator.isFileSizeAcceptable(
         file: file,
-        limitSize: limitSizeMB,
-        // ignore: use_build_context_synchronously
+        limitSizeMB: limitSizeMB,
         context: context,
       );
 
-      if (!isAcceptable) return;
+      if (!isAcceptable || !mounted) return;
 
       setState(() {
         if (type == MediaType.image) {
           _image = file;
+          _video = null;
         } else {
+          _image = null;
           _video = file;
         }
       });
@@ -120,8 +77,8 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                   ? DecorationImage(
                       image: Image.file(_image!).image, fit: BoxFit.cover)
                   : null,
-              borderRadius: Styles.borderRadius8,
-              border: Styles.generalBoxBorder,
+              borderRadius: AppRadius.borderRadius8,
+              border: AppBorders.generalBoxBorder,
             ),
             child: isLoading
                 ? LoadingIndicator(
@@ -131,19 +88,24 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Styles.checkIcon.copyWith(
+                          AppIcons.checkIcon.copyWith(
                             size: 52.w,
                             color: AppTheme.green,
                           ),
                           Text(
                             'تم تحميل الفيديو',
-                            style: Styles.textStyle14,
+                            style: AppTextStyles.textStyle14,
                           )
                         ],
                       )
                     : Visibility(
                         visible: _image == null,
-                        child: Styles.addMediaIcon,
+                        child: AppIcons.addMediaIcon,
                       )));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

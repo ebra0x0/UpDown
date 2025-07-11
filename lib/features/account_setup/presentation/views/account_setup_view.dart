@@ -1,5 +1,5 @@
-import 'package:UpDown/core/utils/service_locator.dart';
-import 'package:UpDown/core/utils/styles.dart';
+import 'package:UpDown/core/di/dependancy_injection.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/features/account_setup/data/repos/account_setup_repo_imp.dart';
 import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
 import 'package:UpDown/features/account_setup/presentation/views/widgets/account_setup_view_body.dart';
@@ -11,12 +11,12 @@ class AccountSetupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AccountSetupCubit(gitIt.get<AccountSetupRepoImp>()),
+      create: (context) => AccountSetupCubit(AccountSetupRepoImp(getIt.get())),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
             'إعداد الملف الشخصي',
-            style: Styles.textStyle24,
+            style: AppTextStyles.textStyle24,
           ),
         ),
         body: AccountSetupViewBody(),

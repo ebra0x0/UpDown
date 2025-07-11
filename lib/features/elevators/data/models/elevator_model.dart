@@ -1,5 +1,4 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 
 class ElevatorModel {
   final String id;
@@ -32,7 +31,7 @@ class ElevatorModel {
       buildingId: json['building_id'],
       name: json['name'],
       capacity: json['capacity'],
-      status: ElevatorStatusExtension.fromString(json['status']),
+      status: ElevatorStatus.values.firstWhere((e) => e.name == json['status']),
       lastMaintenanceDate: json['last_maintenance_date'] != null
           ? DateTime.parse(json['last_maintenance_date'])
           : null,

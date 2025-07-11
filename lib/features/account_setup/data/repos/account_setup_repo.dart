@@ -1,7 +1,7 @@
-import 'package:UpDown/core/errors/failures.dart';
-import 'package:UpDown/core/utils/model/profile_model.dart';
+import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:either_dart/either.dart';
 
 abstract class AccountSetupRepo {
-  Future<Either<Failure, void>> setup(ProfileModel profile);
+  Future<Either<Failure, void>> setup(ProfileRequestModel profile);
 }

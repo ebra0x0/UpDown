@@ -1,5 +1,6 @@
-import 'package:UpDown/core/utils/styles.dart';
-import 'package:UpDown/core/widgets/header_text.dart';
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
+import 'package:UpDown/core/widgets/header_section.dart';
 import 'package:UpDown/features/auth/login/presentaion/views/widgets/login_form.dart';
 import 'package:flutter/widgets.dart';
 
@@ -11,18 +12,18 @@ class LoginViewBody extends StatelessWidget {
     return Center(
       child: SingleChildScrollView(
           child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: AppInsets.h16,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
-            HeaderText(
+            HeaderSection(
               title: "أهلاً من جديد",
-              textStyle: Styles.textStyle26,
+              titleStyle: AppTextStyles.textStyle26,
             ),
-            HeaderText(
+            HeaderSection(
               title: "هيا نسجل الدخول لحسابك",
-              textStyle: Styles.textStyle16,
+              titleStyle: AppTextStyles.textStyle16,
             ),
             const SizedBox(height: 50),
             LoginForm(),

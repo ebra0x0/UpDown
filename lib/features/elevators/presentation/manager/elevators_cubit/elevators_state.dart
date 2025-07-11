@@ -1,22 +1,20 @@
 part of 'elevators_cubit.dart';
 
-enum ElevatorsStates { initial, loading, loaded, error }
-
 class ElevatorsState {
-  final ElevatorsStates status;
+  final ContentStatus status;
   final String? errorMsg;
-  final List<ElevatorSummaryModel>? elevators;
+  final List<ElevatorSummaryResponseModel>? elevators;
 
   ElevatorsState({
-    this.status = ElevatorsStates.initial,
+    this.status = ContentStatus.initial,
     this.errorMsg,
     this.elevators,
   });
 
   ElevatorsState copyWith({
-    ElevatorsStates? status,
+    ContentStatus? status,
     String? errorMsg,
-    List<ElevatorSummaryModel>? elevators,
+    List<ElevatorSummaryResponseModel>? elevators,
   }) {
     return ElevatorsState(
       status: status ?? this.status,

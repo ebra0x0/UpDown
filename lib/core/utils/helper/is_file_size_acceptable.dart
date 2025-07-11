@@ -1,0 +1,22 @@
+import 'dart:io';
+
+import 'package:UpDown/core/utils/helper/toast.dart';
+import 'package:flutter/widgets.dart';
+
+Future<bool> isFileSizeAcceptable(
+    {required File file,
+    required int limitSize,
+    required BuildContext context}) async {
+  int sizeInBytes = await file.length();
+  final int maxSizeInBytes = limitSize * 1024 * 1024;
+
+  if (sizeInBytes > maxSizeInBytes) {
+    if (!context.mounted) return false;
+    showToast(
+        context: context,
+        message: "الملف حجمه كبير جداً",
+        type: ToastType.error);
+    return false;
+  }
+  return true;
+}

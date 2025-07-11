@@ -1,5 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
 enum ContentStatus { initial, loading, loaded, error, empty }
 
+@JsonEnum(valueField: 'name')
 enum ElevatorStatus {
   working("Working"),
   broken("Broken"),
@@ -11,8 +14,20 @@ enum ElevatorStatus {
   const ElevatorStatus(this.name);
 }
 
-enum ReportStatus { pending, reported, coming, arrived, inProgress, resolved }
+@JsonEnum(valueField: 'name')
+enum ReportStatus {
+  pending("Pending"),
+  reported("Reported"),
+  coming("Coming"),
+  arrived("Arrived"),
+  inProgress("In_Progress"),
+  resolved("Resolved");
 
+  final String name;
+  const ReportStatus(this.name);
+}
+
+@JsonEnum(valueField: 'name')
 enum IssueStatus {
   notFixed("Not_Fixed"),
   needsParts("Needs_Parts"),
@@ -23,6 +38,7 @@ enum IssueStatus {
   const IssueStatus(this.name);
 }
 
+@JsonEnum(valueField: 'name')
 enum IssueType {
   doorNotOpening("Door_Not_Opening"),
   stuckBetweenFloors("Stuck_Between_Floors"),
@@ -36,6 +52,7 @@ enum IssueType {
   const IssueType(this.name);
 }
 
+@JsonEnum(valueField: 'name')
 enum IssuePriority {
   critical("Critical"),
   moderate("Moderate"),
@@ -45,6 +62,7 @@ enum IssuePriority {
   const IssuePriority(this.name);
 }
 
+@JsonEnum(valueField: 'name')
 enum UnitName {
   engine("engine"),
   cabin("cabin"),
@@ -56,6 +74,7 @@ enum UnitName {
   const UnitName(this.name);
 }
 
+@JsonEnum(valueField: 'name')
 enum UnitStatus {
   active("Active"),
   needsMaintenance("Needs_Maintenance"),
@@ -65,6 +84,7 @@ enum UnitStatus {
   const UnitStatus(this.name);
 }
 
+@JsonEnum(valueField: 'name')
 enum MediaType {
   image("image"),
   video("video"),

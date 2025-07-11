@@ -1,5 +1,8 @@
+import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_radius.dart';
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,9 +19,9 @@ class IssueDescriptionSection extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.background,
-        borderRadius: Styles.borderRadius12,
+        borderRadius: AppRadius.borderRadius12,
       ),
-      padding: EdgeInsets.all(16.sp),
+      padding: AppInsets.all16,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,7 +43,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: Styles.textStyle16,
+      style: AppTextStyles.textStyle16,
     );
   }
 }
@@ -56,14 +59,14 @@ class _DescriptionBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(14.sp),
+      padding: AppInsets.all14,
       decoration: BoxDecoration(
         color: AppTheme.surface,
-        borderRadius: Styles.borderRadius12,
+        borderRadius: AppRadius.borderRadius12,
       ),
       child: Text(
         text,
-        style: Styles.textStyle14,
+        style: AppTextStyles.textStyle14,
       ),
     );
   }

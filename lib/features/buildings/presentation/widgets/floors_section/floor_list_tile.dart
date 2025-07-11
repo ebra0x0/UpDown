@@ -1,5 +1,6 @@
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/styles.dart';
+
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/bubble_status.dart';
 import 'package:UpDown/core/widgets/custom_list_tile.dart';
@@ -15,14 +16,14 @@ class FloorListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomListTile(
       onTap: () => {},
-      leading: BubbleIcon(icon: Styles.stairsIcon),
+      leading: BubbleIcon(icon: AppIcons.stairsIcon),
       trailing: SizedBox(
         width: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             BubbleStatus(color: AppTheme.red),
-            Styles.forwardIcon,
+            AppIcons.forwardIcon,
           ],
         ),
       ),

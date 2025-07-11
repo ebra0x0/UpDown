@@ -1,4 +1,4 @@
-import 'package:UpDown/core/utils/function/toast.dart';
+import 'package:UpDown/core/utils/helper/toast.dart';
 import 'package:UpDown/features/auth/manager/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

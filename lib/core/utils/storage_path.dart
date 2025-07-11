@@ -1,20 +1,20 @@
-import 'package:UpDown/core/utils/localization/constants.dart';
-import 'package:UpDown/features/issues/data/models/create_issue_model.dart';
+import 'package:UpDown/core/network/api_constants.dart';
+import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
 
 class StoragePath {
   final String path;
   const StoragePath(this.path);
 
-  factory StoragePath.fromIssue({required CreateIssueModel issue}) {
-    final fileName = issue.media!.file!.path.split('/').last;
-    final mediaTypeFolder = issue.media!.type.name;
-    return StoragePath(
-        "${issue.reportId}/${issue.id}/$mediaTypeFolder/$fileName");
+  factory StoragePath.withIssue(
+      {required MediaRequestModel media, required String reportId, issueId}) {
+    final fileName = media.file?.path.split('/').last;
+    final mediaTypeFolder = media.type.name;
+    return StoragePath("$reportId/$issueId/$mediaTypeFolder/$fileName");
   }
   factory StoragePath.fromAvatar(
       {required String filePath, required String userId}) {
     final fileName = filePath.split('/').last;
-    final folder = kAvatarsBucketFolder;
+    final folder = ApiConstants.avatarsBucketFolder;
     return StoragePath("$folder/$userId/$fileName");
   }
 }
