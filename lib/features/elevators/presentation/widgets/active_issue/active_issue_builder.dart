@@ -6,9 +6,9 @@ import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/extensions/ex_box_border.dart';
-import 'package:UpDown/core/utils/extensions/ex_date_time.dart';
-import 'package:UpDown/core/utils/extensions/ex_icon.dart';
+import 'package:UpDown/core/utils/extensions/box_border_ext.dart';
+import 'package:UpDown/core/utils/extensions/date_time_ext.dart';
+import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/card_tile.dart';
 import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
@@ -17,7 +17,7 @@ import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_
 import 'package:UpDown/core/widgets/screen_echo.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:UpDown/core/theme/app_skeleton.dart';
 
 class SliverActiveIssueBuilder extends StatelessWidget {
   const SliverActiveIssueBuilder({
@@ -38,7 +38,8 @@ class SliverActiveIssueBuilder extends StatelessWidget {
               return SliverToBoxAdapter(child: null);
             }
 
-            return Skeletonizer.sliver(
+            return AppSkeletonizer(
+              isSliver: true,
               enabled: state.status == ContentStatus.loading,
               child: SliverToBoxAdapter(
                 child: state.issues?.firstOrNull != null

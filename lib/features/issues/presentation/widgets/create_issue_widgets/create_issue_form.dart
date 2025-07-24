@@ -23,7 +23,7 @@ class _CreateIssueFormState extends State<CreateIssueForm> {
       formKey.currentState!.save();
       FocusScope.of(context).unfocus();
       if (!context.mounted) return;
-      await context.read<CreateIssueCubit>().createIssue(context);
+      await context.read<CreateIssueCubit>().create();
       descriptionController.clear();
     } else {
       setState(() {

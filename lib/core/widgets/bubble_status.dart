@@ -1,5 +1,5 @@
 import 'package:UpDown/core/theme/app_icons.dart';
-import 'package:UpDown/core/utils/extensions/ex_icon.dart';
+import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 
 import 'package:flutter/widgets.dart';
 

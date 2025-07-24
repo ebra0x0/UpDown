@@ -35,25 +35,43 @@ dependencies:
     flutter_bloc: ^9.1.1
     flutter_localizations:
         sdk: flutter
+    # Responsive Design
     flutter_screenutil: ^5.9.3
+    # Dependency Injection
     get_it: ^8.0.3
+    # Routing
     go_router: ^14.6.2
+    # Fonts
     google_fonts: ^6.2.1
+    # Image Picker
     image_picker: ^1.1.2
+    # Storage Services
     flutter_secure_storage: ^9.2.4
     shared_preferences: ^2.5.3
-    intl: ^0.20.2
-    flutter_svg: ^2.0.17
-    supabase_flutter: ^2.8.2
-    firebase_core: ^3.13.0
-    flutter_image_compress: ^2.4.0
-    path_provider: ^2.1.5
     hive: ^2.2.3
     hive_flutter: ^1.1.0
+    # Date Format
+    intl: ^0.20.2
+    # Svg
+    flutter_svg: ^2.0.17
+    # Api services
+    supabase_flutter: ^2.8.2
+    firebase_core: ^3.13.0
+    # Compress files
+    flutter_image_compress: ^2.4.0
+    video_compress: ^3.1.4
+
+    # Path Provider
+    path: ^1.9.1
+    path_provider: ^2.1.5
+    # Skeleton
     skeletonizer: ^2.0.1
+    # Network
     internet_connection_checker: ^3.0.1
     retry: ^3.1.2
+    # Stream controller
     rxdart: ^0.28.0
+    # Annotations
     json_annotation: ^4.9.0
     freezed_annotation: ^2.4.4
 
@@ -61,6 +79,7 @@ dev_dependencies:
     flutter_lints: ^5.0.0
     flutter_test:
         sdk: flutter
+    # Code generation
     flutter_gen: ^5.10.0
     hive_generator: ^2.0.1
     build_runner: ^2.4.15

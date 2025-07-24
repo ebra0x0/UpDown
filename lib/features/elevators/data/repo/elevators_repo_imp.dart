@@ -14,29 +14,55 @@ class ElevatorsRepoImp implements ElevatorsRepo {
   @override
   Future<Either<Failure, ElevatorModel>> fetchElevatorDetails(
       String elevatorId) async {
-    return await _api.fetchElevatorDetails(elevatorId: elevatorId);
+    try {
+      final res = await _api.fetchElevatorDetails(elevatorId: elevatorId);
+      return Right(res);
+    } catch (e) {
+      return Left(CustomFailure(e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, List<ElevatorSummaryResponseModel>>>
       fetchElevatorsByBuilding(String buildingId) async {
-    return await _api.fetchElevatorsByBuilding(buildingId: buildingId);
+    try {
+      final res = await _api.fetchElevatorsByBuilding(buildingId: buildingId);
+      return Right(res);
+    } catch (e) {
+      return Left(CustomFailure(e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, List<ElevatorSummaryResponseModel>>>
       fetchElevatorsByBuildings(List<String> buildingIds) async {
-    return await _api.fetchElevatorsByBuildings(buildingIds: buildingIds);
+    try {
+      final res =
+          await _api.fetchElevatorsByBuildings(buildingIds: buildingIds);
+      return Right(res);
+    } catch (e) {
+      return Left(CustomFailure(e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, List<UnitModel>>> fetchElevatorUnits(
       String elevatorId) async {
-    return await _api.fetchElevatorUnits(elevatorId: elevatorId);
+    try {
+      final res = await _api.fetchElevatorUnits(elevatorId: elevatorId);
+      return Right(res);
+    } catch (e) {
+      return Left(CustomFailure(e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, UnitModel>> fetchUnitDetails(String unitId) async {
-    return await _api.fetchUnitDetails(unitId: unitId);
+    try {
+      final res = await _api.fetchUnitDetails(unitId: unitId);
+      return Right(res);
+    } catch (e) {
+      return Left(CustomFailure(e.toString()));
+    }
   }
 }

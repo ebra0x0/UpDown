@@ -5,7 +5,7 @@ import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/extensions/ex_icon.dart';
+import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
@@ -60,7 +60,7 @@ class IssueInfoSection extends StatelessWidget {
                             .copyWith(fontWeight: FontWeight.w600),
                       ),
                       TextAndbubbleTextRow(
-                          text: "ID: #${issueId.substring(0, 8)}",
+                          text: "ID: #${issueId.substring(0, 7)}",
                           bubbleText: issueStatus.title(context),
                           bubbleColor: issueStatus.color),
                     ]),

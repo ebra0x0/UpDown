@@ -1,17 +1,16 @@
 import 'package:UpDown/core/theme/app_insets.dart';
+import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-
 import 'package:UpDown/core/widgets/back_nav_button.dart';
 import 'package:UpDown/core/widgets/custom_sliver_app_bar.dart';
 import 'package:UpDown/core/widgets/header_section.dart';
-import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/building_details_cubit/building_details_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/floors_section/floors_section_buidler.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/header_section/header_section_builder.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/sliver_grid_section_builder.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class BuildingDetailsViewBody extends StatelessWidget {
   const BuildingDetailsViewBody({super.key});
@@ -40,18 +39,20 @@ class _HeaderSectionBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BuildingDetailsCubit, BuildingDetailsState>(
       builder: (context, state) {
-        return Skeletonizer.sliver(
-          enabled: state.status == ContentStatus.loading,
-          child: SliverPadding(
-              padding: AppInsets.h8,
-              sliver: SliverToBoxAdapter(
-                child: HeaderSection(
-                  title: "الطوابق",
-                  actionText: "عرض الكل",
-                  titleStyle: AppTextStyles.textStyle18,
-                  onActionTap: () {},
-                ),
-              )),
+        return SliverPadding(
+          padding: AppInsets.h8,
+          sliver: AppSkeletonizer(
+            isSliver: true,
+            enabled: state.status == ContentStatus.loading,
+            child: SliverToBoxAdapter(
+              child: HeaderSection(
+                title: "الطوابق",
+                actionText: "عرض الكل",
+                titleStyle: AppTextStyles.textStyle18,
+                onActionTap: () {},
+              ),
+            ),
+          ),
         );
       },
     );
@@ -67,7 +68,8 @@ class CustomSliverAppBarBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BuildingDetailsCubit, BuildingDetailsState>(
       builder: (context, state) {
-        return Skeletonizer.sliver(
+        return AppSkeletonizer(
+          isSliver: true,
           enabled: state.status == ContentStatus.loading,
           child: CustomSliverAppBar(
             title: state.status == ContentStatus.loaded

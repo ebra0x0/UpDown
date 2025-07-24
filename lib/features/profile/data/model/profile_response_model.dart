@@ -1,40 +1,22 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
-import 'package:json_annotation/json_annotation.dart';
+
 part 'profile_response_model.g.dart';
+part 'profile_response_model.freezed.dart';
 
+@freezed
 @HiveType(typeId: 1)
-@JsonSerializable(createToJson: false)
-class ProfileResponseModel {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  final String name;
-  @HiveField(2)
-  final String email;
-  @HiveField(3)
-  final String phone;
-  @HiveField(4)
-  final String address;
-  @HiveField(5)
-  @JsonKey(name: 'image_path')
-  final String? imagePath;
-  @HiveField(6)
-  @JsonKey(name: 'created_at')
-  final DateTime createdAt;
-  @HiveField(7)
-  @JsonKey(name: 'updated_at')
-  final DateTime? updatedAt;
-
-  const ProfileResponseModel({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.address,
-    required this.imagePath,
-    required this.createdAt,
-    this.updatedAt,
-  });
+class ProfileResponseModel with _$ProfileResponseModel {
+  const factory ProfileResponseModel({
+    @HiveField(0) required String id,
+    @HiveField(1) required String name,
+    @HiveField(2) required String email,
+    @HiveField(3) required String phone,
+    @HiveField(4) required String address,
+    @HiveField(5) @JsonKey(name: 'image_path') String? imagePath,
+    @HiveField(6) @JsonKey(name: 'created_at') required DateTime createdAt,
+    @HiveField(7) @JsonKey(name: 'updated_at') DateTime? updatedAt,
+  }) = _ProfileResponseModel;
 
   factory ProfileResponseModel.fromJson(Map<String, dynamic> json) =>
       _$ProfileResponseModelFromJson(json);

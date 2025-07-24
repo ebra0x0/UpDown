@@ -2,7 +2,7 @@ import 'package:UpDown/core/di/dependancy_injection.dart';
 import 'package:UpDown/core/router/redirector_router.dart';
 import 'package:UpDown/core/router/route_config.dart';
 import 'package:UpDown/core/utils/go_router_refresh_stream.dart';
-import 'package:UpDown/features/auth/manager/auth_cubit.dart';
+import 'package:UpDown/features/auth/ui/cubit/auth_cubit.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';

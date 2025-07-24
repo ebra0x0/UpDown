@@ -1,12 +1,10 @@
 import 'package:UpDown/core/di/dependancy_injection.dart';
-import 'package:UpDown/core/network/network_cubit.dart';
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/theme/app_radius.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/enums/app_route.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
-import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,46 +22,32 @@ class RootView extends StatelessWidget {
           BlocProvider(create: (context) => getIt.get<ElevatorsCubit>()),
           BlocProvider(create: (context) => getIt.get<IssuesCubit>()),
         ],
-        child: BlocListener<NetworkCubit, NetworkStatus>(
-          listener: (context, state) {
-            final currentPath = GoRouter.of(context).state.fullPath;
-            final hasInternet = state == NetworkStatus.connected;
-
-            if (!hasInternet && currentPath != AppRoute.offline.path) {
-              context.push(AppRoute.offline.path);
-            } else if (hasInternet && currentPath == AppRoute.offline.path) {
-              context.pop();
-            }
-          },
-          child: Scaffold(
-            body: navigationShell,
-            bottomNavigationBar: Visibility(
-              visible: MediaQuery.of(context).viewInsets.bottom == 0,
-              child: BottomNavigationBar(
-                onTap: (value) {
-                  navigationShell.goBranch(value);
-                },
-                currentIndex: navigationShell.currentIndex,
-                backgroundColor: AppTheme.tabBar,
-                unselectedItemColor: AppTheme.tabBarItem,
-                items: [
-                  BottomNavigationBarItem(
-                      activeIcon:
-                          CustomActiveNavBarItem(icon: AppIcons.homeIcon),
-                      icon: AppIcons.homeIcon,
-                      label: 'الرئيسية'),
-                  BottomNavigationBarItem(
-                      activeIcon:
-                          CustomActiveNavBarItem(icon: AppIcons.addIcon),
-                      icon: AppIcons.addIcon,
-                      label: 'إنشاء عطل'),
-                  BottomNavigationBarItem(
-                      activeIcon:
-                          CustomActiveNavBarItem(icon: AppIcons.userIcon),
-                      icon: AppIcons.userIcon,
-                      label: 'الحساب'),
-                ],
-              ),
+        child: Scaffold(
+          body: navigationShell,
+          bottomNavigationBar: Visibility(
+            visible: MediaQuery.of(context).viewInsets.bottom == 0,
+            child: BottomNavigationBar(
+              onTap: (value) {
+                navigationShell.goBranch(value);
+              },
+              currentIndex: navigationShell.currentIndex,
+              backgroundColor: AppTheme.tabBar,
+              selectedItemColor: AppTheme.primary,
+              unselectedItemColor: AppTheme.tabBarItem,
+              items: [
+                BottomNavigationBarItem(
+                    activeIcon: CustomActiveNavBarItem(icon: AppIcons.homeIcon),
+                    icon: AppIcons.homeIcon,
+                    label: 'الرئيسية'),
+                BottomNavigationBarItem(
+                    activeIcon: CustomActiveNavBarItem(icon: AppIcons.addIcon),
+                    icon: AppIcons.addIcon,
+                    label: 'إنشاء عطل'),
+                BottomNavigationBarItem(
+                    activeIcon: CustomActiveNavBarItem(icon: AppIcons.userIcon),
+                    icon: AppIcons.userIcon,
+                    label: 'الحساب'),
+              ],
             ),
           ),
         ));

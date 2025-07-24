@@ -32,7 +32,11 @@ class IssueResponseModel {
   @JsonKey(name: "issue_type")
   final IssueType issueType;
 
-  final MediaResponseModel? media;
+  @JsonKey(name: "media_urls")
+  final List<String> mediaUrls;
+
+  @JsonKey(includeFromJson: false)
+  final List<MediaResponseModel> mediaList;
 
   final IssueStatus status;
 
@@ -62,7 +66,8 @@ class IssueResponseModel {
     required this.elevatorName,
     this.description,
     required this.issueType,
-    this.media,
+    required this.mediaUrls,
+    this.mediaList = const [],
     required this.status,
     required this.createdAt,
     this.updatedAt,
@@ -85,7 +90,8 @@ class IssueResponseModel {
     String? elevatorName,
     String? description,
     IssueType? issueType,
-    MediaResponseModel? media,
+    List<String>? mediaUrls,
+    List<MediaResponseModel>? mediaList,
     IssueStatus? status,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -104,7 +110,8 @@ class IssueResponseModel {
       elevatorName: elevatorName ?? this.elevatorName,
       description: description ?? this.description,
       issueType: issueType ?? this.issueType,
-      media: media ?? this.media,
+      mediaUrls: mediaUrls ?? this.mediaUrls,
+      mediaList: mediaList ?? this.mediaList,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -125,7 +132,8 @@ class IssueResponseModel {
         elevatorName: 'اسم المصعد',
         description: 'وصف العطل',
         issueType: IssueType.other,
-        media: null,
+        mediaUrls: [],
+        mediaList: [],
         status: IssueStatus.notFixed,
         createdAt: DateTime.now(),
         updatedAt: null,

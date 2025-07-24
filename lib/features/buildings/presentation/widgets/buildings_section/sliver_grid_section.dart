@@ -1,4 +1,4 @@
-import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
+import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/building_card.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,7 +8,7 @@ class BuildingsSliverGridViewSection extends StatelessWidget {
     required this.buildings,
   });
 
-  final List<BuildingSummaryModel> buildings;
+  final List<BuildingModel> buildings;
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,6 @@ import 'package:UpDown/features/issues/presentation/manager/issue_details_cubit/
 import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_view_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class IssueViewBuilder extends StatelessWidget {
   const IssueViewBuilder({super.key});
@@ -17,17 +16,13 @@ class IssueViewBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<IssueDetailsCubit, IssueDetailsState>(
       builder: (context, state) {
-        final isLoading = state.status == ContentStatus.loading;
         final isError = state.status == ContentStatus.error;
 
         return CustomScrollView(
           slivers: [
-            Skeletonizer.sliver(
-              enabled: isLoading,
-              child: const CustomSliverAppBar(
-                title: "تفاصيل العطل",
-                leading: BackButtonNavigation(),
-              ),
+            const CustomSliverAppBar(
+              title: "تفاصيل العطل",
+              leading: BackButtonNavigation(),
             ),
             if (!isError)
               SliverPadding(

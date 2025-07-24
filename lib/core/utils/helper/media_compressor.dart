@@ -1,50 +1,127 @@
 import 'dart:io';
-
-import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-// import 'package:video_compress/video_compress.dart';
+import 'package:video_compress/video_compress.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
-Future<File?> prepareMediaFile(File file, MediaType type) async {
-  File? resultFile;
+abstract class MediaCompressor {
+  int get maxFileSizeMB;
+  int get defaultQuality;
 
-  if (type == MediaType.image) {
-    resultFile = await compressImage(file);
-  } else if (type == MediaType.video) {
-    // resultFile = await compressVideo(XFile(file.path));
+  Future<String> compress(String inputPath);
+
+  Future<void> cleanUp(String filePath) async {
+    try {
+      final file = File(filePath);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      throw Exception('Failed to clean up file: $e');
+    }
   }
 
-  if (resultFile != null && isUnder512KB(resultFile)) {
-    return resultFile;
-  } else {
-    return null;
+  Future<String> generateOutputPath(String inputPath) async {
+    final tempDir = await getTemporaryDirectory();
+    final fileName = path.basenameWithoutExtension(inputPath);
+    final extension = path.extension(inputPath);
+    return '${tempDir.path}/${fileName}_compressed$extension';
+  }
+
+  Future<bool> checkFileSize(String inputPath) async {
+    final file = File(inputPath);
+    if (!await file.exists()) {
+      throw Exception('File does not exist');
+    }
+    final fileSizeMB =
+        (await file.length()) / (1024 * 1024); // تحويل إلى ميجابايت
+    return fileSizeMB <= maxFileSizeMB;
   }
 }
 
-bool isUnder512KB(File file) {
-  final bytes = file.lengthSync();
-  return bytes <= 512 * 1024;
+class ImageCompressorService extends MediaCompressor {
+  static const int maxSizeMB = 10; // حجم الملف الحد الأقصى
+  static const int quality = 70; // جودة الضغط (0-100)
+
+  @override
+  int get maxFileSizeMB => maxSizeMB;
+
+  @override
+  int get defaultQuality => quality;
+
+  @override
+  Future<String> compress(String inputPath) async {
+    try {
+      // فحص حجم الملف
+      final isValidSize = await checkFileSize(inputPath);
+      if (!isValidSize) {
+        throw Exception('File is too large');
+      }
+
+      // إنشاء اسم ملف الإخراج
+      final outputPath = await generateOutputPath(inputPath);
+
+      final extension = path.extension(inputPath).toLowerCase();
+      final supportedFormats = {
+        '.jpg': CompressFormat.jpeg,
+        '.jpeg': CompressFormat.jpeg,
+        '.png': CompressFormat.png,
+        '.webp': CompressFormat.webp,
+      };
+
+      // ضغط الصورة
+      final XFile? result = await FlutterImageCompress.compressAndGetFile(
+        inputPath,
+        outputPath,
+        quality: quality,
+        format: supportedFormats[extension] ?? CompressFormat.jpeg,
+      );
+
+      if (result == null) {
+        throw Exception('Failed to compress image');
+      }
+
+      return result.path;
+    } catch (e) {
+      throw Exception('Failed to compress image: $e');
+    }
+  }
 }
 
-Future<File?> compressImage(File file) async {
-  final XFile? result = await FlutterImageCompress.compressAndGetFile(
-    file.absolute.path,
-    '${file.parent.path}/${file.uri.pathSegments.last.replaceFirst(RegExp(r'\.[a-zA-Z]+$'), '_compressed.jpeg')}',
-    quality: 60,
-    format: CompressFormat.jpeg,
-  );
+class VideoCompressorService extends MediaCompressor {
+  static const int maxSizeMB = 100;
+  static const int quality = 23;
 
-  return result != null ? File(result.path) : null;
+  @override
+  int get maxFileSizeMB => maxSizeMB;
+
+  @override
+  int get defaultQuality => quality;
+
+  @override
+  Future<String> compress(String inputPath) async {
+    try {
+      // فحص حجم الملف
+      final isValidSize = await checkFileSize(inputPath);
+      if (!isValidSize) {
+        throw Exception('File is too large');
+      }
+
+      // تنفيذ الضغط
+      MediaInfo? mediaInfo = await VideoCompress.compressVideo(
+        inputPath,
+        includeAudio: true,
+        quality: VideoQuality.LowQuality,
+      );
+
+      if (mediaInfo == null) {
+        throw Exception('Failed to compress video');
+      }
+      final outputPath = await generateOutputPath(mediaInfo.path!);
+
+      return outputPath;
+    } catch (e) {
+      throw Exception('Failed to compress video: $e');
+    }
+  }
 }
-
-// Future<File?> compressVideo(XFile file) async {
-//   try {
-//     final MediaInfo? info = await VideoCompress.compressVideo(
-//       file.path,
-//       quality: VideoQuality.LowQuality,
-//       deleteOrigin: false,
-//     );
-//     return info?.file;
-//   } catch (e) {
-//     return null;
-//   }
-// }

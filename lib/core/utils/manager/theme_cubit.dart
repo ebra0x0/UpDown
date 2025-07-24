@@ -4,13 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
+  late LazyBox _settingsBox;
   ThemeCubit() : super(ThemeMode.system) {
     getTheme();
   }
 
-  void getTheme() {
+  void getTheme() async {
+    _settingsBox = Hive.lazyBox(HiveConstants.settingsBox);
     final String? theme =
-        Hive.box(HiveConstants.settingsBox).get(HiveConstants.settingsThemeKey);
+        await _settingsBox.get(HiveConstants.settingsThemeKey);
 
     if (theme == null) {
       emit(ThemeMode.system);
@@ -27,9 +29,9 @@ class ThemeCubit extends Cubit<ThemeMode> {
     }
   }
 
-  void toggleTheme() {
-    Hive.box(HiveConstants.settingsBox)
-        .put(HiveConstants.settingsThemeKey, state.name.toString());
+  void toggleTheme() async {
+    await _settingsBox.put(
+        HiveConstants.settingsThemeKey, state.name.toString());
 
     switch (state) {
       case ThemeMode.system:

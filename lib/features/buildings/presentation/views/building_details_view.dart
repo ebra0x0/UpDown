@@ -1,4 +1,4 @@
-import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/building_details_cubit/building_details_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/building_details_view_body.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,9 @@ class _BuildingDetailsViewState extends State<BuildingDetailsView> {
   @override
   void initState() {
     super.initState();
-    context.read<BuildingDetailsCubit>().call(buildingId: widget.buildingId);
+    context
+        .read<BuildingDetailsCubit>()
+        .listenToBuilding(buildingId: widget.buildingId);
     context
         .read<ElevatorsCubit>()
         .callByBuilding(buildingId: widget.buildingId);

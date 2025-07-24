@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:UpDown/features/auth/manager/auth_cubit.dart';
+import 'package:UpDown/features/auth/ui/cubit/auth_cubit.dart';
 import 'package:flutter/widgets.dart';
 
 class AuthNotifier extends ChangeNotifier {

@@ -6,7 +6,7 @@ import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/e
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/sliver_grid_section.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:UpDown/core/theme/app_skeleton.dart';
 
 class ElevatorsSliverGridSectionBuilder extends StatelessWidget {
   const ElevatorsSliverGridSectionBuilder({
@@ -25,7 +25,8 @@ class ElevatorsSliverGridSectionBuilder extends StatelessWidget {
         }
         return SliverPadding(
           padding: AppInsets.h8,
-          sliver: Skeletonizer.sliver(
+          sliver: AppSkeletonizer(
+            isSliver: true,
             enabled: state.status == ContentStatus.loading,
             child: ElevatorsSliverGridSection(
               elevators: state.status == ContentStatus.loaded

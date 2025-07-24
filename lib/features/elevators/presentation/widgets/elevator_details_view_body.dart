@@ -10,7 +10,7 @@ import 'package:UpDown/features/elevators/presentation/widgets/units_section/uni
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:UpDown/core/theme/app_skeleton.dart';
 
 class ElevatorDetailsViewBody extends StatelessWidget {
   const ElevatorDetailsViewBody({super.key});
@@ -36,7 +36,8 @@ class _HeaderSectionBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ElevatorUnitsCubit, ElevatorUnitsState>(
       builder: (context, state) {
-        return Skeletonizer.sliver(
+        return AppSkeletonizer(
+          isSliver: true,
           enabled: state.status == ContentStatus.loading,
           child: SliverToBoxAdapter(
             child: HeaderSection(
@@ -55,7 +56,8 @@ class _SliverAppBarBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ElevatorDetailsCubit, ElevatorDetailsState>(
       builder: (context, state) {
-        return Skeletonizer.sliver(
+        return AppSkeletonizer(
+          isSliver: true,
           enabled: state.status == ContentStatus.loading,
           child: CustomSliverAppBar(
             leading: const BackButtonNavigation(),

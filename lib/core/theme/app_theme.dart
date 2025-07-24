@@ -35,7 +35,7 @@ class AppTheme {
   static Color get black =>
       _isDark ? AppColors.darkBlack : AppColors.lightBlack;
   static Color get tabBar =>
-      _isDark ? AppColors.darkBlack : AppColors.lightWhite;
+      _isDark ? AppColors.darkScaffold : AppColors.lightScaffold;
   static Color get tabBarItem =>
       _isDark ? AppColors.darkWhite : AppColors.lightGrey;
   static Color get shadow =>

@@ -3,8 +3,8 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/model/drop_down_model.dart';
 
 import 'package:UpDown/core/widgets/custom_drop_down.dart';
-import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
-import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
+import 'package:UpDown/features/buildings/data/models/building_model.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,8 +22,8 @@ class BuildingDropDownBuilder extends StatelessWidget {
           context.watch<CreateIssueCubit>().state;
       final bool isCreating =
           issueCubitState.status == CreateIssueStatus.loading;
-      final BuildingSummaryModel? selectedBuilding = issueCubitState.building;
-      final List<BuildingSummaryModel>? buildings =
+      final BuildingModel? selectedBuilding = issueCubitState.building;
+      final List<BuildingModel>? buildings =
           state.status == ContentStatus.loaded ? state.buildings : null;
 
       final dropDownList = buildings
@@ -35,8 +35,7 @@ class BuildingDropDownBuilder extends StatelessWidget {
           [];
 
       final matchValue = dropDownList.cast<DropDownModel?>().firstWhere(
-            (e) =>
-                (e!.value as BuildingSummaryModel).id == selectedBuilding?.id,
+            (e) => (e!.value as BuildingModel).id == selectedBuilding?.id,
             orElse: () => null,
           );
 

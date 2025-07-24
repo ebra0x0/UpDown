@@ -1,6 +1,6 @@
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/extensions/ex_icon.dart';
+import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
 import 'package:UpDown/core/widgets/custom_list_tile.dart';
 import 'package:flutter/widgets.dart';

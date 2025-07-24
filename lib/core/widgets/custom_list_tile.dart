@@ -48,7 +48,7 @@ class CustomListTile extends StatelessWidget {
       contentPadding: padding ??
           AppInsets.h16.copyWith(top: AppSpacing.s2, bottom: AppSpacing.s2),
       shape: RoundedRectangleBorder(borderRadius: AppRadius.borderRadius8),
-      enabled: isLoading,
+      enabled: !isLoading,
       tileColor: backgroundColor ?? AppTheme.background,
       onTap: isLoading ? null : onTap,
       title: Text(

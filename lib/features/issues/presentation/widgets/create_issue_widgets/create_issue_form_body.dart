@@ -3,7 +3,7 @@ import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_spacing.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/extensions/ex_icon.dart';
+import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/issues/presentation/widgets/create_issue_widgets/building_drop_down_builder.dart';
@@ -39,7 +39,7 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
         return Column(
           children: [
             MediaFormField(
-              media: state.media,
+              media: state.mediaList.isNotEmpty ? state.mediaList.first : null,
               onMediaSelected: onMediaSelected,
               isLock: state.status == CreateIssueStatus.loading ||
                   state.status == CreateIssueStatus.selectLoading,

@@ -12,8 +12,8 @@ enum CreateIssueStatus {
 class CreateIssueState {
   final CreateIssueStatus status;
   final String? error;
-  final MediaRequestModel? media;
-  final BuildingSummaryModel? building;
+  final List<MediaRequestModel> mediaList;
+  final BuildingModel? building;
   final ElevatorSummaryResponseModel? elevator;
   final List<ElevatorSummaryResponseModel>? elevators;
   final IssueType? issueType;
@@ -22,7 +22,7 @@ class CreateIssueState {
   const CreateIssueState({
     this.status = CreateIssueStatus.initial,
     this.error,
-    this.media,
+    this.mediaList = const [],
     this.building,
     this.elevator,
     this.elevators,
@@ -30,9 +30,10 @@ class CreateIssueState {
     this.description,
   });
 
-  IssueRequestModel toRequestModel(BuildContext context) {
+  IssueRequestModel toRequestModel() {
     return IssueRequestModel(
-      media: media,
+      mediaUrls: mediaList.map((m) => m.url).toList(),
+      mediaList: mediaList,
       buildingName: building!.name,
       elevatorName: elevator!.name,
       issueType: issueType!,
@@ -49,8 +50,8 @@ class CreateIssueState {
   CreateIssueState copyWith({
     CreateIssueStatus? status,
     String? error,
-    MediaRequestModel? media,
-    BuildingSummaryModel? building,
+    List<MediaRequestModel>? mediaList,
+    BuildingModel? building,
     ElevatorSummaryResponseModel? elevator,
     List<ElevatorSummaryResponseModel>? elevators,
     IssueType? issueType,
@@ -59,7 +60,7 @@ class CreateIssueState {
     return CreateIssueState(
       status: status ?? this.status,
       error: error,
-      media: media ?? this.media,
+      mediaList: mediaList ?? this.mediaList,
       building: building ?? this.building,
       elevator: elevator ?? this.elevator,
       elevators: elevators ?? this.elevators,

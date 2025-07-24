@@ -5,7 +5,7 @@ import 'package:UpDown/features/elevators/presentation/manager/elevator_units_cu
 import 'package:UpDown/features/elevators/presentation/widgets/units_section/units_sliver_section.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:UpDown/core/theme/app_skeleton.dart';
 
 class SliverUnitsSectionBuilder extends StatelessWidget {
   const SliverUnitsSectionBuilder({
@@ -22,7 +22,8 @@ class SliverUnitsSectionBuilder extends StatelessWidget {
           );
         }
 
-        return Skeletonizer.sliver(
+        return AppSkeletonizer(
+            isSliver: true,
             enabled: state.status == ContentStatus.loading,
             child: ElevatorDetailsUnitSection(
               units: state.status == ContentStatus.loaded

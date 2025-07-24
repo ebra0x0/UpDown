@@ -3,7 +3,7 @@ import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/extensions/ex_icon.dart';
+import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/core/utils/helper/toast.dart';
 import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
@@ -11,14 +11,14 @@ import 'package:UpDown/core/widgets/avatar_picker.dart';
 import 'package:UpDown/core/widgets/custom_list_tile.dart';
 import 'package:UpDown/core/widgets/custom_sliver_app_bar.dart';
 import 'package:UpDown/core/widgets/header_section.dart';
-import 'package:UpDown/features/auth/manager/auth_cubit.dart';
+import 'package:UpDown/features/auth/ui/cubit/auth_cubit.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
 import 'package:UpDown/features/profile/presentation/widgets/persolnal_info_list_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:UpDown/core/theme/app_skeleton.dart';
 
 class ProfileViewBody extends StatelessWidget {
   const ProfileViewBody({super.key});
@@ -36,6 +36,13 @@ class ProfileViewBody extends StatelessWidget {
             type: ToastType.error,
           );
         }
+        if (state.status == ContentStatus.updated) {
+          showToast(
+            context: context,
+            message: "تم تحديث الملف الشخصي",
+            type: ToastType.success,
+          );
+        }
       },
       builder: (context, state) {
         return CustomScrollView(slivers: [
@@ -44,7 +51,8 @@ class ProfileViewBody extends StatelessWidget {
             isCenterTitle: false,
             titleStyle: AppTextStyles.textStyle22,
           ),
-          Skeletonizer.sliver(
+          AppSkeletonizer(
+            isSliver: true,
             enabled: state.status == ContentStatus.loading,
             child: SliverToBoxAdapter(
               child: AvatarPicker(
@@ -56,6 +64,7 @@ class ProfileViewBody extends StatelessWidget {
                     final ProfileRequestModel profileImageRequest =
                         ProfileRequestModel(
                             name: state.profile!.name,
+                            email: state.profile!.email,
                             address: state.profile!.address,
                             phone: state.profile!.phone,
                             imagePath: file.path);
@@ -66,19 +75,24 @@ class ProfileViewBody extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: 22.sp)),
-          Skeletonizer.sliver(
-            enabled: state.status == ContentStatus.loading,
-            child: SliverToBoxAdapter(
-              child: HeaderSection(
-                  title: "المعلومات الشخصية",
-                  titleStyle: AppTextStyles.textStyle16),
+          SliverPadding(
+            padding: AppInsets.h8,
+            sliver: AppSkeletonizer(
+              isSliver: true,
+              enabled: state.status == ContentStatus.loading,
+              child: SliverToBoxAdapter(
+                child: HeaderSection(
+                    title: "المعلومات الشخصية",
+                    titleStyle: AppTextStyles.textStyle16),
+              ),
             ),
           ),
-          Skeletonizer.sliver(
-            enabled: state.status == ContentStatus.loading,
-            child: SliverPadding(
-              padding: AppInsets.h8,
-              sliver: SliverToBoxAdapter(
+          SliverPadding(
+            padding: AppInsets.h8,
+            sliver: AppSkeletonizer(
+              isSliver: true,
+              enabled: state.status == ContentStatus.loading,
+              child: SliverToBoxAdapter(
                 child: PersonalInfoListSection(
                   profile: state.status == ContentStatus.loaded
                       ? state.profile!
@@ -88,16 +102,22 @@ class ProfileViewBody extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: 22.sp)),
-          SliverToBoxAdapter(
-              child: HeaderSection(
-                  title: "الحساب", titleStyle: AppTextStyles.textStyle16)),
-          SliverToBoxAdapter(
-            child: CustomListTile(
-              isLoading: authCubit.state.status == AuthStatus.loading,
-              loadingColor: AppTheme.red,
-              title: "تسجيل الخروج",
-              leading: AppIcons.logoutIcon.copyWith(color: AppTheme.red),
-              onTap: () async => await authCubit.signOut(),
+          SliverPadding(
+            padding: AppInsets.h8,
+            sliver: SliverToBoxAdapter(
+                child: HeaderSection(
+                    title: "الحساب", titleStyle: AppTextStyles.textStyle16)),
+          ),
+          SliverPadding(
+            padding: AppInsets.h8,
+            sliver: SliverToBoxAdapter(
+              child: CustomListTile(
+                isLoading: authCubit.state.status == AuthStatus.loading,
+                loadingColor: AppTheme.red,
+                title: "تسجيل الخروج",
+                leading: AppIcons.logoutIcon.copyWith(color: AppTheme.red),
+                onTap: () async => await authCubit.signOut(),
+              ),
             ),
           ),
         ]);

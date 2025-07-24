@@ -6,14 +6,18 @@ part 'issue_request_model.g.dart';
 
 @JsonSerializable(createFactory: false)
 class IssueRequestModel {
+  @JsonKey(includeToJson: false)
   final String? id;
-  @JsonKey(name: 'report_id')
+  @JsonKey(name: 'report_id', includeToJson: false)
   final String? reportId;
   @JsonKey(name: 'issue_type')
   final IssueType issueType;
   final String? description;
   final IssuePriority priority;
-  final MediaRequestModel? media;
+  @JsonKey(name: 'media_urls')
+  final List<String> mediaUrls;
+  @JsonKey(includeToJson: false)
+  final List<MediaRequestModel> mediaList;
   @JsonKey(name: 'building_id')
   final String buildingId;
   @JsonKey(name: 'elevator_id')
@@ -29,7 +33,8 @@ class IssueRequestModel {
     required this.issueType,
     this.description,
     required this.priority,
-    this.media,
+    this.mediaUrls = const [],
+    this.mediaList = const [],
     required this.buildingId,
     required this.elevatorId,
     required this.buildingName,
@@ -44,7 +49,8 @@ class IssueRequestModel {
     IssueType? issueType,
     String? description,
     IssuePriority? priority,
-    MediaRequestModel? media,
+    List<String>? mediaUrls,
+    List<MediaRequestModel>? mediaList,
     String? buildingId,
     String? elevatorId,
     String? buildingName,
@@ -56,7 +62,8 @@ class IssueRequestModel {
       issueType: issueType ?? this.issueType,
       description: description ?? this.description,
       priority: priority ?? this.priority,
-      media: media ?? this.media,
+      mediaUrls: mediaUrls ?? this.mediaUrls,
+      mediaList: mediaList ?? this.mediaList,
       buildingId: buildingId ?? this.buildingId,
       elevatorId: elevatorId ?? this.elevatorId,
       buildingName: buildingName ?? this.buildingName,

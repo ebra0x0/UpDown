@@ -2,10 +2,12 @@ import 'package:UpDown/core/di/dependancy_injection.dart';
 import 'package:UpDown/core/network/widgets/offline_view.dart';
 import 'package:UpDown/core/router/shell_route_config.dart';
 import 'package:UpDown/core/utils/enums/app_route.dart';
+import 'package:UpDown/features/account_setup/data/repos/account_setup_repo.dart';
+import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
 import 'package:UpDown/features/account_setup/presentation/views/account_setup_view.dart';
-import 'package:UpDown/features/auth/login/presentaion/views/login_view.dart';
-import 'package:UpDown/features/auth/registration/presentation/views/registration_view.dart';
-import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
+import 'package:UpDown/features/auth/ui/views/login/login_view.dart';
+import 'package:UpDown/features/auth/ui/views/regestration/registration_view.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/building_details_cubit/building_details_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/views/building_details_view.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_units_cubit/elevator_units_cubit.dart';
@@ -14,9 +16,9 @@ import 'package:UpDown/features/home/presentation/views/home_view.dart';
 import 'package:UpDown/features/issues/presentation/manager/issue_details_cubit/issue_details_cubit.dart';
 import 'package:UpDown/features/issues/presentation/views/create_issue_view.dart';
 import 'package:UpDown/features/issues/presentation/views/issue_view.dart';
-import 'package:UpDown/features/profile/data/data_sources/local_data_source/local_data_source_imp.dart';
-import 'package:UpDown/features/profile/data/data_sources/remote_data_source/remote_data_source_imp.dart';
-import 'package:UpDown/features/profile/data/repos/profile_repo_imp.dart';
+import 'package:UpDown/features/profile/data/sources/local/local.dart';
+import 'package:UpDown/features/profile/data/sources/remote/remote.dart';
+import 'package:UpDown/features/profile/data/repos/profile_repo.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
 import 'package:UpDown/features/profile/presentation/views/profile_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
@@ -47,7 +49,10 @@ class RouteConfig {
         ),
         GoRoute(
           path: AppRoute.accountSetup.path,
-          builder: (context, state) => const AccountSetupView(),
+          builder: (context, state) => BlocProvider(
+            create: (context) => AccountSetupCubit(AccountSetupRepo(getIt())),
+            child: const AccountSetupView(),
+          ),
         ),
       ];
 
@@ -68,9 +73,9 @@ class RouteConfig {
           GoRoute(
             path: AppRoute.profile.path,
             builder: (context, state) => BlocProvider(
-                create: (context) => ProfileCubit(ProfileRepoImp(
-                      ProfileLocalDataSourceImp(),
-                      ProfileRemoteDataSourceImp(getIt()),
+                create: (context) => ProfileCubit(ProfileRepo(
+                      ProfileLocalDataSource(),
+                      ProfileRemoteDataSource(getIt()),
                     )),
                 child: const ProfileView()),
           ),

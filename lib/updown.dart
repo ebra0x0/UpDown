@@ -4,7 +4,7 @@ import 'package:UpDown/core/router/app_router.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/l10n/local_service.dart';
 import 'package:UpDown/core/utils/manager/theme_cubit.dart';
-import 'package:UpDown/features/auth/manager/auth_cubit.dart';
+import 'package:UpDown/features/auth/ui/cubit/auth_cubit.dart';
 import 'package:UpDown/l10n/generated/app_localizations.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';

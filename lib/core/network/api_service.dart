@@ -1,176 +1,193 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:UpDown/core/network/api_constants.dart';
 import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/core/network/api_init.dart';
+import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/core/utils/helper/safe_request.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/helper/media_compressor.dart';
 import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
+import 'package:UpDown/features/auth/data/model/auth_response_model.dart';
 import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
-import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
-import 'package:UpDown/core/utils/storage_path.dart';
+import 'package:UpDown/core/utils/helper/storage_path.dart';
 import 'package:UpDown/features/elevators/data/models/unit_model.dart';
 import 'package:UpDown/features/elevators/data/models/unit_model_factory.dart';
 import 'package:UpDown/features/issues/data/models/issue_request_model.dart';
-import 'package:UpDown/features/buildings/data/models/building_model.dart';
-import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
-import 'package:UpDown/core/utils/model/user_credentials_model.dart';
+import 'package:UpDown/features/auth/data/model/auth_request_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_summary_response_model.dart';
 import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:UpDown/features/issues/data/models/issue_summary_response_model.dart';
 import 'package:UpDown/core/utils/model/media_models/media_response_model.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/transformers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ApiService {
-  final SupabaseClient _supabase;
-  User? get _user => _supabase.auth.currentUser;
-  Session? get _session => _supabase.auth.currentSession;
+  final ApiInitializer _apiInitializer;
+  final NetworkManager _netManager;
 
-  ApiService(this._supabase);
+  ApiService(this._netManager, this._apiInitializer);
+
+  SupabaseClient get _supabase => _apiInitializer.client;
+  User? get user => _supabase.auth.currentUser;
+  Session? get session => _supabase.auth.currentSession;
+
+  bool get isConnected => _netManager.isConnected;
+
+  void _ensureInitialized() => _apiInitializer.ensureInitialized();
 
   // Auth Functions
-
-  Stream<Session?> get onAuthStateChanged {
-    return _supabase.auth.onAuthStateChange
-        .map((data) => data.session)
-        .doOnError((_, __) {
-      throw CustomFailure("حدث خطأ أثناء مراقبة حالة المصادقة");
-    });
+  Stream<AuthResponseModel> authStateStream() async* {
+    _ensureInitialized();
+    if (!isConnected) {
+      yield AuthResponseModel(
+        status: AuthStatus.error,
+        session: null,
+        user: null,
+      );
+      return;
+    }
+    yield* _supabase.auth.onAuthStateChange
+        .map((authState) => AuthResponseModel.fromAuthState(authState));
   }
 
-  Future<Either<Failure, Session?>> signUp(UserCredentialsModel user) async {
+  Future<AuthResponseModel> signUp(AuthRequestModel user) async {
     try {
+      _ensureInitialized();
       final AuthResponse res = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase.auth.signUp(
                 email: user.email,
                 password: user.password,
               ),
-          errorMessage: "فشل الاتصال اثناء التسجيل. حاول مرة اخرى.");
+          errorMessage: "تعذر انشاء الحساب");
 
-      return Right(res.session);
+      final AuthResponseModel authResponseModel =
+          AuthResponseModel.fromAuthResponse(res);
+
+      return authResponseModel;
     } on AuthException catch (e) {
-      return Left(SupabaseFailure.fromAuth(e));
+      throw (SupabaseFailure.fromAuth(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء التسجيل"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("تعذر انشاء الحساب"));
     }
   }
 
-  Future<Either<Failure, Session>> signInWithPassword(
-      UserCredentialsModel user) async {
+  Future<AuthResponseModel> signInWithPassword(AuthRequestModel user) async {
     try {
+      _ensureInitialized();
       final AuthResponse res = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase.auth.signInWithPassword(
                 email: user.email,
                 password: user.password,
               ),
-          errorMessage: "فشل الاتصال اثناء تسجيل الدخول. حاول مرة اخرى.");
+          errorMessage: "تعذر تسجيل الدخول");
 
-      if (res.session == null) {
-        return Left(CustomFailure("حدث خطاء اثناء تسجيل الدخول"));
-      }
+      final AuthResponseModel authResponseModel =
+          AuthResponseModel.fromAuthResponse(res);
 
-      return Right(res.session!);
+      return authResponseModel;
     } on AuthException catch (e) {
-      return Left(SupabaseFailure.fromAuth(e));
+      throw (SupabaseFailure.fromAuth(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطأ أثناء تسجيل الدخول"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("تعذر تسجيل الدخول"));
     }
   }
 
-  Future<Either<Failure, void>> signOut() async {
+  Future<void> signOut() async {
     try {
+      _ensureInitialized();
       await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase.auth.signOut(),
-          errorMessage: "فشل الاتصال اثناء تسجيل الخروج. حاول مرة اخرى.");
-      return const Right(null);
+          errorMessage: "تعذر تسجيل الخروج");
     } on AuthException catch (e) {
-      return Left(SupabaseFailure.fromAuth(e));
+      throw (SupabaseFailure.fromAuth(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطأ أثناء تسجيل الخروج"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("تعذر تسجيل الخروج"));
     }
   }
 
-  Future<Either<Failure, Session?>> refreshToken(String refreshToken) async {
+  Future<Session?> refreshSession(String refreshToken) async {
     try {
-      if (_session == null) return const Right(null);
+      _ensureInitialized();
       final AuthResponse newSession = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase.auth.refreshSession(refreshToken),
-          errorMessage: "فشل الاتصال اثناء تحديث الجلسة. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء تحديث الجلسة.");
 
-      return Right(newSession.session);
+      return newSession.session;
     } on AuthException catch (e) {
-      return Left(SupabaseFailure.fromAuth(e));
+      throw (SupabaseFailure.fromAuth(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء تحديث الجلسة"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("تعذر تحديث الجلسة"));
     }
   }
 
-  Future<Either<Failure, void>> sendConfirmationEmail(String email) async {
+  Future<void> sendConfirmationEmail(String email) async {
     try {
-      if (email.isEmpty) {
-        return Left(CustomFailure("يرجى إرفاق البريد الإلكتروني"));
-      }
+      _ensureInitialized();
 
       await safeRequest(
+          networkManager: _netManager,
           request: () =>
               _supabase.auth.resend(type: OtpType.signup, email: email),
-          errorMessage: "فشل الاتصال اثناء إرسال رمز التفعيل. حاول مرة اخرى.");
-      return const Right(null);
+          errorMessage: "تعذر ارسال رمز التفعيل");
     } on AuthException catch (e) {
-      return Left(SupabaseFailure.fromAuth(e));
+      throw (SupabaseFailure.fromAuth(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء إرسال رمز التفعيل"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("تعذر ارسال رمز التفعيل"));
     }
   }
 
-  Future<Either<Failure, void>> resetPassword({required String email}) async {
+  Future<void> resetPassword({required String email}) async {
     try {
-      if (email.isEmpty) {
-        return Left(CustomFailure("يرجى إدخال البريد الإلكتروني"));
-      }
+      _ensureInitialized();
 
       await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase.auth.resetPasswordForEmail(email),
-          errorMessage:
-              "فشل الاتصال اثناء استعادة كلمة المرور. حاول مرة اخرى.");
-      return const Right(null);
+          errorMessage: "تعذر استعادة كلمة المرور");
     } on AuthException catch (e) {
-      return Left(SupabaseFailure.fromAuth(e));
+      throw (SupabaseFailure.fromAuth(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء استعادة كلمة المرور"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("تعذر استعادة كلمة المرور"));
     }
   }
 
   // User Functions
-  Future<Either<Failure, void>> createProfile(
-      ProfileRequestModel profile) async {
+  Future<void> createProfile(ProfileRequestModel profile) async {
     try {
-      // Check if profile already exists
+      _ensureInitialized();
 
+      // Check if profile already exists
       final isNew = await isNewAccount();
 
-      if (isNew.isLeft) return Left(isNew.left);
-
-      if (!isNew.right) {
-        return Left(CustomFailure("الملف الشخصي موجود بالفعل"));
+      if (!isNew) {
+        throw "المستخدم مسجل بالفعل";
       }
 
       // Upload avatar if exists
@@ -178,86 +195,91 @@ class ApiService {
       if (profile.imagePath != null) {
         final uploadResult = await _uploadAvatar(XFile(profile.imagePath!));
 
-        if (uploadResult.isLeft) return Left(uploadResult.left);
-
         // Update profile model
-        final String? userEmail = _user?.email;
+        final String? userEmail = _supabase.auth.currentUser?.email;
         final String avatarPath =
-            uploadResult.right.replaceFirst(RegExp(r'^[^/]+/[^/]+/'), '');
+            uploadResult.replaceFirst(RegExp(r'^[^/]+/[^/]+/'), '');
 
         profile = profile.copyWith(email: userEmail, imagePath: avatarPath);
       }
 
       // Insert profile into database
       await safeRequest(
+        networkManager: _netManager,
         request: () => _supabase.from('Users').insert(profile.toJson()),
-        errorMessage: "فشل الاتصال اثناء انشاء بيانات المستخدم. حاول مرة اخرى.",
-      ); // removed is remote
-      return const Right(null);
+        errorMessage: "فشل الاتصال اثناء انشاء بيانات المستخدم. حاول مرة اخرى",
+      );
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء انشاء بيانات المستخدم"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      throw (CustomFailure(e.toString()));
     }
   }
 
-  Future<Either<Failure, bool>> isNewAccount() async {
+  Future<bool> isNewAccount() async {
     try {
+      _ensureInitialized();
       final bool isNewAccount = await safeRequest(
-        request: () => _supabase.rpc("check_new_account"),
+        networkManager: _netManager,
+        request: () => _supabase.rpc("is_new_account"),
       );
 
-      return Right(isNewAccount);
+      return isNewAccount;
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء التحقق من حالة الحساب"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      throw (CustomFailure(e.toString()));
     }
   }
 
-  Future<Either<Failure, ProfileResponseModel>> fetchProfile() async {
+  Stream<Map<String, dynamic>?> fetchProfile() async* {
     try {
-      final Map<String, dynamic> response = await safeRequest(
-          request: () =>
-              _supabase.from('Users').select().eq('id', _user!.id).single(),
-          errorMessage:
-              "فشل الاتصال اثناء جلب بيانات المستخدم. حاول مرة اخرى.");
-
-      // Check if image_path exists and download it
-      if (response["image_path"] != null) {
-        // Download avatar
-        final avatarPath = await _downloadAvatar(response["image_path"]);
-
-        if (avatarPath.isLeft) return Left(avatarPath.left);
-
-        response["image_path"] = avatarPath.right;
+      _ensureInitialized();
+      if (!isConnected) {
+        yield null;
+        return;
       }
 
-      final ProfileResponseModel profile =
-          ProfileResponseModel.fromJson(response);
+      yield* _supabase
+          .from("Users")
+          .stream(primaryKey: ["id"])
+          .eq("id", _supabase.auth.currentUser!.id)
+          .asyncMap((stream) async {
+            if (stream.isEmpty) {
+              return null;
+            }
+            final Map<String, dynamic> res = stream.first;
+            // Check if image_path exists and download it
+            if (res["image_path"] != null) {
+              // Download avatar
+              final avatarPath = await _downloadAvatar(res["image_path"]);
 
-      return Right(profile);
+              res["image_path"] = avatarPath;
+            }
+
+            return res;
+          });
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw SupabaseFailure.fromDatabase(e);
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المستخدم"));
+      throw NetworkFailure(e.errMessage);
+    } catch (e) {
+      throw CustomFailure("حدث خطاء اثناء جلب بيانات المستخدم");
     }
   }
 
-  Future<Either<Failure, String>> _downloadAvatar(String imagePath) async {
+  Future<String> _downloadAvatar(String imagePath) async {
     try {
       final Uint8List response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase.storage
               .from(ApiConstants.avatarsBucket)
               .download("${ApiConstants.avatarsBucketFolder}/$imagePath"),
-          errorMessage:
-              "فشل الاتصال اثناء تحميل صورة الملف الشخصي. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء تحميل صورة الملف الشخصي.");
 
       final Directory dir = await getApplicationDocumentsDirectory();
 
@@ -266,45 +288,41 @@ class ApiService {
       final file = File(filePath);
       await file.writeAsBytes(response);
 
-      return Right(file.path);
+      return file.path;
     } on StorageException catch (e) {
-      return Left(SupabaseFailure.fromStorage(e));
+      throw (SupabaseFailure.fromStorage(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
+      throw (NetworkFailure(e.errMessage));
     } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء تحميل صورة الملف الشخصي"));
+      throw (CustomFailure("حدث خطاء اثناء تحميل صورة الملف الشخصي"));
     }
   }
 
-  Future<Either<Failure, String>> _uploadAvatar(XFile file) async {
+  Future<String> _uploadAvatar(XFile file) async {
     try {
       // Upload avatar
       final uploadResult = await _uploadMedia(
         bucketName: ApiConstants.avatarsBucket,
         filePath: file.path,
-        storagePath:
-            StoragePath.fromAvatar(filePath: file.path, userId: _user!.id).path,
+        storagePath: StoragePath.fromAvatar(
+                filePath: file.path, userId: _supabase.auth.currentUser!.id)
+            .path,
         mediaType: MediaType.image,
       );
 
-      if (uploadResult.isLeft) return Left(uploadResult.left);
-
-      final String url = uploadResult.right;
-
-      return Right(url);
+      return uploadResult;
     } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء رفع صورة الملف الشخصي"));
+      throw CustomFailure("تعذر رفع صورة الملف الشخصي");
     }
   }
 
-  Future<Either<Failure, ProfileResponseModel>> updateProfile(
-      ProfileRequestModel profile) async {
+  Future<void> updateProfile(ProfileRequestModel profile) async {
     try {
+      _ensureInitialized();
       if (profile.imagePath != null) {
         final uploadResult = await _uploadAvatar(XFile(profile.imagePath!));
-        if (uploadResult.isLeft) return Left(uploadResult.left);
 
-        final String avatarPath = uploadResult.right.replaceFirst(
+        final String avatarPath = uploadResult.replaceFirst(
           RegExp(r'^[^/]+/[^/]+/'),
           '',
         );
@@ -312,243 +330,236 @@ class ApiService {
         profile = profile.copyWith(imagePath: avatarPath);
       }
 
-      final res = await safeRequest(
+      await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('Users')
               .update(profile.toJson())
-              .eq("id", _user!.id)
-              .single(),
-          errorMessage:
-              "فشل الاتصال اثناء تحديث بيانات المستخدم. حاول مرة اخرى.");
-
-      final ProfileResponseModel updatedProfile =
-          ProfileResponseModel.fromJson(res);
-
-      return Right(updatedProfile);
+              .eq("id", _supabase.auth.currentUser!.id));
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
+      throw (NetworkFailure(e.errMessage));
     } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء تحديث بيانات المستخدم"));
+      throw (CustomFailure("تعذر تحديث بيانات الملف الشخصي"));
     }
   }
 
   // Buildings
-  Future<Either<Failure, List<BuildingSummaryModel>>> fetchBuildings() async {
-    try {
-      final List<dynamic> response = await safeRequest(
-          request: () =>
-              _supabase.rpc("get_buildings", params: {"user_id": _user!.id}),
-          errorMessage: "فشل الاتصال اثناء جلب بيانات الأبنية. حاول مرة اخرى.");
-
-      final List<BuildingSummaryModel> buildings =
-          response.map((b) => BuildingSummaryModel.fromJson(b)).toList();
-
-      return Right(buildings);
-    } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
-    } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات الأبنية"));
+  Stream<List<Map<String, dynamic>>> streamUserBuildings() async* {
+    _ensureInitialized();
+    if (!isConnected) {
+      yield [];
+      return;
     }
+    yield* _supabase.from("Buildings").stream(primaryKey: ["id"]).eq(
+        "owner_id", _supabase.auth.currentUser!.id);
   }
 
-  Future<Either<Failure, BuildingModel>> fetchBuildingDetails(
-      {required String buildingId}) async {
-    try {
-      final Map<String, dynamic> response = await safeRequest(
-          request: () => _supabase
-              .from('Buildings')
-              .select()
-              .eq('id', buildingId)
-              .single(),
-          errorMessage: "فشل الاتصال اثناء جلب بيانات المبنى. حاول مرة اخرى.");
-
-      return Right(BuildingModel.fromJson(response));
-    } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
-    } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المبنى"));
+  Stream<Map<String, dynamic>?> streamBuildingDetails(
+      {required String buildingId}) async* {
+    _ensureInitialized();
+    if (!isConnected) {
+      yield null;
+      return;
     }
+    yield* _supabase
+        .from('Buildings')
+        .stream(primaryKey: ["id"])
+        .eq('id', buildingId)
+        .map((list) => list.isNotEmpty ? list.first : null);
   }
 
   // Elevators
 
-  Future<Either<Failure, ElevatorModel>> fetchElevatorDetails(
+  Future<ElevatorModel> fetchElevatorDetails(
       {required String elevatorId}) async {
     try {
+      _ensureInitialized();
       final Map<String, dynamic> response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('Elevators')
               .select()
               .eq('id', elevatorId)
               .single(),
-          errorMessage: "فشل الاتصال اثناء جلب بيانات المصعد. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء جلب بيانات المصعد.");
 
-      return Right(ElevatorModel.fromJson(response));
+      return ElevatorModel.fromJson(response);
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
+      throw (NetworkFailure(e.errMessage));
     } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصعد"));
+      throw (CustomFailure("حدث خطاء اثناء جلب بيانات المصعد"));
     }
   }
 
-  Future<Either<Failure, List<ElevatorSummaryResponseModel>>>
-      fetchElevatorsByBuilding({required String buildingId}) async {
+  Future<List<ElevatorSummaryResponseModel>> fetchElevatorsByBuilding(
+      {required String buildingId}) async {
     try {
+      _ensureInitialized();
       final List<Map<String, dynamic>> response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('elevators_summary_view')
               .select()
               .eq('building_id', buildingId),
-          errorMessage: "فشل الاتصال اثناء جلب بيانات المصاعد. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء جلب بيانات المصاعد.");
 
       final List<ElevatorSummaryResponseModel> elevators = response.map((e) {
         return ElevatorSummaryResponseModel.fromJson(e);
       }).toList();
 
-      return Right(elevators);
+      return elevators;
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
     }
   }
 
-  Future<Either<Failure, List<ElevatorSummaryResponseModel>>>
-      fetchElevatorsByBuildings({required List<String> buildingIds}) async {
+  Future<List<ElevatorSummaryResponseModel>> fetchElevatorsByBuildings(
+      {required List<String> buildingIds}) async {
     try {
+      _ensureInitialized();
       final List<Map<String, dynamic>> response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('elevators_summary_view')
               .select()
               .inFilter('building_id', buildingIds),
-          errorMessage: "فشل الاتصال اثناء جلب بيانات المصاعد. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء جلب بيانات المصاعد.");
 
       final List<ElevatorSummaryResponseModel> elevators = response.map((e) {
         return ElevatorSummaryResponseModel.fromJson(e);
       }).toList();
 
-      return Right(elevators);
+      return elevators;
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
     }
   }
 
-  Future<Either<Failure, List<UnitModel>>> fetchElevatorUnits(
+  Future<List<UnitModel>> fetchElevatorUnits(
       {required String elevatorId}) async {
     try {
+      _ensureInitialized();
       final List<Map<String, dynamic>> response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('elevator_units_summary_view')
               .select()
               .eq('elevator_id', elevatorId),
-          errorMessage:
-              "فشل الاتصال اثناء جلب بيانات وحدات المصعد. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء جلب بيانات وحدات المصعد.");
 
       final List<UnitModel> units = response.map((u) {
         return UnitModel.fromJson(u);
       }).toList();
 
-      return Right(units);
+      return units;
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء طلب وحدات المصعد"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("حدث خطاء اثناء طلب وحدات المصعد"));
     }
   }
 
-  Future<Either<Failure, UnitModel>> fetchUnitDetails(
-      {required String unitId}) async {
+  Future<UnitModel> fetchUnitDetails({required String unitId}) async {
     try {
+      _ensureInitialized();
       final Map<String, dynamic> response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('Elevator_Units')
               .select()
               .eq('id', unitId)
               .single(),
-          errorMessage: "فشل الاتصال اثناء جلب بيانات الوحدة. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء جلب بيانات الوحدة.");
 
-      return Right(UnitModelFactory.createUnitModel(response));
+      return UnitModelFactory.createUnitModel(response);
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("حدث خطاء اثناء جلب بيانات المصاعد"));
     }
   }
 
   // Issues
-  Future<Either<Failure, void>> createIssue(IssueRequestModel issueReq) async {
+  Future<void> createIssue(IssueRequestModel issueReq) async {
     try {
+      _ensureInitialized();
       // Create issue
       final Map<String, dynamic> issueIdRes = await safeRequest(
+          networkManager: _netManager,
           request: () =>
               _supabase.rpc("create_issue", params: issueReq.toJson()).single(),
-          errorMessage: "فشل الاتصال اثناء انشاء العطل. حاول مرة اخرى.");
-
-      // if (issueIdRes == null) {
-      //   return Left(CustomFailure("تعذر إنشاء العطل"));
-      // }
+          errorMessage: "فشل الاتصال اثناء انشاء العطل.");
+      //////
 
       // Update issue model with ids
       issueReq = issueReq.copyWith(
           id: issueIdRes["issue_id"], reportId: issueIdRes["report_id"]);
 
-      if (issueReq.media == null) return const Right(null);
+      if (issueReq.mediaList.isEmpty) return;
+      //////
 
-      // Create media
-      final mediaResponse = await _createIssueMedia(
-        media: issueReq.media!,
-        issueId: issueReq.id!,
-        reportId: issueReq.reportId,
-      );
-
-      // If media creation fails, delete issue
-      if (mediaResponse.isLeft) {
-        await safeRequest(
-          request: () =>
-              _supabase.from('Issues').delete().eq('id', issueReq.id!),
+      try {
+        // Upload and insert media list
+        await _uploadAndInsertIssueMediaList(
+          mediaList: issueReq.mediaList,
+          issueId: issueReq.id!,
+          reportId: issueReq.reportId!,
         );
-        return Left(mediaResponse.left);
+      } catch (e) {
+        // If media creation fails, delete issue
+        try {
+          await safeRequest(
+            networkManager: _netManager,
+            request: () =>
+                _supabase.from('Issues').delete().eq('id', issueReq.id!),
+          );
+        } catch (_) {}
+        log(e.toString());
+        throw (CustomFailure("حدث خطاء اثناء رفع الوسائط"));
       }
-
-      return const Right(null);
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
+      throw (NetworkFailure(e.errMessage));
     } catch (_) {
-      return Left(CustomFailure("حدث خطأ أثناء إنشاء العطل"));
+      throw (CustomFailure("حدث خطأ أثناء إنشاء العطل"));
     }
   }
 
-  Future<Either<Failure, void>> _createIssueMedia(
-      {required MediaRequestModel media,
-      required String issueId,
-      reportId}) async {
-    try {
-      // Create storage path for media
+  Future<void> _uploadAndInsertIssueMediaList({
+    required List<MediaRequestModel> mediaList,
+    required String issueId,
+    required String reportId,
+  }) async {
+    await Future.wait(mediaList.map((media) async {
+      // 1. توليد مسار التخزين
       final String storagePath = StoragePath.withIssue(
-              media: media, reportId: reportId, issueId: issueId)
-          .path;
+        media: media,
+        reportId: reportId,
+        issueId: issueId,
+      ).path;
 
-      // Upload media
+      // 2. رفع الميديا
       final uploadResult = await _uploadMedia(
         bucketName: ApiConstants.reportsBucket,
         filePath: media.file!.path,
@@ -556,180 +567,182 @@ class ApiService {
         mediaType: MediaType.image,
       );
 
-      if (uploadResult.isLeft) return Left(uploadResult.left);
-
+      // 3. استخراج رابط الميديا بعد الرفع
       final String mediaUrl =
-          uploadResult.right.replaceFirst(RegExp(r'^[^/]+/[^/]+/'), '');
+          uploadResult.replaceFirst(RegExp(r'^[^/]+/[^/]+/'), '');
 
+      // 4. تحديث بيانات الميديا
       final MediaRequestModel mediaWithUrl =
           media.copyWith(url: mediaUrl, issueId: issueId);
 
-      // Create media in db
+      // 5. إدخال الميديا في قاعدة البيانات
       await safeRequest(
+        networkManager: _netManager,
         request: () => _supabase.from('Media').insert(mediaWithUrl.toJson()),
       );
-
-      return const Right(null);
-    } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
-    } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطأ أثناء إنشاء وسائط العطل"));
-    }
+    }));
   }
 
-  Future<Either<Failure, String>> _uploadMedia(
+  Future<String> _uploadMedia(
       {required String bucketName,
       required String filePath,
       required String storagePath,
       required MediaType mediaType}) async {
-    try {
-      // Compress file
-      final File? compressedFile =
-          await prepareMediaFile(File(filePath), mediaType);
+    // Compress file
+    final MediaCompressor mediaCompressor = mediaType == MediaType.image
+        ? ImageCompressorService()
+        : VideoCompressorService();
+    final String compressedPath = await mediaCompressor.compress(filePath);
+    final File compressedFile = File(compressedPath);
 
-      if (compressedFile == null) {
-        return Left(CustomFailure("حدث خطاء اثناء معالجة الملف"));
-      }
+    // Upload to bucket
+    final String url = await safeRequest(
+        networkManager: _netManager,
+        request: () => _supabase.storage.from(bucketName).upload(
+              storagePath,
+              compressedFile,
+            ),
+        errorMessage: "فشل الاتصال اثناء رفع الملف.");
 
-      // Upload to bucket
-      final String url = await safeRequest(
-          request: () => _supabase.storage.from(bucketName).upload(
-                storagePath,
-                File(filePath),
-              ),
-          errorMessage: "فشل الاتصال اثناء رفع الملف. حاول مرة اخرى.");
-
-      return Right(url);
-    } on StorageException catch (e) {
-      return Left(SupabaseFailure.fromStorage(e));
-    } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطاء اثناء رفع الملف"));
-    }
+    return url;
   }
 
-  Future<Either<Failure, List<IssueSummaryResponseModel>?>>
-      fetchActiveIssuesForBuilding(String buildingId) async {
+  Future<Map<String, dynamic>?> _fetchMedia(String mediaId) async {
+    final Map<String, dynamic>? response = await safeRequest(
+        networkManager: _netManager,
+        request: () =>
+            _supabase.from('Media').select().eq('id', mediaId).maybeSingle(),
+        errorMessage: "فشل الاتصال اثناء جلب الملف.");
+
+    return response;
+  }
+
+  Future<List<IssueSummaryResponseModel>> fetchActiveIssuesForBuilding(
+      String buildingId) async {
     try {
+      _ensureInitialized();
       final List<Map<String, dynamic>> response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('active_issues_summary_view')
               .select()
               .eq('building_id', buildingId),
-          errorMessage:
-              "فشل الاتصال اثناء جلب بيانات الأعطال النشطة. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء جلب بيانات الأعطال النشطة.");
 
       if (response.isEmpty) {
-        return Right(null);
+        return [];
       }
 
       final List<IssueSummaryResponseModel> issues = response.map((e) {
         return IssueSummaryResponseModel.fromJson(e);
       }).toList();
 
-      return Right(issues);
+      return issues;
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث حطأ اثناء جلب بيانات الأعطال النشطة"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("حدثت مشكلة اثناء تحميل الأعطال"));
     }
   }
 
-  Future<Either<Failure, List<IssueSummaryResponseModel>?>>
-      fetchActiveIssuesForElevator(String elevatorId) async {
+  Future<List<IssueSummaryResponseModel>> fetchActiveIssuesForElevator(
+      String elevatorId) async {
     try {
+      _ensureInitialized();
       final List<Map<String, dynamic>> response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('active_issues_summary_view')
               .select()
               .eq('elevator_id', elevatorId),
-          errorMessage:
-              "فشل الاتصال اثناء جلب بيانات الأعطال النشطة. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء جلب بيانات الأعطال النشطة.");
 
       if (response.isEmpty) {
-        return Right(null);
+        return [];
       }
 
       final List<IssueSummaryResponseModel> issues = response.map((e) {
         return IssueSummaryResponseModel.fromJson(e);
       }).toList();
 
-      return Right(issues);
+      return issues;
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطأ أثناء جلب بيانات الأعطال النشطة"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("حدثت مشكلة اثناء تحميل الأعطال"));
     }
   }
 
-  Future<Either<Failure, List<IssueSummaryResponseModel>?>>
-      fetchAllActiveIssues() async {
+  Future<List<IssueSummaryResponseModel>> fetchAllActiveIssues() async {
     try {
+      _ensureInitialized();
       final List<Map<String, dynamic>> response = await safeRequest(
+          networkManager: _netManager,
           request: () => _supabase
               .from('active_issues_summary_view')
               .select()
-              .eq("user_id", _user!.id),
-          errorMessage:
-              "فشل الاتصال اثناء جلب بيانات الأعطال النشطة. حاول مرة اخرى.");
+              .eq("user_id", _supabase.auth.currentUser!.id));
 
       if (response.isEmpty) {
-        return Right(null);
+        return [];
       }
 
       final List<IssueSummaryResponseModel> issues = response.map((e) {
         return IssueSummaryResponseModel.fromJson(e);
       }).toList();
 
-      return Right(issues);
+      return issues;
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطأ أثناء جلب بيانات الأعطال النشطة"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("تعذر تحميل الأعطال النشطة"));
     }
   }
 
-  Future<Either<Failure, IssueResponseModel>> fetchIssueDetails(
-      String issueId) async {
+  Future<IssueResponseModel> fetchIssueDetails(String issueId) async {
     try {
+      _ensureInitialized();
       final Map<String, dynamic> response = await safeRequest(
+          networkManager: _netManager,
           request: () =>
               _supabase.from('Issues').select().eq('id', issueId).single(),
-          errorMessage: "فشل الاتصال اثناء جلب بيانات العطل. حاول مرة اخرى.");
+          errorMessage: "فشل الاتصال اثناء جلب بيانات العطل.");
 
       final IssueResponseModel issue = IssueResponseModel.fromJson(response);
 
       // Fetch media if exists
-      final Map<String, dynamic>? mediaResponse = await safeRequest(
-          request: () => _supabase
-              .from('Media')
-              .select()
-              .eq('issue_id', issue.id)
-              .maybeSingle(),
-          errorMessage: "فشل الاتصال اثناء جلب وسائط العطل. حاول مرة اخرى.");
+      if (issue.mediaUrls.isEmpty) return issue;
 
-      IssueResponseModel updatedIssue = issue;
-      if (mediaResponse != null) {
-        updatedIssue = issue.copyWith(
-          media: MediaResponseModel.fromJson(mediaResponse),
-        );
-      }
-      return Right(updatedIssue);
+      final List<Map<String, dynamic>?> mediaListRes =
+          await Future.wait(issue.mediaUrls.map((url) => _fetchMedia(url)));
+
+      // Convert media list response to list of media model.
+      final List<MediaResponseModel> mediaListModel = mediaListRes
+          .where((m) => m != null)
+          .map((m) => MediaResponseModel.fromJson(m!))
+          .toList();
+
+      // Update issue model with media list model.
+      final IssueResponseModel updatedIssue =
+          issue.copyWith(mediaList: mediaListModel);
+
+      return updatedIssue;
     } on PostgrestException catch (e) {
-      return Left(SupabaseFailure.fromDatabase(e));
+      throw (SupabaseFailure.fromDatabase(e));
     } on NetworkFailure catch (e) {
-      return Left(NetworkFailure(e.errMessage));
-    } catch (_) {
-      return Left(CustomFailure("حدث خطأ أثناء جلب بيانات العطل"));
+      throw (NetworkFailure(e.errMessage));
+    } catch (e) {
+      log(e.toString());
+      throw (CustomFailure("حدث خطأ أثناء جلب بيانات العطل"));
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:UpDown/core/theme/app_insets.dart';
-import 'package:UpDown/features/buildings/data/models/floor_model.dart';
+import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/floors_section/floor_list_tile.dart';
 import 'package:flutter/widgets.dart';
 

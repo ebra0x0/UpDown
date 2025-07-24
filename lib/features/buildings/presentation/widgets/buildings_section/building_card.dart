@@ -1,5 +1,5 @@
 import 'package:UpDown/core/utils/enums/app_route.dart';
-import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
+import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/building_card_content.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +10,7 @@ class BuildingCard extends StatelessWidget {
     required this.building,
   });
 
-  final BuildingSummaryModel building;
+  final BuildingModel building;
 
   @override
   Widget build(BuildContext context) {

@@ -4,14 +4,16 @@ import 'package:UpDown/core/router/strategies/new_account_redirect_strategy.dart
 import 'package:UpDown/core/router/strategies/unauthenticated_redirect_strategy.dart';
 import 'package:UpDown/core/router/strategies/unconfirmed_redirect_strategy.dart';
 import 'package:UpDown/core/utils/enums/app_route.dart';
-import 'package:UpDown/features/auth/manager/auth_cubit.dart';
+import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/features/auth/ui/cubit/auth_cubit.dart';
 import 'package:go_router/go_router.dart';
 
 class RedirectRouter {
   final Map<AuthStatus, AuthRedirectStrategy> _authStrategies = {
     AuthStatus.authenticated: AuthenticatedRedirectStrategy(),
     AuthStatus.unAuthenticated: UnAuthenticatedRedirectStrategy(),
-    AuthStatus.newAccount: NewAccountRedirectStrategy(),
+    AuthStatus.error: UnAuthenticatedRedirectStrategy(),
+    AuthStatus.firstTime: NewAccountRedirectStrategy(),
     AuthStatus.unconfirmed: UnconfirmedRedirectStrategy(),
   };
 

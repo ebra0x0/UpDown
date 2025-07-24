@@ -1,6 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
 
-enum ContentStatus { initial, loading, loaded, error, empty }
+enum ContentStatus { initial, loading, loaded, error, empty, updated }
+
+enum AuthStatus {
+  initial,
+  loading,
+  authenticated,
+  unAuthenticated,
+  unconfirmed,
+  firstTime,
+  error
+}
 
 @JsonEnum(valueField: 'name')
 enum ElevatorStatus {

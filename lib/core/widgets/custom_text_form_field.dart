@@ -1,7 +1,7 @@
 import 'package:UpDown/core/theme/app_borders.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/extensions/ex_icon.dart';
+import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 
 import 'package:flutter/material.dart';
 

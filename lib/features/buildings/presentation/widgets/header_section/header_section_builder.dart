@@ -5,8 +5,8 @@ import 'package:UpDown/features/buildings/presentation/widgets/header_section/he
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:UpDown/core/widgets/screen_echo.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
-import 'package:UpDown/features/buildings/presentation/manager/building_details_cubit/building_details_cubit.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/building_details_cubit/building_details_cubit.dart';
+import 'package:UpDown/core/theme/app_skeleton.dart';
 
 class BuildingDetailsHeaderSectionBuilder extends StatelessWidget {
   const BuildingDetailsHeaderSectionBuilder({
@@ -22,15 +22,17 @@ class BuildingDetailsHeaderSectionBuilder extends StatelessWidget {
               child: ScreenEcho(message: state.errorMsg!));
         }
         return SliverPadding(
-            padding: AppInsets.h8,
-            sliver: Skeletonizer.sliver(
-              enabled: state.status == ContentStatus.loading,
-              child: BuildingDetailsHeaderSection(
-                building: state.status == ContentStatus.loaded
-                    ? state.building!
-                    : BuildingModel.empty(),
-              ),
-            ));
+          padding: AppInsets.h8,
+          sliver: AppSkeletonizer(
+            isSliver: true,
+            enabled: state.status == ContentStatus.loading,
+            child: BuildingDetailsHeaderSection(
+              building: state.status == ContentStatus.loaded
+                  ? state.building!
+                  : BuildingModel.empty(),
+            ),
+          ),
+        );
       },
     );
   }

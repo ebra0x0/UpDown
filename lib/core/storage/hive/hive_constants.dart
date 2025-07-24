@@ -1,25 +1,25 @@
 abstract class HiveConstants {
   // Boxes
-  static const String settingsBox = 'settings';
+  static const String authBox = 'auth';
   static const String profileBox = 'profile';
+  static const String settingsBox = 'settings';
   static const String buildingsBox = 'buildings';
   static const String elevatorsBox = 'elevators';
   static const String issuesBox = 'issues';
 
-  // keys
-  // Settings
+  // Auth key
+  static const String authStateKey = 'auth_state';
+
+  // Profile keys
+  static const String profileKey = 'profile';
+  // Buildings keys
+  static const String buildingsKey = 'buildings';
+  // Elevators keys
+  static const String elevatorsKey = 'elevators';
+  // Issues keys
+  static const String issuesKey = 'issues';
+
+  // Settings keys
   static const String settingsThemeKey = 'theme';
   static const String settingsLanguageKey = 'language';
-
-  // Profile
-  static const String profileUserDataKey = 'user_data';
-
-  // Buildings
-  static const String buildingsKey = 'buildings';
-
-  // Elevators
-  static const String elevatorsKey = 'elevators';
-
-  // Issues
-  static const String issuesKey = 'issues';
 }

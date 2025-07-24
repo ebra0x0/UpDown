@@ -177,4 +177,22 @@ class AppIcons {
     color: AppTheme.grey,
     size: 24.sp,
   );
+
+  static Icon settingsIcon = Icon(
+    Icons.settings_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon searchIcon = Icon(
+    Icons.search,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon offlineIcon = Icon(
+    Icons.wifi_off_rounded,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
 }

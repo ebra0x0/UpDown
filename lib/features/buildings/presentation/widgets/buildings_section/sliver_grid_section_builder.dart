@@ -1,11 +1,11 @@
+import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/widgets/screen_echo.dart';
-import 'package:UpDown/features/buildings/data/models/building_summary_model.dart';
-import 'package:UpDown/features/buildings/presentation/manager/buildings_cubit/buildings_cubit.dart';
+import 'package:UpDown/features/buildings/data/models/building_model.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/sliver_grid_section.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class BuildingsSliverGridSectionBuilder extends StatelessWidget {
   const BuildingsSliverGridSectionBuilder({
@@ -17,14 +17,21 @@ class BuildingsSliverGridSectionBuilder extends StatelessWidget {
     return BlocBuilder<BuildingsCubit, BuildingsState>(
         builder: (context, state) {
       if (state.status == ContentStatus.error) {
-        return SliverToBoxAdapter(child: ScreenEcho(message: state.errorMsg!));
+        return SliverToBoxAdapter(
+          child: ScreenEcho(message: state.errorMsg!),
+        );
+      } else if (state.status == ContentStatus.empty) {
+        return SliverToBoxAdapter(
+          child: ScreenEcho(message: "لا توجد مباني مسجلة حتى الآن"),
+        );
       }
-      return Skeletonizer.sliver(
+      return AppSkeletonizer(
         enabled: state.status == ContentStatus.loading,
+        isSliver: true,
         child: BuildingsSliverGridViewSection(
           buildings: state.status == ContentStatus.loaded
               ? state.buildings!
-              : List.generate(2, (_) => BuildingSummaryModel.empty()),
+              : List.generate(2, (_) => BuildingModel.empty()),
         ),
       );
     });
