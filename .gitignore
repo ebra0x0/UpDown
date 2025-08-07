@@ -15,6 +15,7 @@
 migrate_working_dir/
 devtools_options.yaml
 easycode.ignore
+package_rename_config.yaml
 
 # IntelliJ related
 *.iml

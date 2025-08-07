@@ -215,34 +215,34 @@ extension ReportStatusExtension on ReportStatus {
 }
 
 // Unit Name Extension
-extension UnitNameExtension on UnitName {
+extension UnitTypeExtension on UnitType {
   String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
-      case UnitName.engine:
+      case UnitType.engine:
         return local.unit_engine_name;
-      case UnitName.cabin:
+      case UnitType.cabin:
         return local.unit_cabin_name;
-      case UnitName.counter:
+      case UnitType.counter:
         return local.unit_counter_name;
-      case UnitName.wires:
+      case UnitType.wires:
         return local.unit_wires_name;
-      case UnitName.control:
+      case UnitType.control:
         return local.unit_control_name;
     }
   }
 
   String assetPath() {
     switch (this) {
-      case UnitName.engine:
+      case UnitType.engine:
         return AppAssets.engine;
-      case UnitName.cabin:
+      case UnitType.cabin:
         return AppAssets.cabin;
-      case UnitName.counter:
+      case UnitType.counter:
         return AppAssets.counter;
-      case UnitName.wires:
+      case UnitType.wires:
         return AppAssets.wires;
-      case UnitName.control:
+      case UnitType.control:
         return AppAssets.control;
     }
   }

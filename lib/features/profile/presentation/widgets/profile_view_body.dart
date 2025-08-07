@@ -23,13 +23,28 @@ import 'package:UpDown/core/theme/app_skeleton.dart';
 class ProfileViewBody extends StatelessWidget {
   const ProfileViewBody({super.key});
 
+  void updateAvatar(
+      ProfileState state, BuildContext context, String imagePath) async {
+    if (state.profile == null) return;
+    final ProfileRequestModel profileImageRequest = ProfileRequestModel(
+        name: state.profile!.name,
+        email: state.profile!.email,
+        address: state.profile!.address,
+        phone: state.profile!.phone,
+        imagePath: imagePath);
+    await context.read<ProfileCubit>().updateProfile(profileImageRequest);
+  }
+
   @override
   Widget build(BuildContext context) {
     final AuthCubit authCubit = context.watch<AuthCubit>();
 
     return BlocConsumer<ProfileCubit, ProfileState>(
+      listenWhen: (_, state) =>
+          state.status == ContentStatus.error ||
+          state.status == ContentStatus.updated,
       listener: (context, state) {
-        if (state.status == ContentStatus.error) {
+        if (state.status == ContentStatus.error && state.errorMsg != null) {
           showToast(
             context: context,
             message: state.errorMsg!,
@@ -44,34 +59,23 @@ class ProfileViewBody extends StatelessWidget {
           );
         }
       },
+      buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return CustomScrollView(slivers: [
           CustomSliverAppBar(
             title: "الملف الشخصي",
             isCenterTitle: false,
-            titleStyle: AppTextStyles.textStyle22,
           ),
           AppSkeletonizer(
             isSliver: true,
             enabled: state.status == ContentStatus.loading,
             child: SliverToBoxAdapter(
               child: AvatarPicker(
-                  image: state.status == ContentStatus.loaded
-                      ? state.profile!.imagePath
-                      : null,
-                  onImageSelected: (file) async {
-                    if (state.profile == null) return;
-                    final ProfileRequestModel profileImageRequest =
-                        ProfileRequestModel(
-                            name: state.profile!.name,
-                            email: state.profile!.email,
-                            address: state.profile!.address,
-                            phone: state.profile!.phone,
-                            imagePath: file.path);
-                    await context
-                        .read<ProfileCubit>()
-                        .updateProfile(profileImageRequest);
-                  }),
+                isLoading: state.status == ContentStatus.updating,
+                image: state.profile?.imagePath,
+                onImageSelected: (file) =>
+                    updateAvatar(state, context, file.path),
+              ),
             ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: 22.sp)),
@@ -94,7 +98,7 @@ class ProfileViewBody extends StatelessWidget {
               enabled: state.status == ContentStatus.loading,
               child: SliverToBoxAdapter(
                 child: PersonalInfoListSection(
-                  profile: state.status == ContentStatus.loaded
+                  profile: state.profile != null
                       ? state.profile!
                       : ProfileResponseModel.empty(),
                 ),

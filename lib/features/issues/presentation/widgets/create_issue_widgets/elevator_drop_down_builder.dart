@@ -2,7 +2,7 @@ import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/utils/model/drop_down_model.dart';
 
 import 'package:UpDown/core/widgets/custom_drop_down.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_summary_response_model.dart';
+import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +18,8 @@ class ElevatorDropDownBuilder extends StatelessWidget {
       builder: (context, state) {
         final bool isCreating = state.status == CreateIssueStatus.loading;
         // final CreateIssueCubit cubit = context.read<CreateIssueCubit>();
-        final List<ElevatorSummaryResponseModel>? elevators = state.elevators;
-        final ElevatorSummaryResponseModel? selectedElevator = state.elevator;
+        final List<ElevatorModel>? elevators = state.elevators;
+        final ElevatorModel? selectedElevator = state.elevator;
 
         final dropDownList = elevators
                 ?.map((e) => DropDownModel(
@@ -30,9 +30,7 @@ class ElevatorDropDownBuilder extends StatelessWidget {
             [];
 
         final matchValue = dropDownList.cast<DropDownModel?>().firstWhere(
-              (e) =>
-                  (e!.value as ElevatorSummaryResponseModel).id ==
-                  selectedElevator?.id,
+              (e) => (e!.value as ElevatorModel).id == selectedElevator?.id,
               orElse: () => null,
             );
 

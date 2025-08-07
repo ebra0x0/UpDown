@@ -4,7 +4,6 @@ import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_radius.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/core/utils/constants/validators/media_validator.dart';
 import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/core/utils/helper/media_picker_service.dart';
 import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';

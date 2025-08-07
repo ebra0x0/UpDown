@@ -12,7 +12,7 @@ class BuildingDetailsCubit extends Cubit<BuildingDetailsState> {
 
   BuildingDetailsCubit(this._repo) : super(BuildingDetailsState());
 
-  void listenToBuilding({required String buildingId}) async {
+  void emitStreamBuilding({required String buildingId}) async {
     if (state.status == ContentStatus.loading || _streamSubscription != null) {
       return;
     }

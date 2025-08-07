@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:UpDown/core/utils/helper/check_file_size.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:path/path.dart' as path;
@@ -28,14 +29,8 @@ abstract class MediaCompressor {
     return '${tempDir.path}/${fileName}_compressed$extension';
   }
 
-  Future<bool> checkFileSize(String inputPath) async {
-    final file = File(inputPath);
-    if (!await file.exists()) {
-      throw Exception('File does not exist');
-    }
-    final fileSizeMB =
-        (await file.length()) / (1024 * 1024); // تحويل إلى ميجابايت
-    return fileSizeMB <= maxFileSizeMB;
+  Future<bool> isFileSizeValid(String inputPath) async {
+    return await checkFileSize(inputPath, maxFileSizeMB);
   }
 }
 
@@ -53,7 +48,7 @@ class ImageCompressorService extends MediaCompressor {
   Future<String> compress(String inputPath) async {
     try {
       // فحص حجم الملف
-      final isValidSize = await checkFileSize(inputPath);
+      final isValidSize = await isFileSizeValid(inputPath);
       if (!isValidSize) {
         throw Exception('File is too large');
       }
@@ -102,7 +97,7 @@ class VideoCompressorService extends MediaCompressor {
   Future<String> compress(String inputPath) async {
     try {
       // فحص حجم الملف
-      final isValidSize = await checkFileSize(inputPath);
+      final isValidSize = await isFileSizeValid(inputPath);
       if (!isValidSize) {
         throw Exception('File is too large');
       }

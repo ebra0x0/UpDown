@@ -1,4 +1,4 @@
-import 'package:UpDown/core/network/api_service.dart';
+import 'package:UpDown/core/network/api/api_service.dart';
 import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
 
@@ -8,7 +8,7 @@ class ProfileRemoteDataSource {
   ProfileRemoteDataSource(this._apiService);
 
   Stream<ProfileResponseModel?> get() {
-    return _apiService.fetchProfile().map((json) {
+    return _apiService.streamProfile().map((json) {
       if (json == null) {
         return null;
       }

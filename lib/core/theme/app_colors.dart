@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 abstract class AppColors {
   // Light Theme Colors
@@ -43,7 +42,7 @@ abstract class AppColors {
         backgroundColor: lightScaffold,
         elevation: 0,
       ),
-      textTheme: GoogleFonts.notoKufiArabicTextTheme(),
+      fontFamily: "NotoKufiArabic",
       colorScheme: const ColorScheme.light(
         primary: lightPrimary,
         secondary: lightSurface,
@@ -69,10 +68,7 @@ abstract class AppColors {
         backgroundColor: darkScaffold,
         elevation: 0,
       ),
-      textTheme: GoogleFonts.notoKufiArabicTextTheme().apply(
-        bodyColor: darkWhite,
-        displayColor: darkWhite,
-      ),
+      fontFamily: "NotoKufiArabic",
       colorScheme: const ColorScheme.dark(
         primary: darkPrimary,
         secondary: darkBackground,

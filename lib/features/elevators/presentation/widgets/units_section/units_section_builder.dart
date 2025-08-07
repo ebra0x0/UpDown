@@ -1,8 +1,8 @@
+import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/widgets/screen_echo.dart';
-import 'package:UpDown/features/elevators/data/models/unit_model.dart';
-import 'package:UpDown/features/elevators/presentation/manager/elevator_units_cubit/elevator_units_cubit.dart';
-import 'package:UpDown/features/elevators/presentation/widgets/units_section/units_sliver_section.dart';
+import 'package:UpDown/core/widgets/header_section.dart';
+import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
+import 'package:UpDown/features/elevators/presentation/widgets/units_section/units_section.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:UpDown/core/theme/app_skeleton.dart';
@@ -14,23 +14,27 @@ class SliverUnitsSectionBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ElevatorUnitsCubit, ElevatorUnitsState>(
-      builder: (context, state) {
-        if (state.status == ContentStatus.error) {
-          return SliverToBoxAdapter(
-            child: ScreenEcho(message: state.errorMsg!),
-          );
-        }
-
-        return AppSkeletonizer(
+    return BlocBuilder<ElevatorDetailsCubit, ElevatorDetailsState>(
+        buildWhen: (previous, current) => previous.status != current.status,
+        builder: (context, state) {
+          final units = state.elevator?.units ?? [];
+          return AppSkeletonizer(
             isSliver: true,
             enabled: state.status == ContentStatus.loading,
-            child: ElevatorDetailsUnitSection(
-              units: state.status == ContentStatus.loaded
-                  ? state.units!
-                  : List.generate(5, (_) => UnitModel.empty()),
-            ));
-      },
-    );
+            child: SliverList(
+                delegate: SliverChildListDelegate([
+              Visibility(
+                visible: units.isNotEmpty,
+                child: HeaderSection(
+                  title: "الوحدات",
+                  titleStyle: AppTextStyles.textStyle18,
+                ),
+              ),
+              UnitsSection(
+                units: units,
+              ),
+            ])),
+          );
+        });
   }
 }

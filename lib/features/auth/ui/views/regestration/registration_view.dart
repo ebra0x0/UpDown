@@ -18,11 +18,6 @@ class RegistrationView extends StatelessWidget {
               context: context,
               message: "تم انشاء الحساب , تابع رسائل بريدك لتفعيل الحساب",
               type: ToastType.success);
-        } else if (state.status == AuthStatus.error) {
-          showToast(
-              context: context,
-              message: state.errorMsg!,
-              type: ToastType.error);
         }
       },
       child: Scaffold(

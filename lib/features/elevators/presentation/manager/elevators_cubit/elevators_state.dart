@@ -3,7 +3,7 @@ part of 'elevators_cubit.dart';
 class ElevatorsState {
   final ContentStatus status;
   final String? errorMsg;
-  final List<ElevatorSummaryResponseModel>? elevators;
+  final List<ElevatorModel>? elevators;
 
   ElevatorsState({
     this.status = ContentStatus.initial,
@@ -14,7 +14,7 @@ class ElevatorsState {
   ElevatorsState copyWith({
     ContentStatus? status,
     String? errorMsg,
-    List<ElevatorSummaryResponseModel>? elevators,
+    List<ElevatorModel>? elevators,
   }) {
     return ElevatorsState(
       status: status ?? this.status,

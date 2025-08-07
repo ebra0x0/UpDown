@@ -12,9 +12,8 @@ import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/card_tile.dart';
 import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
-import 'package:UpDown/features/issues/data/models/issue_summary_response_model.dart';
+import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
-import 'package:UpDown/core/widgets/screen_echo.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:UpDown/core/theme/app_skeleton.dart';
@@ -29,15 +28,8 @@ class SliverActiveIssueBuilder extends StatelessWidget {
     return SliverPadding(
         padding: AppInsets.h8,
         sliver: BlocBuilder<IssuesCubit, IssuesState>(
+          buildWhen: (previous, current) => previous.status != current.status,
           builder: (context, state) {
-            if (state.status == ContentStatus.error) {
-              return SliverToBoxAdapter(
-                child: ScreenEcho(message: state.errorMsg!),
-              );
-            } else if (state.status == ContentStatus.empty) {
-              return SliverToBoxAdapter(child: null);
-            }
-
             return AppSkeletonizer(
               isSliver: true,
               enabled: state.status == ContentStatus.loading,
@@ -53,7 +45,7 @@ class SliverActiveIssueBuilder extends StatelessWidget {
 }
 
 class ActiveIssueCardTile extends StatelessWidget {
-  final IssueSummaryResponseModel activeIssue;
+  final IssueResponseModel activeIssue;
 
   const ActiveIssueCardTile({
     super.key,

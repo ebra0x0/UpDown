@@ -10,15 +10,12 @@ import 'package:UpDown/features/auth/ui/views/regestration/registration_view.dar
 import 'package:UpDown/features/buildings/presentation/cubits/building_details_cubit/building_details_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/views/building_details_view.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
-import 'package:UpDown/features/elevators/presentation/manager/elevator_units_cubit/elevator_units_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/views/elevator_details_view.dart';
 import 'package:UpDown/features/home/presentation/views/home_view.dart';
+import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/issues/presentation/manager/issue_details_cubit/issue_details_cubit.dart';
 import 'package:UpDown/features/issues/presentation/views/create_issue_view.dart';
 import 'package:UpDown/features/issues/presentation/views/issue_view.dart';
-import 'package:UpDown/features/profile/data/sources/local/local.dart';
-import 'package:UpDown/features/profile/data/sources/remote/remote.dart';
-import 'package:UpDown/features/profile/data/repos/profile_repo.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
 import 'package:UpDown/features/profile/presentation/views/profile_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
@@ -66,17 +63,17 @@ class RouteConfig {
         StatefulShellBranch(routes: [
           GoRoute(
             path: AppRoute.createIssue.path,
-            builder: (context, state) => const CreateIssueView(),
+            builder: (context, state) => BlocProvider(
+              create: (context) => CreateIssueCubit(getIt(), getIt()),
+              child: const CreateIssueView(),
+            ),
           ),
         ]),
         StatefulShellBranch(routes: [
           GoRoute(
             path: AppRoute.profile.path,
             builder: (context, state) => BlocProvider(
-                create: (context) => ProfileCubit(ProfileRepo(
-                      ProfileLocalDataSource(),
-                      ProfileRemoteDataSource(getIt()),
-                    )),
+                create: (context) => getIt<ProfileCubit>(),
                 child: const ProfileView()),
           ),
         ]),
@@ -110,15 +107,8 @@ class RouteConfig {
     return GoRoute(
         path: "${AppRoute.elevator.path}/:id",
         builder: (context, state) {
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => ElevatorDetailsCubit(getIt()),
-              ),
-              BlocProvider(
-                create: (context) => ElevatorUnitsCubit(getIt()),
-              ),
-            ],
+          return BlocProvider(
+            create: (context) => ElevatorDetailsCubit(getIt()),
             child: ElevatorDetailsView(
               elevatorId: state.pathParameters['id'] as String,
             ),

@@ -13,6 +13,9 @@ class CreateIssueBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<CreateIssueCubit, CreateIssueState>(
+      listenWhen: (context, state) =>
+          state.status == CreateIssueStatus.success ||
+          state.status == CreateIssueStatus.error,
       listener: (context, state) {
         if (state.status == CreateIssueStatus.success) {
           showToast(

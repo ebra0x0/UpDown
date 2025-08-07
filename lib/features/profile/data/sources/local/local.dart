@@ -3,20 +3,55 @@ import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
 import 'package:hive/hive.dart';
 
 class ProfileLocalDataSource {
-  late LazyBox<ProfileResponseModel> _profileBox;
+  static const _boxName = HiveConstants.profileBox;
+  static const _profileKey = HiveConstants.profileKey;
 
-  ProfileLocalDataSource() {
-    _init();
+  Future<LazyBox<ProfileResponseModel>> _getBox() async {
+    try {
+      if (!Hive.isBoxOpen(_boxName)) {
+        return await Hive.openLazyBox<ProfileResponseModel>(_boxName);
+      }
+      return Hive.lazyBox<ProfileResponseModel>(_boxName);
+    } catch (e) {
+      throw ('Failed to open profile box: $e');
+    }
   }
-  void _init() {
-    _profileBox = Hive.lazyBox<ProfileResponseModel>(HiveConstants.profileBox);
+
+  Future<ProfileResponseModel?> get() async {
+    try {
+      final box = await _getBox();
+      return await box.get(_profileKey);
+    } catch (e) {
+      throw ('Failed to get profile: $e');
+    }
   }
 
-  Future<ProfileResponseModel?> get() async =>
-      await _profileBox.get(HiveConstants.profileKey);
+  Future<void> save(ProfileResponseModel profile) async {
+    try {
+      final box = await _getBox();
+      await box.put(_profileKey, profile);
+    } catch (e) {
+      throw ('Failed to save profile: $e');
+    }
+  }
 
-  Future<void> save(ProfileResponseModel profile) async =>
-      await _profileBox.put(HiveConstants.profileKey, profile);
+  Future<void> clear() async {
+    try {
+      final box = await _getBox();
+      await box.clear();
+    } catch (e) {
+      throw ('Failed to clear profile: $e');
+    }
+  }
 
-  Future<void> clear() async => await _profileBox.clear();
+  Future<void> closeBox() async {
+    try {
+      if (Hive.isBoxOpen(_boxName)) {
+        final box = Hive.lazyBox<ProfileResponseModel>(_boxName);
+        await box.close();
+      }
+    } catch (e) {
+      throw ('Failed to close profile box: $e');
+    }
+  }
 }

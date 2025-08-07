@@ -13,16 +13,21 @@ class BuildingsCubit extends Cubit<BuildingsState> {
 
   StreamSubscription? _streamSubscription;
 
-  Set<BuildingModel> buildings = {};
-
-  void listenToBuildings() async {
+  void emitStreamBuildings() async {
     if (state.status == ContentStatus.loading || _streamSubscription != null) {
       return;
     }
 
-    emit(state.copyWith(status: ContentStatus.loading));
+    emit(state.copyWith(
+      status: ContentStatus.loading,
+      buildings: List.generate(
+        2,
+        (_) => BuildingModel.empty(),
+      ),
+    ));
 
     _streamSubscription = _repo.getAll().listen((stream) {
+      if (isClosed) return;
       stream.fold(
         (e) => emit(state.copyWith(
             status: ContentStatus.error, errorMsg: e.errMessage)),
@@ -31,14 +36,12 @@ class BuildingsCubit extends Cubit<BuildingsState> {
             emit(state.copyWith(status: ContentStatus.empty));
             return;
           }
-          buildings.addAll(res);
           emit(state.copyWith(status: ContentStatus.loaded, buildings: res));
         },
       );
     }, onError: (e) {
-      if (state.buildings != null) {
-        return;
-      }
+      if (isClosed) return;
+      if (state.buildings != null) return;
       emit(state.copyWith(
           status: ContentStatus.error, errorMsg: "تعذر تحميل المباني"));
     });

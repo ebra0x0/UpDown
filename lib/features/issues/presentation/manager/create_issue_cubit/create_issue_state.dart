@@ -14,8 +14,8 @@ class CreateIssueState {
   final String? error;
   final List<MediaRequestModel> mediaList;
   final BuildingModel? building;
-  final ElevatorSummaryResponseModel? elevator;
-  final List<ElevatorSummaryResponseModel>? elevators;
+  final ElevatorModel? elevator;
+  final List<ElevatorModel>? elevators;
   final IssueType? issueType;
   final String? description;
 
@@ -52,8 +52,8 @@ class CreateIssueState {
     String? error,
     List<MediaRequestModel>? mediaList,
     BuildingModel? building,
-    ElevatorSummaryResponseModel? elevator,
-    List<ElevatorSummaryResponseModel>? elevators,
+    ElevatorModel? elevator,
+    List<ElevatorModel>? elevators,
     IssueType? issueType,
     String? description,
   }) {

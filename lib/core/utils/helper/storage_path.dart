@@ -1,4 +1,4 @@
-import 'package:UpDown/core/network/api_constants.dart';
+import 'package:UpDown/core/network/api/api_constants.dart';
 import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
 
 class StoragePath {

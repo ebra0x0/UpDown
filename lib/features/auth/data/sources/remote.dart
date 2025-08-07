@@ -1,4 +1,4 @@
-import 'package:UpDown/core/network/api_service.dart';
+import 'package:UpDown/core/network/api/api_service.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/auth/data/model/auth_request_model.dart';
 import 'package:UpDown/features/auth/data/model/auth_response_model.dart';
@@ -20,19 +20,20 @@ class AuthRemoteDataSource {
 
       // Session Expired
       if (updatedRes.session!.isExpired) {
-        final Session? refreshedSession =
-            await refreshSession(updatedRes.session!.refreshToken!);
+        try {
+          final Session? refreshedSession =
+              await refreshSession(updatedRes.session!.refreshToken!);
 
-        if (refreshedSession == null) {
-          return updatedRes.copyWith(
-            status: AuthStatus.unAuthenticated,
-            session: null,
-            user: null,
-          );
-        }
-
-        updatedRes = updatedRes.copyWith(
-            session: refreshedSession, user: refreshedSession.user);
+          if (refreshedSession == null) {
+            return updatedRes.copyWith(
+              status: AuthStatus.unAuthenticated,
+              session: null,
+              user: null,
+            );
+          }
+          updatedRes = updatedRes.copyWith(
+              session: refreshedSession, user: refreshedSession.user);
+        } catch (_) {}
       }
 
       // Email Not Confirmed

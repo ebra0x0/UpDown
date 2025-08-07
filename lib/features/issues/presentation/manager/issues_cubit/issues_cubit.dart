@@ -1,6 +1,8 @@
+import 'dart:async';
+import 'dart:developer';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/helper/sort_list.dart';
-import 'package:UpDown/features/issues/data/models/issue_summary_response_model.dart';
+import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,124 +12,120 @@ class IssuesCubit extends Cubit<IssuesState> {
   IssuesCubit(this._repo) : super(IssuesState());
 
   final IssuesRepo _repo;
-  final Set<IssueSummaryResponseModel> _issues = {};
+  StreamSubscription? _streamAllSubscription;
+  StreamSubscription? _streamBuildingSubscription;
+  StreamSubscription? _streamElevatorSubscription;
 
-  Future<void> fetchAllActive() async {
-    if (state.status == ContentStatus.loading) return;
-
-    emit(state.copyWith(status: ContentStatus.loading));
-
-    // get the exist issues if already loaded
-    if (_issues.isNotEmpty) {
-      emit(state.copyWith(
-          status: ContentStatus.loaded, issues: _issues.toList()));
+  void emitStreamAllActive() {
+    if (state.status == ContentStatus.loading ||
+        _streamAllSubscription != null) {
       return;
     }
 
-    // fetch new issues
-    final result = await _repo.fetchAllActiveIssues();
-
-    result.fold(
-      (errMsg) => emit(state.copyWith(
-          status: ContentStatus.error, errorMsg: errMsg.errMessage)),
-      (issues) {
-        if (issues == null) {
-          emit(state.copyWith(status: ContentStatus.empty));
-          return;
-        }
-        _issues.addAll(issues);
-        emit(state.copyWith(
-          status: ContentStatus.loaded,
-          issues: _issues.toList(),
-        ));
-      },
+    emit(
+      state.copyWith(
+        status: ContentStatus.loading,
+        issues: List.generate(
+          2,
+          (_) => IssueResponseModel.empty(),
+        ),
+      ),
     );
+
+    _streamAllSubscription = _repo.streamAllActiveIssues().listen((stream) {
+      if (isClosed) return;
+      stream.fold(
+        (errMsg) => emit(state.copyWith(
+          status: ContentStatus.error,
+          errorMsg: errMsg.errMessage,
+        )),
+        (issues) {
+          final List<IssueResponseModel> orderedIssues =
+              sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
+          emit(state.copyWith(
+            status: ContentStatus.loaded,
+            issues: orderedIssues,
+          ));
+        },
+      );
+    }, onError: (e) {
+      log(e.toString());
+      if (isClosed) return;
+      if (state.issues != null) return;
+      emit(state.copyWith(
+        status: ContentStatus.error,
+        errorMsg: e.toString(),
+      ));
+    });
   }
 
-  Future<void> fetchAllActiveForBuilding(String buildingId) async {
-    if (state.status == ContentStatus.loading) return;
+  void emitStreamAllActiveForBuilding(String buildingId) {
+    if (state.status == ContentStatus.loading ||
+        _streamBuildingSubscription != null) {
+      return;
+    }
 
     emit(state.copyWith(status: ContentStatus.loading));
 
-    // get the exist issues if already loaded
-    if (_issues.isNotEmpty) {
-      final List<IssueSummaryResponseModel> existingIssues =
-          _issues.where((issue) => issue.buildingId == buildingId).toList();
-
-      if (existingIssues.isNotEmpty) {
-        // Sort the issues by date
-        final List<IssueSummaryResponseModel> sortedIssues = sortList(
-            existingIssues, (issue) => issue.updatedAt ?? issue.createdAt);
-
-        emit(
-            state.copyWith(status: ContentStatus.loaded, issues: sortedIssues));
-        return;
-      }
-    }
-
-    // fetch new issues
-    final result = await _repo.fetchActiveIssuesForBuilding(buildingId);
-
-    result.fold(
-      (errMsg) => emit(state.copyWith(
-          status: ContentStatus.error, errorMsg: errMsg.errMessage)),
-      (issues) {
-        if (issues == null) {
-          emit(state.copyWith(status: ContentStatus.empty));
-          return;
-        }
-        _issues.addAll(issues);
-        final List<IssueSummaryResponseModel> orderedIssues =
-            sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
-
-        emit(state.copyWith(
-          status: ContentStatus.loaded,
-          issues: orderedIssues,
-        ));
-      },
-    );
+    _streamBuildingSubscription =
+        _repo.streamBuildingActiveIssues(buildingId).listen((stream) {
+      if (isClosed) return;
+      stream.fold(
+        (errMsg) => emit(state.copyWith(
+            status: ContentStatus.error, errorMsg: errMsg.errMessage)),
+        (issues) {
+          final List<IssueResponseModel> orderedIssues =
+              sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
+          emit(state.copyWith(
+            status: ContentStatus.loaded,
+            issues: orderedIssues,
+          ));
+        },
+      );
+    }, onError: (e) {
+      log(e.toString());
+      if (isClosed) return;
+      if (state.issues != null) return;
+      emit(state.copyWith(status: ContentStatus.error, errorMsg: e.toString()));
+    });
   }
 
-  Future<void> fetchAllActiveForElevator(String elevatorId) async {
-    if (state.status == ContentStatus.loading) return;
+  void emitStreamAllActiveForElevator(String elevatorId) {
+    if (state.status == ContentStatus.loading ||
+        _streamElevatorSubscription != null) {
+      return;
+    }
 
     emit(state.copyWith(status: ContentStatus.loading));
 
-    // get the exist issues if already loaded
-    if (_issues.isNotEmpty) {
-      final List<IssueSummaryResponseModel> existingIssues =
-          _issues.where((issue) => issue.elevatorId == elevatorId).toList();
+    _streamElevatorSubscription =
+        _repo.streamElevatorActiveIssues(elevatorId).listen((stream) {
+      if (isClosed) return;
+      stream.fold(
+        (errMsg) => emit(state.copyWith(
+            status: ContentStatus.error, errorMsg: errMsg.errMessage)),
+        (issues) {
+          final List<IssueResponseModel> orderedIssues =
+              sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
+          emit(state.copyWith(
+            status: ContentStatus.loaded,
+            issues: orderedIssues,
+          ));
+        },
+      );
+    }, onError: (e) {
+      log(e.toString());
+      if (isClosed) return;
+      if (state.issues != null) return;
+      emit(state.copyWith(status: ContentStatus.error, errorMsg: e.toString()));
+    });
+  }
 
-      if (existingIssues.isNotEmpty) {
-        final List<IssueSummaryResponseModel> orderedIssues = sortList(
-            existingIssues, (issue) => issue.updatedAt ?? issue.createdAt);
-        emit(state.copyWith(
-          status: ContentStatus.loaded,
-          issues: orderedIssues,
-        ));
-        return;
-      }
-    }
-
-    // fetch new issues
-    final result = await _repo.fetchActiveIssuesForElevator(elevatorId);
-
-    result.fold(
-      (errMsg) => emit(state.copyWith(
-          status: ContentStatus.error, errorMsg: errMsg.errMessage)),
-      (issues) {
-        if (issues == null) {
-          emit(state.copyWith(status: ContentStatus.empty));
-          return;
-        }
-        _issues.addAll(issues);
-        final List<IssueSummaryResponseModel> orderedIssues =
-            sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
-        emit(state.copyWith(
-          status: ContentStatus.loaded,
-          issues: orderedIssues,
-        ));
-      },
-    );
+  @override
+  Future<void> close() {
+    _streamAllSubscription?.cancel();
+    _streamBuildingSubscription?.cancel();
+    _streamElevatorSubscription?.cancel();
+    return super.close();
   }
 }

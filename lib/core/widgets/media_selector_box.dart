@@ -23,6 +23,18 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
   bool isLoading = false;
   final MediaPickerService _pickerService = MediaPickerService();
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.media?.file != null) {
+      if (widget.media!.type == MediaType.image) {
+        _image = widget.media!.file;
+      } else {
+        _video = widget.media!.file;
+      }
+    }
+  }
+
   Future<void> pickMedia() async {
     if (isLoading || widget.isDisabled) return;
 
@@ -32,17 +44,12 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
 
     try {
       final (file, type) = await _pickerService.pickMedia();
-      if (file == null || type == null || !mounted) return;
-
-      // check file size
-      final limitSizeMB = type == MediaType.image ? 5 : 20;
-      final isAcceptable = await MediaValidator.isFileSizeAcceptable(
-        file: file,
-        limitSizeMB: limitSizeMB,
-        context: context,
-      );
-
-      if (!isAcceptable || !mounted) return;
+      if (file == null || type == null) {
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
 
       setState(() {
         if (type == MediaType.image) {
@@ -52,6 +59,7 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
           _image = null;
           _video = file;
         }
+        isLoading = false;
       });
 
       widget.onMediaSelected(file, type);
@@ -102,10 +110,5 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                         visible: _image == null,
                         child: AppIcons.addMediaIcon,
                       )));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

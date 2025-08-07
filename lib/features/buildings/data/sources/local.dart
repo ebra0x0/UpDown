@@ -3,38 +3,78 @@ import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:hive/hive.dart';
 
 class BuildingsLocalDataSource {
-  late LazyBox _buildingsBox;
+  static const _boxName = HiveConstants.buildingsBox;
 
-  BuildingsLocalDataSource() {
-    _init();
-  }
-
-  void _init() {
-    _buildingsBox = Hive.lazyBox<BuildingModel>(HiveConstants.buildingsBox);
+  Future<LazyBox<BuildingModel>> _getBox() async {
+    try {
+      if (!Hive.isBoxOpen(_boxName)) {
+        return await Hive.openLazyBox<BuildingModel>(_boxName);
+      }
+      return Hive.lazyBox<BuildingModel>(_boxName);
+    } catch (e) {
+      throw ('Failed to open buildings box: $e');
+    }
   }
 
   Future<BuildingModel?> get(String buildingId) async {
-    return await _buildingsBox.get(buildingId);
+    try {
+      final box = await _getBox();
+      return await box.get(buildingId);
+    } catch (e) {
+      throw ('Failed to get building $buildingId: $e');
+    }
   }
 
   Future<List<BuildingModel>> getAll() async {
-    final futures =
-        _buildingsBox.keys.map((k) => _buildingsBox.get(k)).toList();
-    final buildings = await Future.wait(futures);
-    return buildings.cast<BuildingModel>();
+    try {
+      final box = await _getBox();
+      final keys = box.keys.cast<String>();
+      final futures = keys.map((key) => box.get(key)).toList();
+      final buildings = await Future.wait(futures);
+      return buildings.whereType<BuildingModel>().toList();
+    } catch (e) {
+      throw ('Failed to get all buildings: $e');
+    }
   }
 
   Future<void> save(BuildingModel building) async {
-    await _buildingsBox.put(building.id, building);
+    try {
+      final box = await _getBox();
+      await box.put(building.id, building);
+    } catch (e) {
+      throw ('Failed to save building ${building.id}: $e');
+    }
   }
 
   Future<void> saveAll(List<BuildingModel> buildings) async {
-    await Future.wait(
-      buildings.map((building) => _buildingsBox.put(building.id, building)),
-    );
+    try {
+      final box = await _getBox();
+
+      await Future.wait(
+        buildings.map((building) => box.put(building.id, building)),
+      );
+    } catch (e) {
+      throw ('Failed to save buildings: $e');
+    }
   }
 
   Future<void> clear() async {
-    await _buildingsBox.clear();
+    try {
+      final box = await _getBox();
+      await box.clear();
+    } catch (e) {
+      throw ('Failed to clear buildings: $e');
+    }
+  }
+
+  Future<void> closeBox() async {
+    try {
+      if (Hive.isBoxOpen(_boxName)) {
+        final box = Hive.lazyBox<BuildingModel>(_boxName);
+        await box.close();
+      }
+    } catch (e) {
+      throw ('Failed to close buildings box: $e');
+    }
   }
 }

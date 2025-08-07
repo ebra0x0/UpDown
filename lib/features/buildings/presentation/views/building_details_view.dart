@@ -18,10 +18,9 @@ class _BuildingDetailsViewState extends State<BuildingDetailsView> {
     super.initState();
     context
         .read<BuildingDetailsCubit>()
-        .listenToBuilding(buildingId: widget.buildingId);
-    context
-        .read<ElevatorsCubit>()
-        .callByBuilding(buildingId: widget.buildingId);
+        .emitStreamBuilding(buildingId: widget.buildingId);
+
+    context.read<ElevatorsCubit>().emitStreamByBuilding(widget.buildingId);
   }
 
   @override

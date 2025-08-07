@@ -12,7 +12,7 @@ class RedirectRouter {
   final Map<AuthStatus, AuthRedirectStrategy> _authStrategies = {
     AuthStatus.authenticated: AuthenticatedRedirectStrategy(),
     AuthStatus.unAuthenticated: UnAuthenticatedRedirectStrategy(),
-    AuthStatus.error: UnAuthenticatedRedirectStrategy(),
+    // AuthStatus.error: UnAuthenticatedRedirectStrategy(),
     AuthStatus.firstTime: NewAccountRedirectStrategy(),
     AuthStatus.unconfirmed: UnconfirmedRedirectStrategy(),
   };

@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/core/network/api/api_failure.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/auth/data/model/auth_request_model.dart';
@@ -7,113 +7,115 @@ import 'package:UpDown/features/auth/data/model/auth_response_model.dart';
 import 'package:UpDown/features/auth/data/sources/local.dart';
 import 'package:UpDown/features/auth/data/sources/remote.dart';
 import 'package:either_dart/either.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AuthRepo {
   final AuthLocalDataSource _localeDataSource;
-  final AuthRemoteDataSource _remoteDataSource;
-  final NetworkManager _networkManager;
+  final AuthRemoteDataSource _remote;
+  final NetworkManager _netManager;
+  bool get isConnected => _netManager.isConnected;
 
-  AuthRepo(
-      this._localeDataSource, this._remoteDataSource, this._networkManager);
+  AuthRepo(this._localeDataSource, this._remote, this._netManager);
 
   Stream<AuthResponseModel> getAuthState() async* {
     try {
-      final localAuth = await _localeDataSource.get();
-      yield localAuth ??
+      final local = await _localeDataSource.get();
+      yield local ??
           AuthResponseModel(
               status: AuthStatus.unAuthenticated, session: null, user: null);
 
-      yield* _networkManager.connectionStream.asyncExpand(
-        (isConnected) => _handleConnectionChange(isConnected, localAuth),
-      );
-    } on Failure catch (e) {
-      log(e.toString());
-      yield AuthResponseModel(
-          status: AuthStatus.error, session: null, user: null);
-    } catch (e) {
-      log(e.toString());
-      yield AuthResponseModel(
-          status: AuthStatus.error, session: null, user: null);
+      yield* Rx.merge([
+        if (isConnected) _handleConnectionChange(true, local),
+        _netManager.connectionStream
+            .distinct()
+            .where((connected) => connected)
+            .asyncExpand((_) => _handleConnectionChange(true, local))
+      ]);
+    } on Failure catch (_) {
+      yield AuthResponseModel(status: AuthStatus.error);
+    } catch (_) {
+      yield AuthResponseModel(status: AuthStatus.error);
     }
   }
 
   Stream<AuthResponseModel> _handleConnectionChange(
       bool isConnected, AuthResponseModel? lastKnown) async* {
-    if (!isConnected) {
-      yield lastKnown ??
-          AuthResponseModel(
-              status: AuthStatus.unAuthenticated, session: null, user: null);
-      return;
-    }
+    if (!isConnected) return;
 
-    final stream = _remoteDataSource.getAuthState();
-    await for (final authState in stream) {
-      await _localeDataSource.save(authState);
-      yield authState;
-    }
+    final remoteStream = _remote.getAuthState().handleError((e) {
+      Future.delayed(Duration(seconds: 5), () {
+        _remote.getAuthState();
+      });
+    });
+
+    yield* remoteStream.asyncMap((remoteRes) async {
+      try {
+        await _localeDataSource.save(remoteRes);
+        return remoteRes;
+      } catch (e) {
+        return remoteRes;
+      }
+    });
   }
 
   Future<Either<Failure, AuthResponseModel>> signUp(
       {required AuthRequestModel credentials}) async {
     try {
-      final res = await _remoteDataSource.signUp(credentials: credentials);
+      final res = await _remote.signUp(credentials: credentials);
       return Right(res);
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {
-      log(e.toString());
-      return Left(CustomFailure((e as Failure).errMessage));
+      return Left(CustomFailure("غير قادر على انشاء الحساب."));
     }
   }
 
   Future<Either<Failure, AuthResponseModel>> signInWithPassword(
       {required AuthRequestModel credentials}) async {
     try {
-      final res =
-          await _remoteDataSource.signInWithPassword(credentials: credentials);
+      final res = await _remote.signInWithPassword(credentials: credentials);
       return Right(res);
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {
-      log(e.toString());
-      return Left(CustomFailure((e as Failure).errMessage));
+      return Left(CustomFailure("غير قادر على تسجيل الدخول."));
     }
   }
 
   Future<Either<Failure, void>> signOut() async {
     try {
-      final res = await _remoteDataSource.signOut();
+      final res = await _remote.signOut();
       await _localeDataSource.clear();
       return Right(res);
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {
       log(e.toString());
-      return Left(CustomFailure((e as Failure).errMessage));
+      return Left(CustomFailure("تعذر تسجيل الخروج."));
     }
   }
 
   Future<Either<Failure, void>> resetPassword({required String email}) async {
     try {
-      final res = await _remoteDataSource.resetPassword(email: email);
+      final res = await _remote.resetPassword(email: email);
       return Right(res);
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {
       log(e.toString());
-      return Left(CustomFailure((e as Failure).errMessage));
+      return Left(CustomFailure("تعذر اعادة تعيين كلمة المرور."));
     }
   }
 
   Future<Either<Failure, void>> sendConfirmationEmail(String email) async {
     try {
-      final res = await _remoteDataSource.sendConfirmationEmail(email);
+      final res = await _remote.sendConfirmationEmail(email);
       return Right(res);
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {
       log(e.toString());
-      return Left(CustomFailure((e as Failure).errMessage));
+      return Left(CustomFailure("تعذر ارسال رابط التفعيل."));
     }
   }
 }

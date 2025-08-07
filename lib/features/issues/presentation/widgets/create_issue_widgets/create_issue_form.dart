@@ -22,9 +22,7 @@ class _CreateIssueFormState extends State<CreateIssueForm> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       FocusScope.of(context).unfocus();
-      if (!context.mounted) return;
       await context.read<CreateIssueCubit>().create();
-      descriptionController.clear();
     } else {
       setState(() {
         autoValidateMode = AutovalidateMode.always;
@@ -38,7 +36,6 @@ class _CreateIssueFormState extends State<CreateIssueForm> {
         key: formKey,
         autovalidateMode: autoValidateMode,
         child: CreateIssueFormBody(
-          descriptionController: descriptionController,
           submit: submit,
         ));
   }

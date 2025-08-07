@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:rxdart/rxdart.dart';
 
 class NetworkManager {
-  static final _controller = StreamController<bool>.broadcast();
+  static final _controller = BehaviorSubject<bool>.seeded(true);
   static StreamSubscription? _internetSubscription;
   bool isConnected = true;
   static bool isInitialized = false;
-  final InternetConnectionChecker _connectionChecker;
+  final InternetConnection _connectionChecker;
 
   NetworkManager(this._connectionChecker) {
+    log("NetworkManager initialized");
     init();
   }
 
@@ -18,11 +20,11 @@ class NetworkManager {
   void init() {
     if (isInitialized) return;
     try {
+      _controller.add(isConnected);
       isInitialized = true;
-      _checkInitialConnection();
       _internetSubscription = _connectionChecker.onStatusChange.listen(
         (status) {
-          isConnected = status == InternetConnectionStatus.connected;
+          isConnected = status == InternetStatus.connected;
           _controller.add(isConnected);
         },
         onError: (e) => log('NetworkManager error: $e'),
@@ -31,11 +33,6 @@ class NetworkManager {
       log('Failed to initialize NetworkManager: $e');
       rethrow;
     }
-  }
-
-  Future<void> _checkInitialConnection() async {
-    isConnected = await _connectionChecker.hasConnection;
-    _controller.add(isConnected);
   }
 
   static void dispose() async {

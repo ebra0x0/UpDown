@@ -1,50 +1,74 @@
-import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/core/network/api/api_failure.dart';
+import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
 import 'package:UpDown/features/profile/data/sources/local/local.dart';
 import 'package:UpDown/features/profile/data/sources/remote/remote.dart';
 import 'package:either_dart/either.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileRepo {
   final ProfileLocalDataSource _localDataSource;
   final ProfileRemoteDataSource _remoteDataSource;
+  final NetworkManager _netManager;
+  bool get isConnected => _netManager.isConnected;
 
   ProfileRepo(
     this._localDataSource,
     this._remoteDataSource,
+    this._netManager,
   );
 
   Stream<Either<Failure, ProfileResponseModel?>> call() async* {
     try {
-      // Read data from local first
-      final ProfileResponseModel? localProfile = await _localDataSource.get();
+      final ProfileResponseModel? local = await _localDataSource.get();
 
-      if (localProfile != null) {
-        yield Right(localProfile);
+      if (local != null) {
+        yield Right(local);
       }
 
-      // Read data from remote
-      yield* _remoteDataSource.get().asyncMap((remoteRes) async {
-        // If remote is null, clear local
+      yield* Rx.merge([
+        if (isConnected) _handleConnectionChange(true, local),
+        _netManager.connectionStream
+            .distinct()
+            .where((connected) => connected)
+            .asyncExpand((_) => _handleConnectionChange(true, local))
+      ]);
+    } on Failure catch (e) {
+      yield Left(e);
+    } catch (e) {
+      yield Left(CustomFailure("تعذر تحميل الملف الشخصي."));
+    }
+  }
+
+  Stream<Either<Failure, ProfileResponseModel?>> _handleConnectionChange(
+      bool isConnected, ProfileResponseModel? localProfile) async* {
+    if (!isConnected) return;
+
+    final remoteStream = _remoteDataSource.get().handleError((error) {
+      if (error is RealtimeSubscribeException) {
+        Future.delayed(Duration(seconds: 5), () {
+          _remoteDataSource.get();
+        });
+      }
+    });
+    yield* remoteStream.asyncMap((remoteRes) async {
+      try {
         if (remoteRes == null) {
           await _localDataSource.clear();
           return const Right(null);
         }
 
-        // Compare remote with local
         if (remoteRes != localProfile) {
-          // Update local
           await _localDataSource.save(remoteRes);
-          return Right(remoteRes);
         }
-        // If remote is same as local, return local
-        return Right(localProfile);
-      });
-    } on Failure catch (e) {
-      yield Left(e);
-    } catch (e) {
-      yield Left(CustomFailure((e as Failure).errMessage));
-    }
+
+        return Right(remoteRes);
+      } catch (e) {
+        return Right(remoteRes);
+      }
+    });
   }
 
   Future<Either<Failure, void>> update(ProfileRequestModel profile) async {
@@ -55,7 +79,7 @@ class ProfileRepo {
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {
-      return Left(CustomFailure((e as Failure).errMessage));
+      return Left(CustomFailure("تعذر تحديث الملف الشخصي."));
     }
   }
 }

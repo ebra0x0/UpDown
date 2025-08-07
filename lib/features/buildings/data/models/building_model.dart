@@ -1,108 +1,62 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:UpDown/core/storage/hive/hive_type_ids.dart';
 
+part 'building_model.freezed.dart';
 part 'building_model.g.dart';
 
-@HiveType(typeId: 3)
-@JsonSerializable(createToJson: false)
-class BuildingModel {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  @JsonKey(name: 'owner_id')
-  final String ownerId;
-  @HiveField(2)
-  final String name;
-  @HiveField(3)
-  final String address;
-  @HiveField(4)
-  @JsonKey(name: 'elevators_count')
-  final int elevatorsCount;
-  @HiveField(5)
-  @JsonKey(name: 'reports_count')
-  final int reportsCount;
-  @HiveField(6)
-  @JsonKey(name: 'created_at')
-  final DateTime createdAt;
-  @HiveField(7)
-  @JsonKey(name: 'updated_at')
-  final DateTime? updatedAt;
-
-  // Debendincies
-  @HiveField(8)
-  final List<FloorModel> floors;
-
-  BuildingModel({
-    required this.id,
-    required this.ownerId,
-    required this.name,
-    required this.address,
-    required this.floors,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.elevatorsCount,
-    required this.reportsCount,
-  });
+@freezed
+@HiveType(typeId: HiveTypeIds.buildingModel)
+class BuildingModel with _$BuildingModel {
+  const factory BuildingModel({
+    @HiveField(0) required String id,
+    @HiveField(1) @JsonKey(name: 'owner_id') required String ownerId,
+    @HiveField(2) required String name,
+    @HiveField(3) required String address,
+    @HiveField(4) @JsonKey(name: 'elevators_count') required int elevatorsCount,
+    @HiveField(5) @JsonKey(name: 'reports_count') required int reportsCount,
+    @HiveField(6) @JsonKey(name: 'created_at') required DateTime createdAt,
+    @HiveField(7) @JsonKey(name: 'updated_at') DateTime? updatedAt,
+    @HiveField(8) required List<FloorModel> floors,
+  }) = _BuildingModel;
 
   factory BuildingModel.fromJson(Map<String, dynamic> json) =>
       _$BuildingModelFromJson(json);
 
-  factory BuildingModel.empty() {
-    return BuildingModel(
-      id: '',
-      ownerId: '',
-      name: 'اسم المبنى',
-      address: 'عنوان المبنى',
-      floors: [],
-      createdAt: DateTime.now(),
-      updatedAt: null,
-      elevatorsCount: 0,
-      reportsCount: 0,
-    );
-  }
+  factory BuildingModel.empty() => BuildingModel(
+        id: '',
+        ownerId: '',
+        name: 'اسم المبنى',
+        address: 'عنوان المبنى',
+        floors: [],
+        createdAt: DateTime.now(),
+        updatedAt: null,
+        elevatorsCount: 0,
+        reportsCount: 0,
+      );
 }
 
-@HiveType(typeId: 2)
-@JsonSerializable(createToJson: false)
-class FloorModel {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  @JsonKey(name: 'building_id')
-  final String buildingId;
-  @HiveField(2)
-  @JsonKey(name: 'floor_number')
-  final int floorNumber;
-  @HiveField(3)
-  @JsonKey(name: 'is_closed')
-  final bool isClosed;
-  @HiveField(4)
-  @JsonKey(name: 'created_at')
-  final DateTime createdAt;
-  @HiveField(5)
-  @JsonKey(name: 'updated_at')
-  final DateTime updatedAt;
-
-  const FloorModel({
-    required this.id,
-    required this.buildingId,
-    required this.floorNumber,
-    required this.isClosed,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+@HiveType(typeId: HiveTypeIds.floorModel)
+class FloorModel with _$FloorModel {
+  const factory FloorModel({
+    @HiveField(0) required String id,
+    @HiveField(1) @JsonKey(name: 'building_id') required String buildingId,
+    @HiveField(2) @JsonKey(name: 'floor_number') required int floorNumber,
+    @HiveField(3) @JsonKey(name: 'is_closed') required bool isClosed,
+    @HiveField(4) @JsonKey(name: 'created_at') required DateTime createdAt,
+    @HiveField(5) @JsonKey(name: 'updated_at') required DateTime updatedAt,
+  }) = _FloorModel;
 
   factory FloorModel.fromJson(Map<String, dynamic> json) =>
       _$FloorModelFromJson(json);
 
-  factory FloorModel.empty() {
-    return FloorModel(
-      id: '12345678',
-      buildingId: '',
-      floorNumber: 0,
-      isClosed: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-  }
+  factory FloorModel.empty() => FloorModel(
+        id: '12345678',
+        buildingId: '',
+        floorNumber: 0,
+        isClosed: false,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
 }

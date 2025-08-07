@@ -17,9 +17,8 @@ class AppTheme {
     return _theme == ThemeMode.dark;
   }
 
-  static ThemeData get themeData {
-    return _isDark ? AppColors.darkTheme : AppColors.lightTheme;
-  }
+  static ThemeData get themeData =>
+      _isDark ? AppColors.darkTheme : AppColors.lightTheme;
 
   static Color get primary =>
       _isDark ? AppColors.darkPrimary : AppColors.lightPrimary;

@@ -3,7 +3,7 @@ part of 'issues_cubit.dart';
 class IssuesState {
   final ContentStatus status;
   final String? errorMsg;
-  final List<IssueSummaryResponseModel>? issues;
+  final List<IssueResponseModel>? issues;
 
   const IssuesState({
     this.status = ContentStatus.initial,
@@ -14,7 +14,7 @@ class IssuesState {
   IssuesState copyWith({
     ContentStatus? status,
     String? errorMsg,
-    List<IssueSummaryResponseModel>? issues,
+    List<IssueResponseModel>? issues,
   }) {
     return IssuesState(
       status: status ?? this.status,

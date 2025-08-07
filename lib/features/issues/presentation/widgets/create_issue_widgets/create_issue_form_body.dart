@@ -15,11 +15,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateIssueFormBody extends StatefulWidget {
-  final TextEditingController descriptionController;
   final Future<void> Function(BuildContext context) submit;
   const CreateIssueFormBody({
     super.key,
-    required this.descriptionController,
     required this.submit,
   });
 
@@ -57,7 +55,8 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
             const SizedBox(height: 16),
             CustomTextFormField(
               isEnabled: state.status != CreateIssueStatus.loading,
-              controller: widget.descriptionController,
+              controller:
+                  context.read<CreateIssueCubit>().descriptionController,
               keyType: TextInputType.multiline,
               labelText: "وصف العطل",
               maxLines: 6,
@@ -83,11 +82,5 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    widget.descriptionController.dispose();
-    super.dispose();
   }
 }

@@ -8,15 +8,18 @@ import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/bubble_status.dart';
 import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
-import 'package:UpDown/features/elevators/data/models/elevator_summary_response_model.dart';
 import 'package:UpDown/core/widgets/card_tile.dart';
+import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
+import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class ElevatorCard extends StatelessWidget {
-  const ElevatorCard({super.key, required this.elevator});
+  const ElevatorCard(
+      {super.key, required this.elevator, required this.activeIssue});
 
-  final ElevatorSummaryResponseModel elevator;
+  final ElevatorModel elevator;
+  final IssueResponseModel? activeIssue;
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +30,11 @@ class ElevatorCard extends StatelessWidget {
       },
       title: _ElevatorCardHeader(name: elevator.name, status: elevator.status),
       body: Text(
-        elevator.status.description(context, elevator.activeIssue?.issueType),
+        elevator.status.description(context, activeIssue?.issueType),
         style: AppTextStyles.textStyle14,
       ),
       footer: _ElevatorCardFooter(
-          issueType: elevator.activeIssue?.issueType,
-          issueDate: elevator.activeIssue?.issueDate),
+          issueType: activeIssue?.issueType, issueDate: activeIssue?.createdAt),
       trailing: BubbleIcon(
         icon: elevator.status.icon.copyWith(
           color: elevator.status.color,

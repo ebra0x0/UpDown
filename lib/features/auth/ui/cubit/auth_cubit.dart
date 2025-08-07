@@ -25,8 +25,10 @@ class AuthCubit extends Cubit<AuthState> {
           status: authRes.status,
           session: authRes.session,
           user: authRes.user));
-    }, onError: (e) {
-      emit(state.copyWith(status: AuthStatus.error));
+    }, onError: (_) {
+      if (isClosed) return;
+      emit(state.copyWith(
+          status: AuthStatus.error, errorMsg: "هناك مشاكل في الاتصال"));
     });
   }
 

@@ -1,53 +1,48 @@
+import 'package:UpDown/features/elevators/data/models/units/unit_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
+import 'package:UpDown/core/storage/hive/hive_type_ids.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 
-class ElevatorModel {
-  final String id;
-  final String buildingId;
-  final String name;
-  final ElevatorStatus status;
-  final DateTime? lastMaintenanceDate;
-  final DateTime? nextMaintenanceDate;
-  final int capacity;
-  final List<int> floorsServed;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
+part 'elevator_model.freezed.dart';
+part 'elevator_model.g.dart';
 
-  ElevatorModel({
-    required this.id,
-    required this.buildingId,
-    required this.name,
-    required this.status,
-    required this.capacity,
-    required this.floorsServed,
-    required this.lastMaintenanceDate,
-    required this.nextMaintenanceDate,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+@HiveType(typeId: HiveTypeIds.elevatorModel)
+class ElevatorModel with _$ElevatorModel {
+  const factory ElevatorModel({
+    @HiveField(0) required String id,
+    @HiveField(1) @JsonKey(name: 'building_id') required String buildingId,
+    @HiveField(2) required String name,
+    @HiveField(3) required ElevatorStatus status,
+    @HiveField(4)
+    @JsonKey(name: 'last_maintenance_date')
+    DateTime? lastMaintenanceDate,
+    @HiveField(5)
+    @JsonKey(name: 'next_maintenance_date')
+    DateTime? nextMaintenanceDate,
+    @HiveField(6) required int capacity,
+    @HiveField(7)
+    @JsonKey(name: 'floors_served')
+    required List<int> floorsServed,
+    @HiveField(8) required List<UnitModel> units,
+    @HiveField(9) @JsonKey(name: 'created_at') required DateTime createdAt,
+    @HiveField(10) @JsonKey(name: 'updated_at') DateTime? updatedAt,
+  }) = _ElevatorModel;
 
-  factory ElevatorModel.fromJson(Map<String, dynamic> json) {
-    return ElevatorModel(
-      id: json['id'],
-      buildingId: json['building_id'],
-      name: json['name'],
-      capacity: json['capacity'],
-      status: ElevatorStatus.values.firstWhere((e) => e.name == json['status']),
-      lastMaintenanceDate: json['last_maintenance_date'] != null
-          ? DateTime.parse(json['last_maintenance_date'])
-          : null,
-      floorsServed: (json['floors_served'] as List<dynamic>).cast<int>(),
-      nextMaintenanceDate: json['next_maintenance_date'] != null
-          ? DateTime.parse(json['next_maintenance_date'])
-          : null,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: json['updated_at'] == null
-          ? null
-          : DateTime.parse(json['updated_at']),
-    );
-  }
+  factory ElevatorModel.fromJson(Map<String, dynamic> json) =>
+      _$ElevatorModelFromJson(json);
 
-  // Update Elevator
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'elevator_name': name,
-      };
+  factory ElevatorModel.empty() => ElevatorModel(
+        id: '1234567',
+        buildingId: '0',
+        name: 'اسم المصعد',
+        status: ElevatorStatus.working,
+        lastMaintenanceDate: null,
+        nextMaintenanceDate: null,
+        capacity: 2,
+        floorsServed: <int>[],
+        units: <UnitModel>[],
+        createdAt: DateTime(2025, 1, 1),
+      );
 }

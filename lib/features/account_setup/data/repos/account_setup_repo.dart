@@ -1,7 +1,5 @@
-import 'dart:developer';
-
-import 'package:UpDown/core/network/api_failure.dart';
-import 'package:UpDown/core/network/api_service.dart';
+import 'package:UpDown/core/network/api/api_failure.dart';
+import 'package:UpDown/core/network/api/api_service.dart';
 import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:either_dart/either.dart';
 
@@ -16,8 +14,7 @@ class AccountSetupRepo {
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {
-      log(e.toString());
-      return Left(CustomFailure((e as Failure).errMessage));
+      return Left(CustomFailure("تعذر انشااء الملف الشخصي."));
     }
   }
 }

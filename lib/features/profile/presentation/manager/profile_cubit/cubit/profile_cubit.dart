@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
 import 'package:UpDown/features/profile/data/repos/profile_repo.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'profile_state.dart';
@@ -16,7 +16,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit(this._repo) : super(ProfileState());
 
   Future<void> call() async {
-    if (state.status == ContentStatus.loading) return;
+    if (state.status == ContentStatus.loading || _streamSubscription != null) {
+      return;
+    }
 
     if (_profile != null) {
       emit(state.copyWith(
@@ -29,6 +31,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(state.copyWith(status: ContentStatus.loading));
 
     _streamSubscription = _repo.call().listen((profileRes) {
+      if (isClosed) return;
       profileRes.fold((failure) {
         emit(state.copyWith(
           status: ContentStatus.error,
@@ -39,22 +42,33 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(state.copyWith(
           status: ContentStatus.loaded,
           profile: data,
+          errorMsg: null,
         ));
       });
     }, onError: (e) {
-      emit(state.copyWith(
-        status: ContentStatus.error,
-        errorMsg: "تعذر تحميل بيانات الملف الشخصي",
-      ));
+      log(e.toString());
+      if (state.status != ContentStatus.error) {
+        emit(state.copyWith(
+          status: ContentStatus.error,
+          errorMsg: "تعذر تحميل بيانات الملف الشخصي",
+        ));
+      }
     });
   }
 
   Future<void> updateProfile(ProfileRequestModel profile) async {
-    await _repo.update(profile).fold(
-        (f) => emit(state.copyWith(isAvatarUpdateFailed: true)), (success) {
+    if (state.status == ContentStatus.updating) return;
+    emit(state.copyWith(status: ContentStatus.updating));
+    final res = await _repo.update(profile);
+    if (isClosed) return;
+    res.fold(
+        (f) => emit(
+              state.copyWith(
+                  status: ContentStatus.error, errorMsg: f.errMessage),
+            ), (success) {
       emit(state.copyWith(
         status: ContentStatus.updated,
-        isAvatarUpdateFailed: false,
+        errorMsg: null,
       ));
     });
   }

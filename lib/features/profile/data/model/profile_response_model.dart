@@ -1,3 +1,4 @@
+import 'package:UpDown/core/storage/hive/hive_type_ids.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
@@ -5,7 +6,7 @@ part 'profile_response_model.g.dart';
 part 'profile_response_model.freezed.dart';
 
 @freezed
-@HiveType(typeId: 1)
+@HiveType(typeId: HiveTypeIds.profileModel)
 class ProfileResponseModel with _$ProfileResponseModel {
   const factory ProfileResponseModel({
     @HiveField(0) required String id,

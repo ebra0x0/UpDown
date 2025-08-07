@@ -1,4 +1,4 @@
-import 'package:UpDown/core/network/api_failure.dart';
+import 'package:UpDown/core/network/api/api_failure.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:retry/retry.dart';
 import 'dart:async';
@@ -8,7 +8,7 @@ Future<T> safeRequest<T>({
   required Future<T> Function() request,
   required NetworkManager networkManager,
   Duration timeoutDuration = const Duration(seconds: 6),
-  String errorMessage = "تعذر الاتصال",
+  String errorMessage = "هناك مشكلة في الاتصال",
 }) async {
   final retryOptions = RetryOptions(
     maxAttempts: 3,

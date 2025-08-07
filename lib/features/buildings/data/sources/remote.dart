@@ -1,4 +1,4 @@
-import 'package:UpDown/core/network/api_service.dart';
+import 'package:UpDown/core/network/api/api_service.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 
 class BuildingsRemoteDataSource {
@@ -8,19 +8,15 @@ class BuildingsRemoteDataSource {
 
   Stream<BuildingModel?> get(String buildingId) {
     return _api.streamBuildingDetails(buildingId: buildingId).map((json) {
-      if (json != null) {
-        final model = BuildingModel.fromJson(json);
-        return model;
-      } else {
-        return null;
-      }
+      if (json == null) return null;
+      return BuildingModel.fromJson(json);
     });
   }
 
   Stream<List<BuildingModel>> getAll() {
-    return _api.streamUserBuildings().map((event) {
-      final buildings = event.map((b) => BuildingModel.fromJson(b)).toList();
-      return buildings;
+    return _api.streamUserBuildings().map((json) {
+      if (json.isEmpty) return [];
+      return json.map((b) => BuildingModel.fromJson(b)).toList();
     });
   }
 }
