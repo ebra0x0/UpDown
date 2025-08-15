@@ -14,19 +14,28 @@ class ElevatorDetailsViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        BlocBuilder<ElevatorDetailsCubit, ElevatorDetailsState>(
-          buildWhen: (previous, current) => previous.status != current.status,
-          builder: (context, state) {
-            return CustomSliverAppBar(
-              title: state.elevator?.name ?? "اسم المصعد",
-              isLoading: state.status == ContentStatus.loading,
-            );
-          },
-        ),
+        SliverAppBarBuilder(),
         SliverActiveIssueBuilder(),
         SliverToBoxAdapter(child: SizedBox(height: 24.sp)),
         SliverUnitsSectionBuilder(),
       ],
+    );
+  }
+}
+
+class SliverAppBarBuilder extends StatelessWidget {
+  const SliverAppBarBuilder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ElevatorDetailsCubit, ElevatorDetailsState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        return CustomSliverAppBar(
+          title: state.elevator?.name ?? "اسم المصعد",
+          isLoading: state.status == ContentStatus.loading,
+        );
+      },
     );
   }
 }

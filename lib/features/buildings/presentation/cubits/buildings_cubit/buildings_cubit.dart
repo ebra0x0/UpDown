@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/data/repo/buildings_repo.dart';
@@ -33,9 +32,10 @@ class BuildingsCubit extends Cubit<BuildingsState> {
             status: ContentStatus.error, errorMsg: e.errMessage)),
         (res) {
           if (res.isEmpty) {
-            emit(state.copyWith(status: ContentStatus.empty));
+            emit(state.copyWith(status: ContentStatus.empty, buildings: []));
             return;
           }
+
           emit(state.copyWith(status: ContentStatus.loaded, buildings: res));
         },
       );

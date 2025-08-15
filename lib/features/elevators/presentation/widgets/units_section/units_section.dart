@@ -1,3 +1,4 @@
+import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/features/elevators/data/models/units/unit_model.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/units_section/unit_card.dart';
 import 'package:flutter/widgets.dart';
@@ -20,6 +21,7 @@ class UnitsSection extends StatelessWidget {
     return SizedBox(
       height: 170.sp,
       child: ListView(
+        padding: AppInsets.h8,
         scrollDirection: Axis.horizontal,
         children: buildUnitWidgets(),
       ),

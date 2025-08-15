@@ -14,7 +14,7 @@ class BuildingsSliverGridSectionBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BuildingsCubit, BuildingsState>(
-        buildWhen: (previous, current) => previous.status != current.status,
+        buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
           if (state.status == ContentStatus.error) {
             return SliverToBoxAdapter(

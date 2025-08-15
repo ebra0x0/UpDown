@@ -1,3 +1,4 @@
+import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/widgets/header_section.dart';
@@ -18,22 +19,25 @@ class SliverUnitsSectionBuilder extends StatelessWidget {
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
           final units = state.elevator?.units ?? [];
-          return AppSkeletonizer(
-            isSliver: true,
-            enabled: state.status == ContentStatus.loading,
-            child: SliverList(
-                delegate: SliverChildListDelegate([
-              Visibility(
-                visible: units.isNotEmpty,
-                child: HeaderSection(
-                  title: "الوحدات",
-                  titleStyle: AppTextStyles.textStyle18,
+          return SliverPadding(
+            padding: AppInsets.h8,
+            sliver: AppSkeletonizer(
+              isSliver: true,
+              enabled: state.status == ContentStatus.loading,
+              child: SliverList(
+                  delegate: SliverChildListDelegate([
+                Visibility(
+                  visible: units.isNotEmpty,
+                  child: HeaderSection(
+                    title: "الوحدات",
+                    titleStyle: AppTextStyles.textStyle18,
+                  ),
                 ),
-              ),
-              UnitsSection(
-                units: units,
-              ),
-            ])),
+                UnitsSection(
+                  units: units,
+                ),
+              ])),
+            ),
           );
         });
   }

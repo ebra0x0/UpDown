@@ -1,6 +1,7 @@
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_spacing.dart';
-import 'package:UpDown/core/theme/app_theme.dart';
+
+import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/bubble_status.dart';
 import 'package:UpDown/core/widgets/custom_list_tile.dart';
@@ -39,12 +40,12 @@ class FloorListTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BubbleStatus(color: AppTheme.red),
+            BubbleStatus(color: floor.status.color),
             AppIcons.forwardIcon,
           ],
         ),
       ),
-      title: "الدور ${floor.floorNumber == 0 ? "الأرضي" : floor.floorNumber}",
+      title: "الدور ${floor.number == 0 ? "الأرضي" : floor.number}",
     );
   }
 }

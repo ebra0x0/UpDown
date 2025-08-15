@@ -25,11 +25,24 @@ class HiveService {
   }
 
   static void _registerAdapters() {
+    // Profile adapters
     Hive.registerAdapter(ProfileResponseModelAdapter());
+    // Buildings adapters
     Hive.registerAdapter(BuildingModelAdapter());
+    // Floors adapters
     Hive.registerAdapter(FloorModelAdapter());
+    Hive.registerAdapter(FloorStatusAdapter());
+    // Doors adapters
+    Hive.registerAdapter(DoorModelAdapter());
+    Hive.registerAdapter(DoorStatusAdapter());
+    // Parts adapters
+    Hive.registerAdapter(PartModelAdapter());
+    Hive.registerAdapter(PartTypeAdapter());
+    Hive.registerAdapter(PartConditionAdapter());
+    // Elevators adapters
     Hive.registerAdapter(ElevatorModelAdapter());
     Hive.registerAdapter(ElevatorStatusAdapter());
+    // Units adapters
     Hive.registerAdapter(ControlModelAdapter());
     Hive.registerAdapter(BoardModelAdapter());
     Hive.registerAdapter(EngineModelAdapter());
@@ -39,10 +52,12 @@ class HiveService {
     Hive.registerAdapter(CounterModelAdapter());
     Hive.registerAdapter(UnitTypeAdapter());
     Hive.registerAdapter(UnitStatusAdapter());
+    // Issues adapters
     Hive.registerAdapter(IssueResponseModelAdapter());
     Hive.registerAdapter(IssueTypeAdapter());
     Hive.registerAdapter(IssuePriorityAdapter());
     Hive.registerAdapter(IssueStatusAdapter());
+    // Media adapters
     Hive.registerAdapter(MediaResponseModelAdapter());
     Hive.registerAdapter(MediaTypeAdapter());
   }

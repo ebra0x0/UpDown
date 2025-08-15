@@ -95,317 +95,383 @@ abstract class AppLocalizations {
     Locale('en')
   ];
 
-  /// No description provided for @elevator_working.
+  /// No description provided for @elevator_status_working.
   ///
   /// In en, this message translates to:
   /// **'Working'**
-  String get elevator_working;
+  String get elevator_status_working;
 
-  /// No description provided for @elevator_broken.
+  /// No description provided for @elevator_status_broken.
   ///
   /// In en, this message translates to:
   /// **'Broken'**
-  String get elevator_broken;
+  String get elevator_status_broken;
 
-  /// No description provided for @elevator_repair.
+  /// No description provided for @elevator_status_repair.
   ///
   /// In en, this message translates to:
   /// **'Under Repair'**
-  String get elevator_repair;
+  String get elevator_status_repair;
 
-  /// No description provided for @elevator_maintenance.
+  /// No description provided for @elevator_status_maintenance.
   ///
   /// In en, this message translates to:
   /// **'Under Maintenance'**
-  String get elevator_maintenance;
+  String get elevator_status_maintenance;
 
-  /// No description provided for @elevator_disabled.
+  /// No description provided for @elevator_status_disabled.
   ///
   /// In en, this message translates to:
   /// **'Disabled'**
-  String get elevator_disabled;
+  String get elevator_status_disabled;
 
-  /// No description provided for @elevatorWorkingDescription.
+  /// No description provided for @elevator_description_Working.
   ///
   /// In en, this message translates to:
   /// **'The elevator\'s working'**
-  String get elevatorWorkingDescription;
+  String get elevator_description_Working;
 
-  /// No description provided for @elevatorBrokenDescription.
+  /// No description provided for @elevator_description_Broken.
   ///
   /// In en, this message translates to:
   /// **'The elevator\'s broken and cannot be used'**
-  String get elevatorBrokenDescription;
+  String get elevator_description_Broken;
 
-  /// No description provided for @elevatorRepairDescription.
+  /// No description provided for @elevator_description_Repair.
   ///
   /// In en, this message translates to:
   /// **'The elevator\'s under repair'**
-  String get elevatorRepairDescription;
+  String get elevator_description_Repair;
 
-  /// No description provided for @elevatorMaintenanceDescription.
+  /// No description provided for @elevator_description_Maintenance.
   ///
   /// In en, this message translates to:
   /// **'The elevator\'s under maintenance'**
-  String get elevatorMaintenanceDescription;
+  String get elevator_description_Maintenance;
 
-  /// No description provided for @elevatorDisabledDescription.
+  /// No description provided for @elevator_description_Disabled.
   ///
   /// In en, this message translates to:
   /// **'The elevator\'s currently unavailable'**
-  String get elevatorDisabledDescription;
+  String get elevator_description_Disabled;
 
-  /// No description provided for @issueType_door_not_opening.
+  /// No description provided for @issue_type_door_not_opening.
   ///
   /// In en, this message translates to:
   /// **'Door Not Opening'**
-  String get issueType_door_not_opening;
+  String get issue_type_door_not_opening;
 
-  /// No description provided for @issueType_stuck_between_floors.
+  /// No description provided for @issue_type_stuck_between_floors.
   ///
   /// In en, this message translates to:
   /// **'Stuck Between Floors'**
-  String get issueType_stuck_between_floors;
+  String get issue_type_stuck_between_floors;
 
-  /// No description provided for @issueType_noise.
+  /// No description provided for @issue_type_noise.
   ///
   /// In en, this message translates to:
   /// **'Noise'**
-  String get issueType_noise;
+  String get issue_type_noise;
 
-  /// No description provided for @issueType_not_responding.
+  /// No description provided for @issue_type_not_responding.
   ///
   /// In en, this message translates to:
   /// **'Not Responding'**
-  String get issueType_not_responding;
+  String get issue_type_not_responding;
 
-  /// No description provided for @issueType_button_not_responding.
+  /// No description provided for @issue_type_button_not_responding.
   ///
   /// In en, this message translates to:
   /// **'Button Not Responding'**
-  String get issueType_button_not_responding;
+  String get issue_type_button_not_responding;
 
-  /// No description provided for @issueType_above_floor.
+  /// No description provided for @issue_type_above_floor.
   ///
   /// In en, this message translates to:
   /// **'Above Floor'**
-  String get issueType_above_floor;
+  String get issue_type_above_floor;
 
-  /// No description provided for @issueType_other.
+  /// No description provided for @issue_type_other.
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get issueType_other;
+  String get issue_type_other;
 
-  /// No description provided for @issueTypeDoorNotOpeningPriority.
+  /// No description provided for @issue_type_priority_DoorNotOpening.
   ///
   /// In en, this message translates to:
   /// **'Critical'**
-  String get issueTypeDoorNotOpeningPriority;
+  String get issue_type_priority_DoorNotOpening;
 
-  /// No description provided for @issueTypeStuckBetweenFloorsPriority.
+  /// No description provided for @issue_type_priority_StuckBetweenFloors.
   ///
   /// In en, this message translates to:
   /// **'Critical'**
-  String get issueTypeStuckBetweenFloorsPriority;
+  String get issue_type_priority_StuckBetweenFloors;
 
-  /// No description provided for @issueTypeNoisePriority.
+  /// No description provided for @issue_type_priority_Noise.
   ///
   /// In en, this message translates to:
   /// **'Low'**
-  String get issueTypeNoisePriority;
+  String get issue_type_priority_Noise;
 
-  /// No description provided for @issueTypeNotRespondingPriority.
+  /// No description provided for @issue_type_priority_NotResponding.
   ///
   /// In en, this message translates to:
   /// **'Critical'**
-  String get issueTypeNotRespondingPriority;
+  String get issue_type_priority_NotResponding;
 
-  /// No description provided for @issueTypeButtonNotRespondingPriority.
+  /// No description provided for @issue_type_priority_ButtonNotResponding.
   ///
   /// In en, this message translates to:
   /// **'Moderate'**
-  String get issueTypeButtonNotRespondingPriority;
+  String get issue_type_priority_ButtonNotResponding;
 
-  /// No description provided for @issueTypeAboveFloorPriority.
+  /// No description provided for @issue_type_priority_AboveFloor.
   ///
   /// In en, this message translates to:
   /// **'Critical'**
-  String get issueTypeAboveFloorPriority;
+  String get issue_type_priority_AboveFloor;
 
-  /// No description provided for @issueTypeOtherPriority.
+  /// No description provided for @issue_type_priority_Other.
   ///
   /// In en, this message translates to:
   /// **'Unknown'**
-  String get issueTypeOtherPriority;
+  String get issue_type_priority_Other;
 
-  /// No description provided for @issueStatus_not_fixed.
+  /// No description provided for @issue_status_not_fixed.
   ///
   /// In en, this message translates to:
   /// **'Not Fixed'**
-  String get issueStatus_not_fixed;
+  String get issue_status_not_fixed;
 
-  /// No description provided for @issueStatus_needs_parts.
+  /// No description provided for @issue_status_needs_parts.
   ///
   /// In en, this message translates to:
   /// **'Needs Parts'**
-  String get issueStatus_needs_parts;
+  String get issue_status_needs_parts;
 
-  /// No description provided for @issueStatus_escalated.
+  /// No description provided for @issue_status_escalated.
   ///
   /// In en, this message translates to:
   /// **'Escalated'**
-  String get issueStatus_escalated;
+  String get issue_status_escalated;
 
-  /// No description provided for @issueStatus_fixed.
+  /// No description provided for @issue_status_fixed.
   ///
   /// In en, this message translates to:
   /// **'Fixed'**
-  String get issueStatus_fixed;
+  String get issue_status_fixed;
 
-  /// No description provided for @issueStatusNotFixedDescription.
+  /// No description provided for @issue_description_NotFixed.
   ///
   /// In en, this message translates to:
   /// **'The issue has not been fixed yet'**
-  String get issueStatusNotFixedDescription;
+  String get issue_description_NotFixed;
 
-  /// No description provided for @issueStatusNeedsPartsDescription.
+  /// No description provided for @issue_description_NeedsParts.
   ///
   /// In en, this message translates to:
   /// **'The issue needs parts'**
-  String get issueStatusNeedsPartsDescription;
+  String get issue_description_NeedsParts;
 
-  /// No description provided for @issueStatusEscalatedDescription.
+  /// No description provided for @issue_description_Escalated.
   ///
   /// In en, this message translates to:
   /// **'The issue has been escalated to another technecian'**
-  String get issueStatusEscalatedDescription;
+  String get issue_description_Escalated;
 
-  /// No description provided for @issueStatusFixedDescription.
+  /// No description provided for @issue_description_Fixed.
   ///
   /// In en, this message translates to:
   /// **'The issue has been fixed'**
-  String get issueStatusFixedDescription;
+  String get issue_description_Fixed;
 
-  /// No description provided for @report_pending.
+  /// No description provided for @report_status_pending.
   ///
   /// In en, this message translates to:
   /// **'Pending'**
-  String get report_pending;
+  String get report_status_pending;
 
-  /// No description provided for @report_reported.
+  /// No description provided for @report_status_reported.
   ///
   /// In en, this message translates to:
   /// **'Reported'**
-  String get report_reported;
+  String get report_status_reported;
 
-  /// No description provided for @report_coming.
+  /// No description provided for @report_status_coming.
   ///
   /// In en, this message translates to:
   /// **'Coming'**
-  String get report_coming;
+  String get report_status_coming;
 
-  /// No description provided for @report_arrived.
+  /// No description provided for @report_status_arrived.
   ///
   /// In en, this message translates to:
   /// **'Arrived'**
-  String get report_arrived;
+  String get report_status_arrived;
 
-  /// No description provided for @report_in_progress.
+  /// No description provided for @report_status_in_progress.
   ///
   /// In en, this message translates to:
   /// **'In Progress'**
-  String get report_in_progress;
+  String get report_status_in_progress;
 
-  /// No description provided for @report_resolved.
+  /// No description provided for @report_status_resolved.
   ///
   /// In en, this message translates to:
   /// **'Resolved'**
-  String get report_resolved;
+  String get report_status_resolved;
 
-  /// No description provided for @reportPendingDescription.
+  /// No description provided for @report_description_Pending.
   ///
   /// In en, this message translates to:
   /// **'The report is pending and hasn\'t been handled yet'**
-  String get reportPendingDescription;
+  String get report_description_Pending;
 
-  /// No description provided for @reportReportedDescription.
+  /// No description provided for @report_description_Reported.
   ///
   /// In en, this message translates to:
   /// **'The issue has been reported'**
-  String get reportReportedDescription;
+  String get report_description_Reported;
 
-  /// No description provided for @reportComingDescription.
+  /// No description provided for @report_description_Coming.
   ///
   /// In en, this message translates to:
   /// **'The technecian\'s on the way'**
-  String get reportComingDescription;
+  String get report_description_Coming;
 
-  /// No description provided for @reportArrivedDescription.
+  /// No description provided for @report_description_Arrived.
   ///
   /// In en, this message translates to:
   /// **'The technician has arrived'**
-  String get reportArrivedDescription;
+  String get report_description_Arrived;
 
-  /// No description provided for @reportInProgressDescription.
+  /// No description provided for @report_description_InProgress.
   ///
   /// In en, this message translates to:
   /// **'In progress'**
-  String get reportInProgressDescription;
+  String get report_description_InProgress;
 
-  /// No description provided for @reportResolvedDescription.
+  /// No description provided for @report_description_Resolved.
   ///
   /// In en, this message translates to:
   /// **'The issue has been resolved'**
-  String get reportResolvedDescription;
+  String get report_description_Resolved;
 
-  /// No description provided for @unit_engine_name.
+  /// No description provided for @unit_name_engine.
   ///
   /// In en, this message translates to:
   /// **'Engine'**
-  String get unit_engine_name;
+  String get unit_name_engine;
 
-  /// No description provided for @unit_cabin_name.
+  /// No description provided for @unit_name_cabin.
   ///
   /// In en, this message translates to:
   /// **'Cabin'**
-  String get unit_cabin_name;
+  String get unit_name_cabin;
 
-  /// No description provided for @unit_counter_name.
+  /// No description provided for @unit_name_counter.
   ///
   /// In en, this message translates to:
   /// **'Counter'**
-  String get unit_counter_name;
+  String get unit_name_counter;
 
-  /// No description provided for @unit_wires_name.
+  /// No description provided for @unit_name_wires.
   ///
   /// In en, this message translates to:
   /// **'Wires'**
-  String get unit_wires_name;
+  String get unit_name_wires;
 
-  /// No description provided for @unit_control_name.
+  /// No description provided for @unit_name_control.
   ///
   /// In en, this message translates to:
   /// **'Control control'**
-  String get unit_control_name;
+  String get unit_name_control;
 
-  /// No description provided for @unit_active.
+  /// No description provided for @unit_status_active.
   ///
   /// In en, this message translates to:
   /// **'Active'**
-  String get unit_active;
+  String get unit_status_active;
 
-  /// No description provided for @unit_needs_maintenance.
+  /// No description provided for @unit_status_maintenance.
   ///
   /// In en, this message translates to:
   /// **'Needs Maintenance'**
-  String get unit_needs_maintenance;
+  String get unit_status_maintenance;
 
-  /// No description provided for @unit_out_of_service.
+  /// No description provided for @unit_status_out_of_service.
   ///
   /// In en, this message translates to:
   /// **'Out Of Service'**
-  String get unit_out_of_service;
+  String get unit_status_out_of_service;
+
+  /// No description provided for @unit_status_requires_replacement.
+  ///
+  /// In en, this message translates to:
+  /// **'Requires Replacement'**
+  String get unit_status_requires_replacement;
+
+  /// No description provided for @floor_status_accessible.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessible'**
+  String get floor_status_accessible;
+
+  /// No description provided for @floor_status_out_of_service.
+  ///
+  /// In en, this message translates to:
+  /// **'Out Of Service'**
+  String get floor_status_out_of_service;
+
+  /// No description provided for @floor_status_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get floor_status_closed;
+
+  /// No description provided for @floor_status_restricted.
+  ///
+  /// In en, this message translates to:
+  /// **'Restricted'**
+  String get floor_status_restricted;
+
+  /// No description provided for @part_type_door_lock.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock'**
+  String get part_type_door_lock;
+
+  /// No description provided for @part_type_door_pump.
+  ///
+  /// In en, this message translates to:
+  /// **'Pumb'**
+  String get part_type_door_pump;
+
+  /// No description provided for @part_type_door_spring.
+  ///
+  /// In en, this message translates to:
+  /// **'Spring'**
+  String get part_type_door_spring;
+
+  /// No description provided for @part_condition_good.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get part_condition_good;
+
+  /// No description provided for @part_condition_worn.
+  ///
+  /// In en, this message translates to:
+  /// **'Worn'**
+  String get part_condition_worn;
+
+  /// No description provided for @part_condition_broken.
+  ///
+  /// In en, this message translates to:
+  /// **'Broken'**
+  String get part_condition_broken;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

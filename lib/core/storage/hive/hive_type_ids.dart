@@ -5,6 +5,13 @@ abstract class HiveTypeIds {
   // Building type ids (31 to 50)
   static const int buildingModel = 31;
   static const int floorModel = 32;
+  static const int doorModel = 33;
+  static const int partModel = 34;
+  // Floor Enums
+  static const int floorStatusEnum = 35;
+  static const int doorStatusEnum = 36;
+  static const int partTypeEnum = 37;
+  static const int partConditionEnum = 38;
 
   // Elevator type ids (51 to 70)
   static const int elevatorModel = 51;

@@ -181,7 +181,6 @@ class IssuesRepo {
     });
 
     yield* remoteStream.asyncMap((remoteRes) async {
-      log(remoteRes.first.id.toString());
       try {
         if (remoteRes.isEmpty) {
           await _local.clear();

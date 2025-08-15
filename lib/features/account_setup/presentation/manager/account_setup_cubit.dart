@@ -1,7 +1,7 @@
+import 'dart:io';
 import 'package:UpDown/features/account_setup/data/repos/account_setup_repo.dart';
 import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 part 'account_setup_state.dart';
 
@@ -9,7 +9,7 @@ class AccountSetupCubit extends Cubit<AccountSetupState> {
   final AccountSetupRepo _repo;
   AccountSetupCubit(this._repo) : super(AccountSetupState());
 
-  void setAvatar(XFile avatar) {
+  void setAvatar(File avatar) {
     emit(state.copyWith(avatarPath: avatar.path));
   }
 

@@ -7,7 +7,7 @@ import 'package:UpDown/core/utils/model/media_models/media_response_model.dart';
 part 'issue_response_model.freezed.dart';
 part 'issue_response_model.g.dart';
 
-@freezed
+@Freezed(toJson: false)
 @HiveType(typeId: HiveTypeIds.issueModel)
 class IssueResponseModel with _$IssueResponseModel {
   const factory IssueResponseModel({
@@ -22,7 +22,7 @@ class IssueResponseModel with _$IssueResponseModel {
     @HiveField(8) @JsonKey(name: "issue_type") required IssueType issueType,
     @HiveField(9) @JsonKey(name: "media_urls") required List<String> mediaUrls,
     @HiveField(10)
-    @JsonKey(includeFromJson: false)
+    @JsonKey(name: "media_list")
     @Default([])
     List<MediaResponseModel> mediaList,
     @HiveField(11) required IssueStatus status,

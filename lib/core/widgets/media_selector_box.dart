@@ -7,6 +7,7 @@ class _MediaSelectorBox extends StatefulWidget {
     this.isDisabled = false,
     this.media,
   });
+
   final FormFieldState<File> field;
   final Function(File, MediaType) onMediaSelected;
   final bool isDisabled;
@@ -19,18 +20,18 @@ class _MediaSelectorBox extends StatefulWidget {
 class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
   File? _image;
   File? _video;
-
   bool isLoading = false;
   final MediaPickerService _pickerService = MediaPickerService();
 
   @override
   void initState() {
     super.initState();
-    if (widget.media?.file != null) {
-      if (widget.media!.type == MediaType.image) {
-        _image = widget.media!.file;
-      } else {
-        _video = widget.media!.file;
+    final media = widget.media;
+    if (media != null && media.file != null && media.file!.existsSync()) {
+      if (media.type == MediaType.image) {
+        _image = media.file;
+      } else if (media.type == MediaType.video) {
+        _video = media.file;
       }
     }
   }
@@ -43,27 +44,42 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
     });
 
     try {
-      final (file, type) = await _pickerService.pickMedia();
-      if (file == null || type == null) {
-        setState(() {
-          isLoading = false;
-        });
+      final (files, type) = await _pickerService.pickMedia(
+        selectionType: MediaSelectionType.singleImage,
+        source: ImageSource.gallery,
+      );
+
+      if (files.isEmpty || type == null) {
         return;
       }
 
       setState(() {
         if (type == MediaType.image) {
-          _image = file;
+          _image = files.first;
           _video = null;
         } else {
           _image = null;
-          _video = file;
+          _video = files.first;
         }
-        isLoading = false;
       });
 
-      widget.onMediaSelected(file, type);
-      widget.field.didChange(file);
+      widget.onMediaSelected(files.first, type);
+      widget.field.didChange(files.first);
+    } on FileTooLargeException catch (e) {
+      if (mounted) {
+        showToast(context: context, message: e.message, type: ToastType.error);
+      }
+    } on UnsupportedFileTypeException catch (e) {
+      if (mounted) {
+        showToast(context: context, message: e.message, type: ToastType.error);
+      }
+    } catch (e) {
+      if (mounted) {
+        showToast(
+            context: context,
+            message: 'لم يتم اختيار صورة صالحة',
+            type: ToastType.error);
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -76,39 +92,48 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: pickMedia,
-        child: Container(
-            width: double.infinity,
-            height: 150.h,
-            decoration: BoxDecoration(
-              image: _image != null
-                  ? DecorationImage(
-                      image: Image.file(_image!).image, fit: BoxFit.cover)
-                  : null,
-              borderRadius: AppRadius.borderRadius8,
-              border: AppBorders.generalBoxBorder,
-            ),
-            child: isLoading
-                ? LoadingIndicator(
-                    size: 26.sp,
+      onTap: isLoading || widget.isDisabled ? null : pickMedia,
+      child: Container(
+        width: double.infinity,
+        height: 150.h,
+        decoration: BoxDecoration(
+          image: _image != null && _image!.existsSync()
+              ? DecorationImage(
+                  fit: BoxFit.contain,
+                  image: Image.file(
+                    _image!,
+                    fit: BoxFit.contain,
+                    width: 300.w,
+                    height: 150.h,
+                  ).image,
+                )
+              : null,
+          borderRadius: AppRadius.borderRadius8,
+          border: AppBorders.generalBoxBorder,
+        ),
+        child: isLoading
+            ? LoadingIndicator(
+                size: 26.sp,
+              )
+            : _video != null && _video!.existsSync()
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      AppIcons.checkIcon.copyWith(
+                        size: 52.w,
+                        color: AppTheme.green,
+                      ),
+                      Text(
+                        'تم تحميل الفيديو',
+                        style: AppTextStyles.textStyle14,
+                      ),
+                    ],
                   )
-                : _video != null
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          AppIcons.checkIcon.copyWith(
-                            size: 52.w,
-                            color: AppTheme.green,
-                          ),
-                          Text(
-                            'تم تحميل الفيديو',
-                            style: AppTextStyles.textStyle14,
-                          )
-                        ],
-                      )
-                    : Visibility(
-                        visible: _image == null,
-                        child: AppIcons.addMediaIcon,
-                      )));
+                : Visibility(
+                    visible: _image == null && _video == null,
+                    child: AppIcons.addMediaIcon,
+                  ),
+      ),
+    );
   }
 }

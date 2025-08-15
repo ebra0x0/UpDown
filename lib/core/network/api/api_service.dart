@@ -258,39 +258,42 @@ class ApiService {
 
   Future<String> _downloadAvatar(String imagePath) async {
     try {
-      final Uint8List response = await safeRequest(
-          networkManager: _netManager,
-          request: () => _supabase.storage
-              .from(ApiConstants.avatarsBucket)
-              .download("${ApiConstants.avatarsBucketFolder}/$imagePath"),
-          errorMessage: "فشل الاتصال اثناء تحميل صورة الملف الشخصي.");
-
       final Directory dir = await getApplicationDocumentsDirectory();
-
       final String filePath = '${dir.path}/${imagePath.split('/').last}';
-
       final file = File(filePath);
+
+      if (await file.exists()) {
+        return file.path;
+      }
+
+      final Uint8List response = await safeRequest(
+        networkManager: _netManager,
+        request: () => _supabase.storage
+            .from(ApiConstants.avatarsBucket)
+            .download("${ApiConstants.avatarsBucketFolder}/$imagePath"),
+      );
+
       await file.writeAsBytes(response);
 
       return file.path;
     } on StorageException catch (e) {
-      throw (SupabaseFailure.fromStorage(e));
+      throw SupabaseFailure.fromStorage(e);
     } on NetworkFailure catch (e) {
-      throw (NetworkFailure(e.errMessage));
+      throw NetworkFailure(e.errMessage);
     } catch (_) {
-      throw (CustomFailure("حدث خطاء اثناء تحميل صورة الملف الشخصي"));
+      throw CustomFailure("حدث خطأ أثناء تحميل صورة الملف الشخصي");
     }
   }
 
   Future<String> _uploadAvatar(XFile file) async {
     try {
+      final StoragePath storagePath = await StoragePath.fromAvatar(
+          filePath: file.path, userId: _supabase.auth.currentUser!.id);
       // Upload avatar
       final uploadResult = await _uploadMedia(
         bucketName: ApiConstants.avatarsBucket,
         filePath: file.path,
-        storagePath: StoragePath.fromAvatar(
-                filePath: file.path, userId: _supabase.auth.currentUser!.id)
-            .path,
+        storagePath: storagePath.path,
         mediaType: MediaType.image,
       );
 
@@ -417,9 +420,9 @@ class ApiService {
       // Create issue
       final Map<String, dynamic> issueIdRes = await safeRequest(
           networkManager: _netManager,
-          request: () =>
-              _supabase.rpc("create_issue", params: issueReq.toJson()).single(),
-          errorMessage: "فشل الاتصال اثناء انشاء العطل.");
+          request: () => _supabase
+              .rpc("create_issue", params: issueReq.toJson())
+              .single());
       //////
 
       // Update issue model with ids
@@ -461,36 +464,44 @@ class ApiService {
     required String issueId,
     required String reportId,
   }) async {
-    await Future.wait(mediaList.map((media) async {
+    final List<String> mediaUrls =
+        await Future.wait(mediaList.map((media) async {
       // 1. توليد مسار التخزين
-      final String storagePath = StoragePath.withIssue(
+      final StoragePath storagePath = await StoragePath.withIssue(
         media: media,
         reportId: reportId,
         issueId: issueId,
-      ).path;
+      );
 
       // 2. رفع الميديا
       final uploadResult = await _uploadMedia(
         bucketName: ApiConstants.reportsBucket,
         filePath: media.file!.path,
-        storagePath: storagePath,
+        storagePath: storagePath.path,
         mediaType: MediaType.image,
       );
 
-      // 3. استخراج رابط الميديا بعد الرفع
-      final String mediaUrl =
-          uploadResult.replaceFirst(RegExp(r'^[^/]+/[^/]+/'), '');
-
-      // 4. تحديث بيانات الميديا
+      // 3. تحديث بيانات الميديا
       final MediaRequestModel mediaWithUrl =
-          media.copyWith(url: mediaUrl, issueId: issueId);
+          media.copyWith(url: uploadResult, issueId: issueId);
 
-      // 5. إدخال الميديا في قاعدة البيانات
+      // 4. إدخال الميديا في قاعدة البيانات
       await safeRequest(
         networkManager: _netManager,
         request: () => _supabase.from('Media').insert(mediaWithUrl.toJson()),
       );
+
+      return mediaWithUrl.url;
     }));
+
+    if (mediaUrls.isEmpty) return;
+
+    // 5. تحديث رابط الميديا للعطل في قاعدة البيانات
+    await safeRequest(
+        networkManager: _netManager,
+        request: () => _supabase
+            .from('Issues')
+            .update({"media_urls": mediaUrls}).eq("id", issueId));
   }
 
   Future<String> _uploadMedia(
@@ -515,18 +526,30 @@ class ApiService {
               fileOptions: FileOptions(
                 upsert: true,
               ),
-            ),
-        errorMessage: "فشل الاتصال اثناء رفع الملف.");
+            ));
 
     return url;
   }
 
-  Future<Map<String, dynamic>?> _fetchMedia(String mediaId) async {
+  Future<String> _getMediaPublicUrl(String path) async {
+    final bucketName = path.split('/').first;
+    final mediaPath = path.split('/').skip(1).join('/');
+    final String response = await _supabase.storage
+        .from(bucketName)
+        .createSignedUrl(mediaPath, 3600); // Expired in 1 hour
+
+    return response;
+  }
+
+  Future<Map<String, dynamic>?> _fetchMedia(String mediaUrl) async {
     final Map<String, dynamic>? response = await safeRequest(
         networkManager: _netManager,
         request: () =>
-            _supabase.from('Media').select().eq('id', mediaId).maybeSingle(),
-        errorMessage: "فشل الاتصال اثناء جلب الملف.");
+            _supabase.from('Media').select().eq('url', mediaUrl).maybeSingle());
+
+    if (response != null) {
+      response["url"] = await _getMediaPublicUrl(response["url"]);
+    }
 
     return response;
   }
@@ -589,13 +612,12 @@ class ApiService {
           }
           final Map<String, dynamic> issue = list.first;
 
-          // Fetch media for the issue
+          // Fetch media issue
           final List<Map<String, dynamic>?> mediaList = await Future.wait(
               (issue["media_urls"] as List)
                   .map((mediaUrl) async => await _fetchMedia(mediaUrl)));
 
           issue["media_list"] = mediaList;
-
           return issue;
         })
         .distinct();

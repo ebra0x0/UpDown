@@ -47,11 +47,14 @@ dependencies:
     # Path Provider
     path: ^1.9.1
     path_provider: ^2.1.5
+    # Encryption
+    crypto: ^3.0.6
     # Skeleton
     skeletonizer: ^2.0.1
     # Network
     internet_connection_checker_plus: ^2.7.2
     retry: ^3.1.2
+    cached_network_image: ^3.4.1
     # Stream controller
     rxdart: ^0.28.0
     # Annotations

@@ -11,7 +11,6 @@ class NetworkManager {
   final InternetConnection _connectionChecker;
 
   NetworkManager(this._connectionChecker) {
-    log("NetworkManager initialized");
     init();
   }
 

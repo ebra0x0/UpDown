@@ -9,158 +9,191 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get elevator_working => 'Working';
+  String get elevator_status_working => 'Working';
 
   @override
-  String get elevator_broken => 'Broken';
+  String get elevator_status_broken => 'Broken';
 
   @override
-  String get elevator_repair => 'Under Repair';
+  String get elevator_status_repair => 'Under Repair';
 
   @override
-  String get elevator_maintenance => 'Under Maintenance';
+  String get elevator_status_maintenance => 'Under Maintenance';
 
   @override
-  String get elevator_disabled => 'Disabled';
+  String get elevator_status_disabled => 'Disabled';
 
   @override
-  String get elevatorWorkingDescription => 'The elevator\'s working';
+  String get elevator_description_Working => 'The elevator\'s working';
 
   @override
-  String get elevatorBrokenDescription => 'The elevator\'s broken and cannot be used';
+  String get elevator_description_Broken => 'The elevator\'s broken and cannot be used';
 
   @override
-  String get elevatorRepairDescription => 'The elevator\'s under repair';
+  String get elevator_description_Repair => 'The elevator\'s under repair';
 
   @override
-  String get elevatorMaintenanceDescription => 'The elevator\'s under maintenance';
+  String get elevator_description_Maintenance => 'The elevator\'s under maintenance';
 
   @override
-  String get elevatorDisabledDescription => 'The elevator\'s currently unavailable';
+  String get elevator_description_Disabled => 'The elevator\'s currently unavailable';
 
   @override
-  String get issueType_door_not_opening => 'Door Not Opening';
+  String get issue_type_door_not_opening => 'Door Not Opening';
 
   @override
-  String get issueType_stuck_between_floors => 'Stuck Between Floors';
+  String get issue_type_stuck_between_floors => 'Stuck Between Floors';
 
   @override
-  String get issueType_noise => 'Noise';
+  String get issue_type_noise => 'Noise';
 
   @override
-  String get issueType_not_responding => 'Not Responding';
+  String get issue_type_not_responding => 'Not Responding';
 
   @override
-  String get issueType_button_not_responding => 'Button Not Responding';
+  String get issue_type_button_not_responding => 'Button Not Responding';
 
   @override
-  String get issueType_above_floor => 'Above Floor';
+  String get issue_type_above_floor => 'Above Floor';
 
   @override
-  String get issueType_other => 'Other';
+  String get issue_type_other => 'Other';
 
   @override
-  String get issueTypeDoorNotOpeningPriority => 'Critical';
+  String get issue_type_priority_DoorNotOpening => 'Critical';
 
   @override
-  String get issueTypeStuckBetweenFloorsPriority => 'Critical';
+  String get issue_type_priority_StuckBetweenFloors => 'Critical';
 
   @override
-  String get issueTypeNoisePriority => 'Low';
+  String get issue_type_priority_Noise => 'Low';
 
   @override
-  String get issueTypeNotRespondingPriority => 'Critical';
+  String get issue_type_priority_NotResponding => 'Critical';
 
   @override
-  String get issueTypeButtonNotRespondingPriority => 'Moderate';
+  String get issue_type_priority_ButtonNotResponding => 'Moderate';
 
   @override
-  String get issueTypeAboveFloorPriority => 'Critical';
+  String get issue_type_priority_AboveFloor => 'Critical';
 
   @override
-  String get issueTypeOtherPriority => 'Unknown';
+  String get issue_type_priority_Other => 'Unknown';
 
   @override
-  String get issueStatus_not_fixed => 'Not Fixed';
+  String get issue_status_not_fixed => 'Not Fixed';
 
   @override
-  String get issueStatus_needs_parts => 'Needs Parts';
+  String get issue_status_needs_parts => 'Needs Parts';
 
   @override
-  String get issueStatus_escalated => 'Escalated';
+  String get issue_status_escalated => 'Escalated';
 
   @override
-  String get issueStatus_fixed => 'Fixed';
+  String get issue_status_fixed => 'Fixed';
 
   @override
-  String get issueStatusNotFixedDescription => 'The issue has not been fixed yet';
+  String get issue_description_NotFixed => 'The issue has not been fixed yet';
 
   @override
-  String get issueStatusNeedsPartsDescription => 'The issue needs parts';
+  String get issue_description_NeedsParts => 'The issue needs parts';
 
   @override
-  String get issueStatusEscalatedDescription => 'The issue has been escalated to another technecian';
+  String get issue_description_Escalated => 'The issue has been escalated to another technecian';
 
   @override
-  String get issueStatusFixedDescription => 'The issue has been fixed';
+  String get issue_description_Fixed => 'The issue has been fixed';
 
   @override
-  String get report_pending => 'Pending';
+  String get report_status_pending => 'Pending';
 
   @override
-  String get report_reported => 'Reported';
+  String get report_status_reported => 'Reported';
 
   @override
-  String get report_coming => 'Coming';
+  String get report_status_coming => 'Coming';
 
   @override
-  String get report_arrived => 'Arrived';
+  String get report_status_arrived => 'Arrived';
 
   @override
-  String get report_in_progress => 'In Progress';
+  String get report_status_in_progress => 'In Progress';
 
   @override
-  String get report_resolved => 'Resolved';
+  String get report_status_resolved => 'Resolved';
 
   @override
-  String get reportPendingDescription => 'The report is pending and hasn\'t been handled yet';
+  String get report_description_Pending => 'The report is pending and hasn\'t been handled yet';
 
   @override
-  String get reportReportedDescription => 'The issue has been reported';
+  String get report_description_Reported => 'The issue has been reported';
 
   @override
-  String get reportComingDescription => 'The technecian\'s on the way';
+  String get report_description_Coming => 'The technecian\'s on the way';
 
   @override
-  String get reportArrivedDescription => 'The technician has arrived';
+  String get report_description_Arrived => 'The technician has arrived';
 
   @override
-  String get reportInProgressDescription => 'In progress';
+  String get report_description_InProgress => 'In progress';
 
   @override
-  String get reportResolvedDescription => 'The issue has been resolved';
+  String get report_description_Resolved => 'The issue has been resolved';
 
   @override
-  String get unit_engine_name => 'Engine';
+  String get unit_name_engine => 'Engine';
 
   @override
-  String get unit_cabin_name => 'Cabin';
+  String get unit_name_cabin => 'Cabin';
 
   @override
-  String get unit_counter_name => 'Counter';
+  String get unit_name_counter => 'Counter';
 
   @override
-  String get unit_wires_name => 'Wires';
+  String get unit_name_wires => 'Wires';
 
   @override
-  String get unit_control_name => 'Control control';
+  String get unit_name_control => 'Control control';
 
   @override
-  String get unit_active => 'Active';
+  String get unit_status_active => 'Active';
 
   @override
-  String get unit_needs_maintenance => 'Needs Maintenance';
+  String get unit_status_maintenance => 'Needs Maintenance';
 
   @override
-  String get unit_out_of_service => 'Out Of Service';
+  String get unit_status_out_of_service => 'Out Of Service';
+
+  @override
+  String get unit_status_requires_replacement => 'Requires Replacement';
+
+  @override
+  String get floor_status_accessible => 'Accessible';
+
+  @override
+  String get floor_status_out_of_service => 'Out Of Service';
+
+  @override
+  String get floor_status_closed => 'Closed';
+
+  @override
+  String get floor_status_restricted => 'Restricted';
+
+  @override
+  String get part_type_door_lock => 'Lock';
+
+  @override
+  String get part_type_door_pump => 'Pumb';
+
+  @override
+  String get part_type_door_spring => 'Spring';
+
+  @override
+  String get part_condition_good => 'Good';
+
+  @override
+  String get part_condition_worn => 'Worn';
+
+  @override
+  String get part_condition_broken => 'Broken';
 }

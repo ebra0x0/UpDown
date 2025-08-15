@@ -12,15 +12,15 @@ extension ElevatorStatusExtension on ElevatorStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case ElevatorStatus.working:
-        return local.elevator_working;
+        return local.elevator_status_working;
       case ElevatorStatus.broken:
-        return local.elevator_broken;
+        return local.elevator_status_broken;
       case ElevatorStatus.repair:
-        return local.elevator_repair;
+        return local.elevator_status_repair;
       case ElevatorStatus.maintenance:
-        return local.elevator_maintenance;
+        return local.elevator_status_maintenance;
       case ElevatorStatus.disabled:
-        return local.elevator_disabled;
+        return local.elevator_status_disabled;
     }
   }
 
@@ -28,15 +28,15 @@ extension ElevatorStatusExtension on ElevatorStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case ElevatorStatus.working:
-        return local.elevatorWorkingDescription;
+        return local.elevator_description_Working;
       case ElevatorStatus.broken:
         return issueType!.title(context);
       case ElevatorStatus.repair:
-        return local.elevatorRepairDescription;
+        return local.elevator_description_Repair;
       case ElevatorStatus.maintenance:
-        return local.elevatorMaintenanceDescription;
+        return local.elevator_description_Maintenance;
       case ElevatorStatus.disabled:
-        return local.elevatorDisabledDescription;
+        return local.elevator_description_Disabled;
     }
   }
 
@@ -77,19 +77,19 @@ extension IssueTypeExtension on IssueType {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case IssueType.doorNotOpening:
-        return local.issueType_door_not_opening;
+        return local.issue_type_door_not_opening;
       case IssueType.stuckBetweenFloors:
-        return local.issueType_stuck_between_floors;
+        return local.issue_type_stuck_between_floors;
       case IssueType.noise:
-        return local.issueType_noise;
+        return local.issue_type_noise;
       case IssueType.notResponding:
-        return local.issueType_not_responding;
+        return local.issue_type_not_responding;
       case IssueType.buttonNotResponding:
-        return local.issueType_button_not_responding;
+        return local.issue_type_button_not_responding;
       case IssueType.aboveFloor:
-        return local.issueType_above_floor;
+        return local.issue_type_above_floor;
       case IssueType.other:
-        return local.issueType_other;
+        return local.issue_type_other;
     }
   }
 
@@ -97,19 +97,19 @@ extension IssueTypeExtension on IssueType {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case IssueType.doorNotOpening:
-        return local.issueTypeDoorNotOpeningPriority;
+        return local.issue_type_priority_DoorNotOpening;
       case IssueType.stuckBetweenFloors:
-        return local.issueTypeStuckBetweenFloorsPriority;
+        return local.issue_type_priority_StuckBetweenFloors;
       case IssueType.noise:
-        return local.issueTypeNoisePriority;
+        return local.issue_type_priority_Noise;
       case IssueType.notResponding:
-        return local.issueTypeNotRespondingPriority;
+        return local.issue_type_priority_NotResponding;
       case IssueType.buttonNotResponding:
-        return local.issueTypeButtonNotRespondingPriority;
+        return local.issue_type_priority_ButtonNotResponding;
       case IssueType.aboveFloor:
-        return local.issueTypeAboveFloorPriority;
+        return local.issue_type_priority_AboveFloor;
       case IssueType.other:
-        return local.issueTypeOtherPriority;
+        return local.issue_type_priority_Other;
     }
   }
 }
@@ -120,13 +120,13 @@ extension IssueStatusExtension on IssueStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case IssueStatus.notFixed:
-        return local.issueStatus_not_fixed;
+        return local.issue_status_not_fixed;
       case IssueStatus.needsParts:
-        return local.issueStatus_needs_parts;
+        return local.issue_status_needs_parts;
       case IssueStatus.escalated:
-        return local.issueStatus_escalated;
+        return local.issue_status_escalated;
       case IssueStatus.fixed:
-        return local.issueStatus_fixed;
+        return local.issue_status_fixed;
     }
   }
 
@@ -134,13 +134,13 @@ extension IssueStatusExtension on IssueStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case IssueStatus.notFixed:
-        return local.issueStatusNotFixedDescription;
+        return local.issue_description_NotFixed;
       case IssueStatus.needsParts:
-        return local.issueStatusNeedsPartsDescription;
+        return local.issue_description_NeedsParts;
       case IssueStatus.escalated:
-        return local.issueStatusEscalatedDescription;
+        return local.issue_description_Escalated;
       case IssueStatus.fixed:
-        return local.issueStatusFixedDescription;
+        return local.issue_description_Fixed;
     }
   }
 
@@ -164,17 +164,17 @@ extension ReportStatusExtension on ReportStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case ReportStatus.pending:
-        return local.report_pending;
+        return local.report_status_pending;
       case ReportStatus.reported:
-        return local.report_reported;
+        return local.report_status_reported;
       case ReportStatus.coming:
-        return local.report_coming;
+        return local.report_status_coming;
       case ReportStatus.arrived:
-        return local.report_arrived;
+        return local.report_status_arrived;
       case ReportStatus.inProgress:
-        return local.report_in_progress;
+        return local.report_status_in_progress;
       case ReportStatus.resolved:
-        return local.report_resolved;
+        return local.report_status_resolved;
     }
   }
 
@@ -182,17 +182,17 @@ extension ReportStatusExtension on ReportStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case ReportStatus.pending:
-        return local.reportPendingDescription;
+        return local.report_description_Pending;
       case ReportStatus.reported:
-        return local.reportReportedDescription;
+        return local.report_description_Reported;
       case ReportStatus.coming:
-        return local.reportComingDescription;
+        return local.report_description_Coming;
       case ReportStatus.arrived:
-        return local.reportArrivedDescription;
+        return local.report_description_Arrived;
       case ReportStatus.inProgress:
-        return local.reportInProgressDescription;
+        return local.report_description_InProgress;
       case ReportStatus.resolved:
-        return local.reportResolvedDescription;
+        return local.report_description_Resolved;
     }
   }
 
@@ -214,21 +214,21 @@ extension ReportStatusExtension on ReportStatus {
   }
 }
 
-// Unit Name Extension
+// Unit Type Extension
 extension UnitTypeExtension on UnitType {
   String title(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case UnitType.engine:
-        return local.unit_engine_name;
+        return local.unit_name_engine;
       case UnitType.cabin:
-        return local.unit_cabin_name;
+        return local.unit_name_cabin;
       case UnitType.counter:
-        return local.unit_counter_name;
+        return local.unit_name_counter;
       case UnitType.wires:
-        return local.unit_wires_name;
+        return local.unit_name_wires;
       case UnitType.control:
-        return local.unit_control_name;
+        return local.unit_name_control;
     }
   }
 
@@ -254,11 +254,13 @@ extension UnitStatusExtension on UnitStatus {
     final local = AppLocalizations.of(context)!;
     switch (this) {
       case UnitStatus.active:
-        return local.unit_active;
-      case UnitStatus.needsMaintenance:
-        return local.unit_needs_maintenance;
+        return local.unit_status_active;
+      case UnitStatus.maintenance:
+        return local.unit_status_maintenance;
       case UnitStatus.outOfService:
-        return local.unit_out_of_service;
+        return local.unit_status_out_of_service;
+      case UnitStatus.requiresReplacement:
+        return local.unit_status_requires_replacement;
     }
   }
 
@@ -266,9 +268,79 @@ extension UnitStatusExtension on UnitStatus {
     switch (this) {
       case UnitStatus.active:
         return AppTheme.green;
-      case UnitStatus.needsMaintenance:
+      case UnitStatus.maintenance:
         return AppTheme.yellow;
       case UnitStatus.outOfService:
+        return AppTheme.red;
+      case UnitStatus.requiresReplacement:
+        return AppTheme.blue;
+    }
+  }
+}
+
+extension FloorStatusExtension on FloorStatus {
+  String title(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
+    switch (this) {
+      case FloorStatus.accessible:
+        return local.floor_status_accessible;
+      case FloorStatus.outOfService:
+        return local.floor_status_out_of_service;
+      case FloorStatus.closed:
+        return local.floor_status_closed;
+      case FloorStatus.restricted:
+        return local.floor_status_restricted;
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case FloorStatus.accessible:
+        return AppTheme.green;
+      case FloorStatus.outOfService:
+        return AppTheme.red;
+      case FloorStatus.closed:
+        return AppTheme.grey;
+      case FloorStatus.restricted:
+        return AppTheme.blue;
+    }
+  }
+}
+
+extension PartTypeExtension on PartType {
+  String title(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
+    switch (this) {
+      case PartType.doorLock:
+        return local.part_type_door_lock;
+      case PartType.doorPump:
+        return local.part_type_door_pump;
+      case PartType.doorSpring:
+        return local.part_type_door_spring;
+    }
+  }
+}
+
+extension PartConditionExtension on PartCondition {
+  String title(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
+    switch (this) {
+      case PartCondition.good:
+        return local.part_condition_good;
+      case PartCondition.worn:
+        return local.part_condition_worn;
+      case PartCondition.broken:
+        return local.part_condition_broken;
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case PartCondition.good:
+        return AppTheme.green;
+      case PartCondition.worn:
+        return AppTheme.yellow;
+      case PartCondition.broken:
         return AppTheme.red;
     }
   }

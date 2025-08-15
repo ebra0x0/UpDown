@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/utils/constants/validators/validator.dart';
@@ -9,7 +10,6 @@ import 'package:UpDown/features/account_setup/presentation/views/widgets/account
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AccountSetupForm extends StatefulWidget {
   const AccountSetupForm({
@@ -61,7 +61,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
             Padding(
               padding: AppInsets.top26,
               child: AvatarPicker(
-                  onImageSelected: (XFile image) =>
+                  onImageSelected: (File image) =>
                       context.read<AccountSetupCubit>().setAvatar(image)),
             ),
             SizedBox(height: 28.h),

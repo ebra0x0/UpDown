@@ -40,6 +40,10 @@ class IssuesCubit extends Cubit<IssuesState> {
           errorMsg: errMsg.errMessage,
         )),
         (issues) {
+          if (issues.isEmpty) {
+            emit(state.copyWith(status: ContentStatus.empty, issues: []));
+            return;
+          }
           final List<IssueResponseModel> orderedIssues =
               sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
           emit(state.copyWith(
@@ -49,7 +53,6 @@ class IssuesCubit extends Cubit<IssuesState> {
         },
       );
     }, onError: (e) {
-      log(e.toString());
       if (isClosed) return;
       if (state.issues != null) return;
       emit(state.copyWith(
@@ -74,6 +77,10 @@ class IssuesCubit extends Cubit<IssuesState> {
         (errMsg) => emit(state.copyWith(
             status: ContentStatus.error, errorMsg: errMsg.errMessage)),
         (issues) {
+          if (issues.isEmpty) {
+            emit(state.copyWith(status: ContentStatus.empty, issues: []));
+            return;
+          }
           final List<IssueResponseModel> orderedIssues =
               sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
           emit(state.copyWith(
@@ -105,6 +112,10 @@ class IssuesCubit extends Cubit<IssuesState> {
         (errMsg) => emit(state.copyWith(
             status: ContentStatus.error, errorMsg: errMsg.errMessage)),
         (issues) {
+          if (issues.isEmpty) {
+            emit(state.copyWith(status: ContentStatus.empty, issues: []));
+            return;
+          }
           final List<IssueResponseModel> orderedIssues =
               sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
           emit(state.copyWith(

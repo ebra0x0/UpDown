@@ -123,12 +123,72 @@ enum UnitStatus {
   @HiveField(0)
   active("Active"),
   @HiveField(1)
-  needsMaintenance("Needs_Maintenance"),
+  maintenance("Maintenance"),
   @HiveField(2)
-  outOfService("Out_Of_Service");
+  outOfService("Out_Of_Service"),
+  @HiveField(3)
+  requiresReplacement("Requires_Replacement");
 
   final String name;
   const UnitStatus(this.name);
+}
+
+@HiveType(typeId: HiveTypeIds.floorStatusEnum)
+@JsonEnum(valueField: 'name')
+enum FloorStatus {
+  @HiveField(0)
+  accessible("Accessible"),
+  @HiveField(1)
+  outOfService("Out_Of_Service"),
+  @HiveField(2)
+  closed("Closed"),
+  @HiveField(3)
+  restricted("Restricted");
+
+  final String name;
+  const FloorStatus(this.name);
+}
+
+@HiveType(typeId: HiveTypeIds.doorStatusEnum)
+@JsonEnum(valueField: 'name')
+enum DoorStatus {
+  @HiveField(0)
+  active("Active"),
+  @HiveField(1)
+  outOfService("Out_Of_Service"),
+  @HiveField(2)
+  locked("Locked");
+
+  final String name;
+  const DoorStatus(this.name);
+}
+
+@HiveType(typeId: HiveTypeIds.partTypeEnum)
+@JsonEnum(valueField: 'name')
+enum PartType {
+  @HiveField(0)
+  doorLock("Door_Lock"),
+  @HiveField(1)
+  doorPump("Door_Pump"),
+  @HiveField(2)
+  doorSpring("Door_Spring");
+
+  final String name;
+  const PartType(this.name);
+}
+
+@HiveType(typeId: HiveTypeIds.partConditionEnum)
+@JsonEnum(valueField: 'name')
+enum PartCondition {
+  @HiveField(0)
+  good("Good"),
+  @HiveField(1)
+  worn("Worn"),
+  @HiveField(2)
+  broken("Broken");
+
+  final String name;
+  const PartCondition(this.name);
 }
 
 @HiveType(typeId: HiveTypeIds.mediaTypeEnum)

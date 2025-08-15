@@ -114,7 +114,6 @@ class BuildingsRepo {
         if (!isSame) {
           await _local.saveAll(remoteRes);
         }
-
         return Right(remoteRes);
       } catch (e) {
         return Right(remoteRes);

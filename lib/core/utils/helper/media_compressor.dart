@@ -1,15 +1,24 @@
 import 'dart:io';
+import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/helper/check_file_size.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
+class MediaCompressionException implements Exception {
+  final String message;
+  MediaCompressionException(this.message);
+
+  @override
+  String toString() => 'MediaCompressionException: $message';
+}
+
 abstract class MediaCompressor {
   int get maxFileSizeMB;
   int get defaultQuality;
 
-  Future<String> compress(String inputPath);
+  Future<String> compress(String inputPath, {int? quality});
 
   Future<void> cleanUp(String filePath) async {
     try {
@@ -18,7 +27,7 @@ abstract class MediaCompressor {
         await file.delete();
       }
     } catch (e) {
-      throw Exception('Failed to clean up file: $e');
+      throw MediaCompressionException('فشل في تنظيف الملف: $e');
     }
   }
 
@@ -26,97 +35,145 @@ abstract class MediaCompressor {
     final tempDir = await getTemporaryDirectory();
     final fileName = path.basenameWithoutExtension(inputPath);
     final extension = path.extension(inputPath);
-    return '${tempDir.path}/${fileName}_compressed$extension';
+    return '${tempDir.path}/${fileName}_compressed${DateTime.now().millisecondsSinceEpoch}$extension';
   }
 
-  Future<bool> isFileSizeValid(String inputPath) async {
-    return await checkFileSize(inputPath, maxFileSizeMB);
-  }
+  Future<bool> isFileSizeValid({
+    required String filePath,
+    required MediaType mediaType,
+  }) async =>
+      await FileSizeValidator.isFileSizeAcceptable(
+        filePath: filePath,
+        limitSizeMB: maxFileSizeMB,
+      );
 }
 
 class ImageCompressorService extends MediaCompressor {
-  static const int maxSizeMB = 10; // حجم الملف الحد الأقصى
-  static const int quality = 70; // جودة الضغط (0-100)
+  static const int _maxSizeMB = 10;
+  static const int _defaultQuality = 70;
+  static const _supportedFormats = {
+    '.jpg': CompressFormat.jpeg,
+    '.jpeg': CompressFormat.jpeg,
+    '.png': CompressFormat.png,
+    '.webp': CompressFormat.webp,
+  };
 
   @override
-  int get maxFileSizeMB => maxSizeMB;
+  int get maxFileSizeMB => _maxSizeMB;
 
   @override
-  int get defaultQuality => quality;
+  int get defaultQuality => _defaultQuality;
 
   @override
-  Future<String> compress(String inputPath) async {
+  Future<String> compress(String inputPath, {int? quality}) async {
     try {
-      // فحص حجم الملف
-      final isValidSize = await isFileSizeValid(inputPath);
-      if (!isValidSize) {
-        throw Exception('File is too large');
+      // التحقق من الامتداد
+      final extension = path.extension(inputPath).toLowerCase();
+      if (!_supportedFormats.containsKey(extension)) {
+        throw MediaCompressionException('امتداد الصورة غير مدعوم: $extension');
       }
 
-      // إنشاء اسم ملف الإخراج
-      final outputPath = await generateOutputPath(inputPath);
+      // فحص حجم الملف
+      final isValidSize = await isFileSizeValid(
+        filePath: inputPath,
+        mediaType: MediaType.image,
+      );
+      if (!isValidSize) {
+        throw MediaCompressionException('حجم الصورة كبير جدًا');
+      }
 
-      final extension = path.extension(inputPath).toLowerCase();
-      final supportedFormats = {
-        '.jpg': CompressFormat.jpeg,
-        '.jpeg': CompressFormat.jpeg,
-        '.png': CompressFormat.png,
-        '.webp': CompressFormat.webp,
-      };
+      // إنشاء مسار الإخراج
+      final outputPath = await generateOutputPath(inputPath);
 
       // ضغط الصورة
       final XFile? result = await FlutterImageCompress.compressAndGetFile(
         inputPath,
         outputPath,
-        quality: quality,
-        format: supportedFormats[extension] ?? CompressFormat.jpeg,
+        quality: quality ?? defaultQuality,
+        format: _supportedFormats[extension]!,
       );
 
       if (result == null) {
-        throw Exception('Failed to compress image');
+        throw MediaCompressionException('فشل في ضغط الصورة');
+      }
+
+      // التحقق من حجم الملف بعد الضغط
+      final isOutputValid = await isFileSizeValid(
+        filePath: result.path,
+        mediaType: MediaType.image,
+      );
+      if (!isOutputValid) {
+        await cleanUp(result.path);
+        throw MediaCompressionException('حجم الصورة المضغوطة كبير جدًا');
       }
 
       return result.path;
     } catch (e) {
-      throw Exception('Failed to compress image: $e');
+      throw MediaCompressionException('فشل في ضغط الصورة: $e');
     }
   }
 }
 
 class VideoCompressorService extends MediaCompressor {
-  static const int maxSizeMB = 100;
-  static const int quality = 23;
+  static const int _maxSizeMB = 100;
+  static const int _defaultQuality = 23;
+  static const _supportedFormats = ['.mp4', '.mov', '.avi'];
 
   @override
-  int get maxFileSizeMB => maxSizeMB;
+  int get maxFileSizeMB => _maxSizeMB;
 
   @override
-  int get defaultQuality => quality;
+  int get defaultQuality => _defaultQuality;
 
   @override
-  Future<String> compress(String inputPath) async {
+  Future<String> compress(String inputPath, {int? quality}) async {
     try {
+      // التحقق من الامتداد
+      final extension = path.extension(inputPath).toLowerCase();
+      if (!_supportedFormats.contains(extension)) {
+        throw MediaCompressionException('امتداد الفيديو غير مدعوم: $extension');
+      }
+
       // فحص حجم الملف
-      final isValidSize = await isFileSizeValid(inputPath);
+      final isValidSize = await isFileSizeValid(
+        filePath: inputPath,
+        mediaType: MediaType.video,
+      );
       if (!isValidSize) {
-        throw Exception('File is too large');
+        throw MediaCompressionException('حجم الفيديو كبير جدًا');
       }
 
       // تنفيذ الضغط
-      MediaInfo? mediaInfo = await VideoCompress.compressVideo(
+      final mediaInfo = await VideoCompress.compressVideo(
         inputPath,
         includeAudio: true,
-        quality: VideoQuality.LowQuality,
+        quality:
+            quality != null ? _mapQuality(quality) : VideoQuality.LowQuality,
       );
 
-      if (mediaInfo == null) {
-        throw Exception('Failed to compress video');
+      if (mediaInfo == null || mediaInfo.path == null) {
+        throw MediaCompressionException('فشل في ضغط الفيديو');
       }
-      final outputPath = await generateOutputPath(mediaInfo.path!);
 
-      return outputPath;
+      // التحقق من حجم الملف بعد الضغط
+      final isOutputValid = await isFileSizeValid(
+        filePath: mediaInfo.path!,
+        mediaType: MediaType.video,
+      );
+      if (!isOutputValid) {
+        await cleanUp(mediaInfo.path!);
+        throw MediaCompressionException('حجم الفيديو المضغوط كبير جدًا');
+      }
+
+      return mediaInfo.path!;
     } catch (e) {
-      throw Exception('Failed to compress video: $e');
+      throw MediaCompressionException('فشل في ضغط الفيديو: $e');
     }
+  }
+
+  VideoQuality _mapQuality(int quality) {
+    if (quality <= 33) return VideoQuality.LowQuality;
+    if (quality <= 66) return VideoQuality.MediumQuality;
+    return VideoQuality.HighestQuality;
   }
 }
