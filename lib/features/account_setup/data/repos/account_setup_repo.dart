@@ -10,6 +10,7 @@ class AccountSetupRepo {
   Future<Either<Failure, void>> setup(ProfileRequestModel profile) async {
     try {
       await _api.createProfile(profile.copyWith(email: _api.user?.email));
+      await _api.refreshSession();
       return Right(null);
     } on Failure catch (e) {
       return Left(e);

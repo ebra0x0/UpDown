@@ -61,4 +61,14 @@ class HiveService {
     Hive.registerAdapter(MediaResponseModelAdapter());
     Hive.registerAdapter(MediaTypeAdapter());
   }
+
+  Future<void> clear(List<String> boxNames) async {
+    for (String boxName in boxNames) {
+      await Hive.deleteBoxFromDisk(boxName);
+    }
+  }
+
+  Future<void> close() async {
+    await Hive.close();
+  }
 }

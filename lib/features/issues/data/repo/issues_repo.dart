@@ -172,7 +172,6 @@ class IssuesRepo {
     if (!isConnected) return;
 
     final remoteStream = _remote.fetchAllActiveIssues().handleError((error) {
-      log(error.toString());
       if (error is RealtimeSubscribeException) {
         Future.delayed(Duration(seconds: 5), () {
           _remote.fetchAllActiveIssues();
@@ -190,7 +189,7 @@ class IssuesRepo {
         if (remoteRes != local) {
           await _local.saveAll(remoteRes);
         }
-
+        log("new issues ${remoteRes.length}");
         return Right(remoteRes);
       } catch (e) {
         return Right(remoteRes);

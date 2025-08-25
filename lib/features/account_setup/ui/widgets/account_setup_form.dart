@@ -5,8 +5,8 @@ import 'package:UpDown/core/utils/constants/validators/validator.dart';
 import 'package:UpDown/core/utils/model/form_field_model.dart';
 import 'package:UpDown/core/widgets/avatar_picker.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
-import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
-import 'package:UpDown/features/account_setup/presentation/views/widgets/account_submit_section_builder.dart';
+import 'package:UpDown/features/account_setup/ui/cubit/account_setup_cubit.dart';
+import 'package:UpDown/features/account_setup/ui/widgets/account_submit_section_builder.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,6 +70,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
                   context.read<AccountSetupCubit>().setName(value),
               labelText: _nameField.labelText,
               prefixIcon: AppIcons.badgeIcon,
+              maxLength: 20,
               validator: _nameField.validator,
             ),
             SizedBox(height: 16.h),
@@ -87,6 +88,7 @@ class _AccountSetupFormState extends State<AccountSetupForm> {
               labelText: _addressField.labelText,
               prefixIcon: AppIcons.locationIcon,
               validator: _addressField.validator,
+              maxLength: 50,
             ),
             SizedBox(height: 32.h),
             AccountSubmitSectionBuilder(

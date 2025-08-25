@@ -4,10 +4,13 @@ import 'package:UpDown/core/network/net_connection_init.dart';
 import 'package:UpDown/core/network/network_cubit.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/core/router/app_router.dart';
+import 'package:UpDown/core/storage/hive/hive_constants.dart';
+import 'package:UpDown/core/storage/hive/hive_service.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/theme/cubit/theme_cubit.dart';
 import 'package:UpDown/features/auth/data/repos/auth_repo.dart';
 import 'package:UpDown/features/auth/data/sources/local.dart';
+import 'package:UpDown/features/auth/data/sources/local_user_data.dart';
 import 'package:UpDown/features/auth/data/sources/remote.dart';
 import 'package:UpDown/features/auth/ui/cubit/auth_cubit.dart';
 import 'package:UpDown/features/buildings/data/repo/buildings_repo.dart';
@@ -42,6 +45,9 @@ void setupDependancyInjection() {
   getIt.registerSingleton<ApiInitializer>(ApiInitializer(getIt()));
   getIt.registerLazySingleton<ApiService>(() => ApiService(getIt(), getIt()));
 
+  // Hive
+  getIt.registerLazySingleton<HiveService>(() => HiveService());
+
   // Theme
   getIt.registerSingleton<AppTheme>(AppTheme());
   getIt.registerSingleton<ThemeCubit>(ThemeCubit());
@@ -53,8 +59,16 @@ void setupDependancyInjection() {
   getIt.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource());
   getIt.registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSource(getIt()));
+  getIt.registerLazySingleton<UserDataLocalDataSource>(
+      () => UserDataLocalDataSource([
+            HiveConstants.profileBox,
+            HiveConstants.buildingsBox,
+            HiveConstants.elevatorsBox,
+            HiveConstants.issuesBox
+          ]));
+
   getIt.registerLazySingleton<AuthRepo>(
-      () => AuthRepo(getIt(), getIt(), getIt()));
+      () => AuthRepo(getIt(), getIt(), getIt(), getIt()));
   getIt.registerLazySingleton<AuthCubit>(() => AuthCubit(authRepo: getIt()));
 
   // Buildings

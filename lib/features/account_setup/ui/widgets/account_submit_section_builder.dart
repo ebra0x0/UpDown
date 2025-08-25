@@ -1,5 +1,5 @@
 import 'package:UpDown/core/widgets/custom_button.dart';
-import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
+import 'package:UpDown/features/account_setup/ui/cubit/account_setup_cubit.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

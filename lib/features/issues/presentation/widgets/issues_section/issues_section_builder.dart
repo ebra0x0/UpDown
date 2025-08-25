@@ -15,7 +15,7 @@ class IssuesSectionBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<IssuesCubit, IssuesState>(
-        buildWhen: (previous, current) => previous.status != current.status,
+        buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
           return AppSkeletonizer(
             isSliver: true,

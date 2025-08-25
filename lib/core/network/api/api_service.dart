@@ -115,7 +115,7 @@ class ApiService {
     }
   }
 
-  Future<Session?> refreshSession(String refreshToken) async {
+  Future<Session?> refreshSession({String? refreshToken}) async {
     try {
       _ensureInitialized();
       final AuthResponse newSession = await safeRequest(

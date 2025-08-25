@@ -1,8 +1,8 @@
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/helper/toast.dart';
-import 'package:UpDown/features/account_setup/presentation/manager/account_setup_cubit.dart';
-import 'package:UpDown/features/account_setup/presentation/views/widgets/account_setup_view_body.dart';
+import 'package:UpDown/features/account_setup/ui/cubit/account_setup_cubit.dart';
+import 'package:UpDown/features/account_setup/ui/widgets/account_setup_view_body.dart';
 import 'package:UpDown/features/auth/ui/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

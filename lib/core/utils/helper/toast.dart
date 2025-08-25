@@ -19,7 +19,7 @@ void showToast(
           type == ToastType.success ? AppIcons.checkIcon : AppIcons.errorIcon,
           Expanded(
             child: Text(
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               message,
               style: AppTextStyles.textStyle14.copyWith(

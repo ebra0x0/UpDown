@@ -62,7 +62,7 @@ class AuthRemoteDataSource {
   Future<void> signOut() async => await _api.signOut();
 
   Future<Session?> refreshSession(String refreshToken) async =>
-      await _api.refreshSession(refreshToken);
+      await _api.refreshSession(refreshToken: refreshToken);
 
   Future<void> resetPassword({required String email}) async =>
       await _api.resetPassword(email: email);

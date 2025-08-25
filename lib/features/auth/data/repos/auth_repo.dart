@@ -5,21 +5,23 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/auth/data/model/auth_request_model.dart';
 import 'package:UpDown/features/auth/data/model/auth_response_model.dart';
 import 'package:UpDown/features/auth/data/sources/local.dart';
+import 'package:UpDown/features/auth/data/sources/local_user_data.dart';
 import 'package:UpDown/features/auth/data/sources/remote.dart';
 import 'package:either_dart/either.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthRepo {
-  final AuthLocalDataSource _localeDataSource;
+  final AuthLocalDataSource _local;
   final AuthRemoteDataSource _remote;
+  final UserDataLocalDataSource _userDataLocal;
   final NetworkManager _netManager;
   bool get isConnected => _netManager.isConnected;
 
-  AuthRepo(this._localeDataSource, this._remote, this._netManager);
+  AuthRepo(this._local, this._remote, this._userDataLocal, this._netManager);
 
   Stream<AuthResponseModel> getAuthState() async* {
     try {
-      final local = await _localeDataSource.get();
+      final local = await _local.get();
       yield local ??
           AuthResponseModel(
               status: AuthStatus.unAuthenticated, session: null, user: null);
@@ -50,7 +52,7 @@ class AuthRepo {
 
     yield* remoteStream.asyncMap((remoteRes) async {
       try {
-        await _localeDataSource.save(remoteRes);
+        await _local.save(remoteRes);
         return remoteRes;
       } catch (e) {
         return remoteRes;
@@ -85,7 +87,8 @@ class AuthRepo {
   Future<Either<Failure, void>> signOut() async {
     try {
       final res = await _remote.signOut();
-      await _localeDataSource.clear();
+      await _local.clear();
+      await _userDataLocal.clearAllUserBoxes();
       return Right(res);
     } on Failure catch (e) {
       return Left(e);

@@ -1,5 +1,5 @@
 import 'package:UpDown/core/theme/app_insets.dart';
-import 'package:UpDown/features/account_setup/presentation/views/widgets/account_setup_form.dart';
+import 'package:UpDown/features/account_setup/ui/widgets/account_setup_form.dart';
 import 'package:flutter/widgets.dart';
 
 class AccountSetupViewBody extends StatelessWidget {
