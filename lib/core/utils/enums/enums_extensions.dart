@@ -116,7 +116,7 @@ extension IssueTypeExtension on IssueType {
   Icon get icon {
     switch (this) {
       case IssueType.doorNotOpening:
-        return AppIcons.doorIcon;
+        return AppIcons.doorLockedIcon;
       case IssueType.stuckBetweenFloors:
         return AppIcons.betweenIcon;
       case IssueType.noise:

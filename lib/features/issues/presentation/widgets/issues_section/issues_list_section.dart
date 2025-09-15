@@ -64,7 +64,9 @@ class IssueCard extends StatelessWidget {
           bubbleText: issue.status.title(context),
           bubbleColor: AppTheme.red),
       onTap: () {
-        context.push("${AppRoute.home.path}${AppRoute.issue.path}/${issue.id}");
+        // context.push("${AppRoute.home.path}${AppRoute.issue.path}/${issue.id}");
+        context.push("${AppRoute.home.path}${AppRoute.issue.path}",
+            extra: issue);
       },
     );
   }

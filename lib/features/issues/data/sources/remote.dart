@@ -33,10 +33,9 @@ class IssuesRemoteDataSource {
     });
   }
 
-  Stream<IssueResponseModel?> fetchIssueDetails(String issueId) {
-    return _api.fetchIssueDetails(issueId).map((json) {
-      if (json == null) return null;
-      return IssueResponseModel.fromJson(json);
-    });
+  Future<IssueResponseModel?> fetchIssueDetails(String issueId) async {
+    final json = await _api.fetchIssueDetails(issueId);
+    if (json == null) return null;
+    return IssueResponseModel.fromJson(json);
   }
 }

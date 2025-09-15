@@ -1,3 +1,4 @@
+import 'package:UpDown/core/theme/app_spacing.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/elevators_section/elevator_card.dart';
 import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
@@ -19,6 +20,7 @@ class ElevatorsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: AppSpacing.s8,
       children: buildElevatorWidgets(),
     );
   }

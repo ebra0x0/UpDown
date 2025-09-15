@@ -592,34 +592,42 @@ class ApiService {
         .from('Issues')
         .stream(primaryKey: ["id"])
         .eq('user_id', _supabase.auth.currentUser!.id)
-        .distinct();
+        .distinct()
+        .asyncMap((list) async {
+          return await Future.wait(list.map((issue) async {
+            final List<Map<String, dynamic>?> mediaList = await Future.wait(
+              (issue["media_urls"] as List).map(
+                (mediaUrl) async => await _fetchMedia(mediaUrl),
+              ),
+            );
+            issue["media_list"] = mediaList;
+            return issue;
+          }));
+        });
   }
 
-  Stream<Map<String, dynamic>?> fetchIssueDetails(String issueId) async* {
+  Future<Map<String, dynamic>?> fetchIssueDetails(String issueId) async {
     _ensureInitialized();
 
     if (!isConnected) {
-      yield null;
+      return null;
     }
 
-    yield* _supabase
-        .from('Issues')
-        .stream(primaryKey: ["id"])
-        .eq('id', issueId)
-        .asyncMap((list) async {
-          if (list.isEmpty) {
-            return null;
-          }
-          final Map<String, dynamic> issue = list.first;
+    final response =
+        await _supabase.from('Issues').select().eq('id', issueId).maybeSingle();
 
-          // Fetch media issue
-          final List<Map<String, dynamic>?> mediaList = await Future.wait(
-              (issue["media_urls"] as List)
-                  .map((mediaUrl) async => await _fetchMedia(mediaUrl)));
+    if (response == null) {
+      return null;
+    }
 
-          issue["media_list"] = mediaList;
-          return issue;
-        })
-        .distinct();
+    // Fetch media issue
+    final List<Map<String, dynamic>?> mediaList = await Future.wait(
+      (response["media_urls"] as List).map(
+        (mediaUrl) async => await _fetchMedia(mediaUrl),
+      ),
+    );
+
+    response["media_list"] = mediaList;
+    return response;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/extensions/date_time_ext.dart';
@@ -18,6 +20,7 @@ class IssueViewBody extends StatelessWidget {
     return BlocBuilder<IssueDetailsCubit, IssueDetailsState>(
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
+        log(state.issue?.mediaList.length.toString() ?? '0');
         return SliverList(
             delegate: SliverChildListDelegate.fixed(<Widget>[
           const SizedBox(height: 16),

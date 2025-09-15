@@ -202,6 +202,12 @@ class AppIcons {
     size: 24.sp,
   );
 
+  static Icon doorLockedIcon = Icon(
+    Icons.no_meeting_room_rounded,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
   static Icon volumeUpIcon = Icon(
     Icons.volume_up_outlined,
     color: AppTheme.grey,

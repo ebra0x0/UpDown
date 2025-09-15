@@ -12,6 +12,7 @@ import 'package:UpDown/features/buildings/presentation/views/building_details_vi
 import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/views/elevator_details_view.dart';
 import 'package:UpDown/features/home/presentation/views/home_view.dart';
+import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/issues/presentation/manager/issue_details_cubit/issue_details_cubit.dart';
 import 'package:UpDown/features/issues/presentation/views/create_issue_view.dart';
@@ -91,13 +92,12 @@ class RouteConfig {
 
   static GoRoute _issueDetailsRoute() {
     return GoRoute(
-      path: "${AppRoute.issue.path}/:id",
+      path: AppRoute.issue.path,
       builder: (context, state) {
         return BlocProvider(
-          create: (context) => IssueDetailsCubit(getIt()),
-          child: IssueView(
-            issueId: state.pathParameters["id"] as String,
-          ),
+          create: (context) =>
+              IssueDetailsCubit()..setIssue(state.extra as IssueResponseModel),
+          child: IssueView(),
         );
       },
     );

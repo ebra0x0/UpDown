@@ -11,12 +11,14 @@ class ElevatorsCubit extends Cubit<ElevatorsState> {
   final ElevatorsRepo _repo;
   StreamSubscription? _byBuildingSubscription;
   StreamSubscription? _byBuildingsSubscription;
+  String? currentBuildingId;
 
   void emitStreamByBuilding(String buildingId) {
-    if (state.status == ContentStatus.loading ||
-        _byBuildingSubscription != null) {
+    if (currentBuildingId == buildingId) {
       return;
     }
+
+    currentBuildingId = buildingId;
 
     emit(state.copyWith(
         status: ContentStatus.loading,
@@ -69,8 +71,8 @@ class ElevatorsCubit extends Cubit<ElevatorsState> {
 
   @override
   Future<void> close() async {
+    super.close();
     await _byBuildingSubscription?.cancel();
     await _byBuildingsSubscription?.cancel();
-    super.close();
   }
 }

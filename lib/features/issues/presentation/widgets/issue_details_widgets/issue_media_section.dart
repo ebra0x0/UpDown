@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:UpDown/core/theme/app_radius.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,6 +13,7 @@ class IssueMediaBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(mediaUrl);
     return Container(
       width: double.infinity,
       height: 200.h,
