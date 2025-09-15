@@ -2,12 +2,13 @@ import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/widgets/screen_echo.dart';
 import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
-import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/sliver_grid_section.dart';
+import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/grid_section.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class BuildingsSliverGridSectionBuilder extends StatelessWidget {
-  const BuildingsSliverGridSectionBuilder({
+class BuildingsGridSectionBuilder extends StatelessWidget {
+  const BuildingsGridSectionBuilder({
     super.key,
   });
 
@@ -28,8 +29,13 @@ class BuildingsSliverGridSectionBuilder extends StatelessWidget {
           return AppSkeletonizer(
             enabled: state.status == ContentStatus.loading,
             isSliver: true,
-            child: BuildingsSliverGridViewSection(
-              buildings: state.buildings ?? [],
+            child: SliverToBoxAdapter(
+              child: SizedBox(
+                height: 120.sp,
+                child: BuildingsGridViewSection(
+                  buildings: state.buildings ?? [],
+                ),
+              ),
             ),
           );
         });

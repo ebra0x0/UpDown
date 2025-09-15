@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:UpDown/core/network/api/api_failure.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/features/issues/data/models/issue_request_model.dart';
@@ -189,7 +187,6 @@ class IssuesRepo {
         if (remoteRes != local) {
           await _local.saveAll(remoteRes);
         }
-        log("new issues ${remoteRes.length}");
         return Right(remoteRes);
       } catch (e) {
         return Right(remoteRes);

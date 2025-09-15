@@ -31,6 +31,8 @@ class BuildingFloorsSectionBuilder extends StatelessWidget {
                 child: HeaderSection(
                   title: "الطوابق",
                   titleStyle: AppTextStyles.textStyle18,
+                  actionText: "عرض الكل",
+                  onActionTap: () {},
                 ),
               ),
               BuildingFloorsSection(
