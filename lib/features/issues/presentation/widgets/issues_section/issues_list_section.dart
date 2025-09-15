@@ -1,4 +1,3 @@
-import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/theme/app_spacing.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
@@ -44,7 +43,7 @@ class IssueCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardTile(
       leading: BubbleIcon(
-        icon: AppIcons.errorOutlineIcon.copyWith(
+        icon: issue.issueType.icon.copyWith(
           size: 22.sp,
         ),
         color: issue.status.color,

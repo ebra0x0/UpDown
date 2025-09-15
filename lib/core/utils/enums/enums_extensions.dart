@@ -112,6 +112,25 @@ extension IssueTypeExtension on IssueType {
         return local.issue_type_priority_Other;
     }
   }
+
+  Icon get icon {
+    switch (this) {
+      case IssueType.doorNotOpening:
+        return AppIcons.doorIcon;
+      case IssueType.stuckBetweenFloors:
+        return AppIcons.betweenIcon;
+      case IssueType.noise:
+        return AppIcons.volumeUpIcon;
+      case IssueType.notResponding:
+        return AppIcons.powerIcon;
+      case IssueType.buttonNotResponding:
+        return AppIcons.buttonIcon;
+      case IssueType.aboveFloor:
+        return AppIcons.aboveFloorIcon;
+      case IssueType.other:
+        return AppIcons.reportProblemIcon;
+    }
+  }
 }
 
 // Issue Status Extension

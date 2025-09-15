@@ -195,4 +195,58 @@ class AppIcons {
     color: AppTheme.grey,
     size: 24.sp,
   );
+
+  static Icon doorIcon = Icon(
+    Icons.door_front_door_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon volumeUpIcon = Icon(
+    Icons.volume_up_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon powerIcon = Icon(
+    Icons.power_settings_new_rounded,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon buttonIcon = Icon(
+    Icons.touch_app_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon lightIcon = Icon(
+    Icons.light_mode_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon aboveFloorIcon = Icon(
+    Icons.vertical_align_top_sharp,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon downArrowIcon = Icon(
+    Icons.arrow_downward_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon betweenIcon = Icon(
+    Icons.height_rounded,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
+
+  static Icon reportProblemIcon = Icon(
+    Icons.report_problem_outlined,
+    color: AppTheme.grey,
+    size: 24.sp,
+  );
 }
