@@ -44,10 +44,10 @@ class ElevatorsRepo {
     if (!isConnected) return;
 
     final remoteStream =
-        _remote.fetchElevatorDetails(elevatorId).handleError((error) {
+        _remote.streamElevatorDetails(elevatorId).handleError((error) {
       if (error is RealtimeSubscribeException) {
         Future.delayed(Duration(seconds: 5), () {
-          _remote.fetchElevatorDetails(elevatorId);
+          _remote.streamElevatorDetails(elevatorId);
         });
       }
     });

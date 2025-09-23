@@ -3,8 +3,6 @@ import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
-import 'package:UpDown/core/utils/extensions/icon_ext.dart';
-
 import 'package:UpDown/core/widgets/bubble_icon.dart';
 import 'package:UpDown/core/widgets/section_box.dart';
 import 'package:UpDown/core/widgets/text_and_bubble_text_row.dart';
@@ -35,10 +33,7 @@ class IssueInfoSection extends StatelessWidget {
           spacing: 8.sp,
           children: [
             BubbleIcon(
-              icon: AppIcons.errorOutlineIcon.copyWith(
-                size: 26.sp,
-                color: issueStatus.color,
-              ),
+              icon: issueType.icon,
               color: AppTheme.red,
             ),
             Expanded(

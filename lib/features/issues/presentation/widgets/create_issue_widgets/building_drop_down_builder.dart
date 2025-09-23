@@ -22,7 +22,7 @@ class BuildingDropDownBuilder extends StatelessWidget {
           context.watch<CreateIssueCubit>().state;
       final bool isCreating =
           issueCubitState.status == CreateIssueStatus.loading;
-      final BuildingModel? selectedBuilding = issueCubitState.building;
+      final BuildingModel? selectedBuilding = issueCubitState.selectedBuilding;
       final List<BuildingModel>? buildings =
           state.status == ContentStatus.loaded ? state.buildings : null;
 

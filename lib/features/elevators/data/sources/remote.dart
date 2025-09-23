@@ -20,7 +20,7 @@ class ElevatorsRemoteDataSource {
     });
   }
 
-  Stream<ElevatorModel?> fetchElevatorDetails(String elevatorId) {
+  Stream<ElevatorModel?> streamElevatorDetails(String elevatorId) {
     return _api.streamElevatorDetails(elevatorId).map((json) {
       if (json == null) return null;
       return ElevatorModel.fromJson(json);

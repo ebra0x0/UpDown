@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
 import 'package:UpDown/features/elevators/data/repo/elevators_repo.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'elevators_state.dart';
@@ -12,13 +13,16 @@ class ElevatorsCubit extends Cubit<ElevatorsState> {
   StreamSubscription? _byBuildingSubscription;
   StreamSubscription? _byBuildingsSubscription;
   String? currentBuildingId;
+  List<String> currentBuildingIds = [];
 
   void emitStreamByBuilding(String buildingId) {
-    if (currentBuildingId == buildingId) {
+    if (currentBuildingId == buildingId ||
+        state.status == ContentStatus.loading) {
       return;
     }
 
     currentBuildingId = buildingId;
+    _byBuildingSubscription?.cancel();
 
     emit(state.copyWith(
         status: ContentStatus.loading,
@@ -46,9 +50,12 @@ class ElevatorsCubit extends Cubit<ElevatorsState> {
 
   void callByBuildings(List<String> buildingIds) {
     if (state.status == ContentStatus.loading ||
-        _byBuildingsSubscription != null) {
+        currentBuildingIds.equals(buildingIds)) {
       return;
     }
+
+    currentBuildingIds = buildingIds;
+    _byBuildingsSubscription?.cancel();
 
     emit(state.copyWith(
         status: ContentStatus.loading,

@@ -17,7 +17,9 @@ class _ElevatorDetailsViewState extends State<ElevatorDetailsView> {
   @override
   void initState() {
     super.initState();
-    context.read<ElevatorDetailsCubit>().call(elevatorId: widget.elevatorId);
+    context
+        .read<ElevatorDetailsCubit>()
+        .emitStreamElevatorDetails(elevatorId: widget.elevatorId);
     context
         .read<IssuesCubit>()
         .emitStreamAllActiveForElevator(widget.elevatorId);

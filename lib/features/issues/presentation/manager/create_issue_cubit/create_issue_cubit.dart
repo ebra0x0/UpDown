@@ -58,7 +58,10 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   }
 
   void selectBuilding(BuildingModel building) {
-    if (building.id == state.building?.id) return;
+    if (building.id == state.selectedBuilding?.id ||
+        state.status == CreateIssueStatus.loading) {
+      return;
+    }
 
     emit(state.copyWith(status: CreateIssueStatus.selectLoading));
 
@@ -73,8 +76,8 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
         (elevators) {
           emit(state.copyWith(
             status: CreateIssueStatus.selected,
-            building: building,
-            elevators: elevators,
+            selectedBuilding: building,
+            elevatorsList: elevators,
           ));
         },
       );
@@ -91,7 +94,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
   void selectElevator(ElevatorModel elevator) {
     emit(state.copyWith(
       status: CreateIssueStatus.selected,
-      elevator: elevator,
+      selectedElevator: elevator,
     ));
   }
 

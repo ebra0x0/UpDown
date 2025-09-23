@@ -16,7 +16,7 @@ class SliverUnitsSectionBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ElevatorDetailsCubit, ElevatorDetailsState>(
-        buildWhen: (previous, current) => previous.status != current.status,
+        buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
           final units = state.elevator?.units ?? [];
           return SliverPadding(

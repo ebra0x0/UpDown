@@ -18,8 +18,8 @@ class ElevatorDropDownBuilder extends StatelessWidget {
       builder: (context, state) {
         final bool isCreating = state.status == CreateIssueStatus.loading;
         // final CreateIssueCubit cubit = context.read<CreateIssueCubit>();
-        final List<ElevatorModel>? elevators = state.elevators;
-        final ElevatorModel? selectedElevator = state.elevator;
+        final List<ElevatorModel>? elevators = state.elevatorsList;
+        final ElevatorModel? selectedElevator = state.selectedElevator;
 
         final dropDownList = elevators
                 ?.map((e) => DropDownModel(

@@ -14,7 +14,7 @@ class ElevatorDetailsCubit extends Cubit<ElevatorDetailsState> {
 
   ElevatorDetailsCubit(this._repo) : super(ElevatorDetailsState());
 
-  void call({required String elevatorId}) {
+  void emitStreamElevatorDetails({required String elevatorId}) {
     if (state.status == ContentStatus.loading) return;
 
     emit(state.copyWith(

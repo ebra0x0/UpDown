@@ -13,9 +13,9 @@ class CreateIssueState {
   final CreateIssueStatus status;
   final String? error;
   final List<MediaRequestModel> mediaList;
-  final BuildingModel? building;
-  final ElevatorModel? elevator;
-  final List<ElevatorModel>? elevators;
+  final BuildingModel? selectedBuilding;
+  final ElevatorModel? selectedElevator;
+  final List<ElevatorModel>? elevatorsList;
   final IssueType? issueType;
   final String? description;
 
@@ -23,9 +23,9 @@ class CreateIssueState {
     this.status = CreateIssueStatus.initial,
     this.error,
     this.mediaList = const [],
-    this.building,
-    this.elevator,
-    this.elevators,
+    this.selectedBuilding,
+    this.selectedElevator,
+    this.elevatorsList,
     this.issueType,
     this.description,
   });
@@ -34,16 +34,16 @@ class CreateIssueState {
     return IssueRequestModel(
       mediaUrls: mediaList.map((m) => m.url).toList(),
       mediaList: mediaList,
-      buildingName: building!.name,
-      elevatorName: elevator!.name,
+      buildingName: selectedBuilding!.name,
+      elevatorName: selectedElevator!.name,
       issueType: issueType!,
       priority: IssuePriority.values.firstWhere(
         (element) => element.name == issueType!.name,
         orElse: () => IssuePriority.low,
       ),
       description: description,
-      buildingId: building!.id,
-      elevatorId: elevator!.id,
+      buildingId: selectedBuilding!.id,
+      elevatorId: selectedElevator!.id,
     );
   }
 
@@ -51,9 +51,9 @@ class CreateIssueState {
     CreateIssueStatus? status,
     String? error,
     List<MediaRequestModel>? mediaList,
-    BuildingModel? building,
-    ElevatorModel? elevator,
-    List<ElevatorModel>? elevators,
+    BuildingModel? selectedBuilding,
+    ElevatorModel? selectedElevator,
+    List<ElevatorModel>? elevatorsList,
     IssueType? issueType,
     String? description,
   }) {
@@ -61,9 +61,9 @@ class CreateIssueState {
       status: status ?? this.status,
       error: error,
       mediaList: mediaList ?? this.mediaList,
-      building: building ?? this.building,
-      elevator: elevator ?? this.elevator,
-      elevators: elevators ?? this.elevators,
+      selectedBuilding: selectedBuilding ?? this.selectedBuilding,
+      selectedElevator: selectedElevator ?? this.selectedElevator,
+      elevatorsList: elevatorsList ?? this.elevatorsList,
       issueType: issueType ?? this.issueType,
       description: description ?? this.description,
     );
