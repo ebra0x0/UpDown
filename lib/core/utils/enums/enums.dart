@@ -204,3 +204,21 @@ enum MediaType {
   final String name;
   const MediaType(this.name);
 }
+
+enum MaintenanceType {
+  gas("Gas"),
+  oil("Oil"),
+  inspection("Inspection");
+
+  final String name;
+  const MaintenanceType(this.name);
+}
+
+enum MaintenanceStatus {
+  pending("Pending"),
+  inProgress("In_Progress"),
+  completed("Completed");
+
+  final String name;
+  const MaintenanceStatus(this.name);
+}

@@ -630,4 +630,19 @@ class ApiService {
     response["media_list"] = mediaList;
     return response;
   }
+
+  // Maintenance
+
+  Stream<Map<String, dynamic>?> streamActiveMaintenance() async* {
+    _ensureInitialized();
+    if (!isConnected) {
+      yield null;
+    }
+    yield* _supabase
+        .from('Maintenance')
+        .stream(primaryKey: ["id"])
+        .eq('status', MaintenanceStatus.inProgress.name)
+        .map((list) => list.isNotEmpty ? list.first : null)
+        .distinct();
+  }
 }

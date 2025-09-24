@@ -364,3 +364,40 @@ extension PartConditionExtension on PartCondition {
     }
   }
 }
+
+extension MaintenanceStatusExtension on MaintenanceStatus {
+  String get title {
+    switch (this) {
+      case MaintenanceStatus.pending:
+        return "قيد الانتظار";
+      case MaintenanceStatus.inProgress:
+        return "جارية الأن";
+      case MaintenanceStatus.completed:
+        return "تم الانتهاء";
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case MaintenanceStatus.pending:
+        return AppTheme.grey;
+      case MaintenanceStatus.inProgress:
+        return AppTheme.yellow;
+      case MaintenanceStatus.completed:
+        return AppTheme.green;
+    }
+  }
+}
+
+extension MaintenanceTypeExtension on MaintenanceType {
+  String get title {
+    switch (this) {
+      case MaintenanceType.inspection:
+        return "تربيطات ومراجعة التوصيلات";
+      case MaintenanceType.gas:
+        return "سولار وتنظيف شوك";
+      case MaintenanceType.oil:
+        return "تزييت لسير الكابينة والتقل";
+    }
+  }
+}
