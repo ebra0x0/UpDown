@@ -8,14 +8,16 @@ class MaintenanceModel with _$MaintenanceModel {
   const factory MaintenanceModel({
     required String id,
     required MaintenanceType type,
+    required String buildingId,
     required String elevatorId,
     required int cost,
-    required String technicianName,
+    required String technicianId,
     String? notes,
     @Default([]) List<String> media,
     required MaintenanceStatus status,
     required DateTime date,
     required DateTime createdAt,
+    DateTime? updatedAt,
   }) = _MaintainanceModel;
 
   factory MaintenanceModel.fromJson(Map<String, dynamic> json) =>
@@ -25,12 +27,14 @@ class MaintenanceModel with _$MaintenanceModel {
         id: '',
         type: MaintenanceType.inspection,
         elevatorId: '',
+        buildingId: '',
+        technicianId: '',
         cost: 300,
-        technicianName: '',
         notes: null,
         media: [],
         status: MaintenanceStatus.inProgress,
         date: DateTime(2020, 1, 1),
         createdAt: DateTime(2020, 1, 1),
+        updatedAt: DateTime(2020, 1, 1),
       );
 }

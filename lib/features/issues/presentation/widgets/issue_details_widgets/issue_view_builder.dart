@@ -1,6 +1,6 @@
 import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/widgets/custom_sliver_app_bar.dart';
-import 'package:UpDown/features/issues/presentation/manager/issue_details_cubit/issue_details_cubit.dart';
+import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_view_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +10,7 @@ class IssueViewBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IssueDetailsCubit, IssueDetailsState>(
+    return BlocBuilder<IssuesCubit, IssuesState>(
       builder: (context, state) {
         return CustomScrollView(
           slivers: [

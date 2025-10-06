@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/data/repo/buildings_repo.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'buildings_state.dart';
@@ -12,7 +13,7 @@ class BuildingsCubit extends Cubit<BuildingsState> {
 
   StreamSubscription? _streamSubscription;
 
-  void emitStreamBuildings() async {
+  void emitStreamAll() async {
     if (state.status == ContentStatus.loading || _streamSubscription != null) {
       return;
     }
@@ -37,6 +38,9 @@ class BuildingsCubit extends Cubit<BuildingsState> {
           }
 
           emit(state.copyWith(status: ContentStatus.loaded, buildings: res));
+          if (state.currentBuilding != null) {
+            selectBuilding(state.currentBuilding!.id);
+          }
         },
       );
     }, onError: (e) {
@@ -45,6 +49,17 @@ class BuildingsCubit extends Cubit<BuildingsState> {
       emit(state.copyWith(
           status: ContentStatus.error, errorMsg: "تعذر تحميل المباني"));
     });
+  }
+
+  void selectBuilding(String buildingId) {
+    if (state.status == ContentStatus.loading || state.buildings == null) {
+      return;
+    }
+
+    emit(state.copyWith(
+      currentBuilding: state.buildings
+          ?.firstWhereOrNull((building) => building.id == buildingId),
+    ));
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/widgets/custom_sliver_app_bar.dart';
-import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
+import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/active_issue/active_issue_builder.dart';
 import 'package:UpDown/features/elevators/presentation/widgets/units_section/units_section_builder.dart';
 import 'package:flutter/widgets.dart';
@@ -14,7 +14,7 @@ class ElevatorDetailsViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBarBuilder(),
+        _SliverAppBarBuilder(),
         SliverActiveIssueBuilder(),
         SliverToBoxAdapter(child: SizedBox(height: 24.sp)),
         SliverUnitsSectionBuilder(),
@@ -23,16 +23,14 @@ class ElevatorDetailsViewBody extends StatelessWidget {
   }
 }
 
-class SliverAppBarBuilder extends StatelessWidget {
-  const SliverAppBarBuilder({super.key});
-
+class _SliverAppBarBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ElevatorDetailsCubit, ElevatorDetailsState>(
-      buildWhen: (previous, current) => previous.status != current.status,
+    return BlocBuilder<ElevatorsCubit, ElevatorsState>(
+      buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         return CustomSliverAppBar(
-          title: state.elevator?.name ?? "اسم المصعد",
+          title: state.currentElevator?.name ?? "اسم المصعد",
           isLoading: state.status == ContentStatus.loading,
         );
       },

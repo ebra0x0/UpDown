@@ -2,7 +2,6 @@ import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/icon_ext.dart';
-
 import 'package:UpDown/core/widgets/custom_card.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:flutter/widgets.dart';

@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/helper/sort_list.dart';
 import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'issues_state.dart';
@@ -44,12 +44,16 @@ class IssuesCubit extends Cubit<IssuesState> {
             emit(state.copyWith(status: ContentStatus.empty, issues: []));
             return;
           }
+
           final List<IssueResponseModel> orderedIssues =
               sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
           emit(state.copyWith(
             status: ContentStatus.loaded,
             issues: orderedIssues,
           ));
+          if (state.currentIssue != null) {
+            selectIssue(state.currentIssue!.id);
+          }
         },
       );
     }, onError: (e) {
@@ -62,74 +66,11 @@ class IssuesCubit extends Cubit<IssuesState> {
     });
   }
 
-  void emitStreamAllActiveForBuilding(String buildingId) {
-    if (state.status == ContentStatus.loading ||
-        _streamBuildingSubscription != null) {
-      return;
-    }
-
-    emit(state.copyWith(status: ContentStatus.loading));
-
-    _streamBuildingSubscription =
-        _repo.streamBuildingActiveIssues(buildingId).listen((stream) {
-      if (isClosed) return;
-      stream.fold(
-        (errMsg) => emit(state.copyWith(
-            status: ContentStatus.error, errorMsg: errMsg.errMessage)),
-        (issues) {
-          if (issues.isEmpty) {
-            emit(state.copyWith(status: ContentStatus.empty, issues: []));
-            return;
-          }
-          final List<IssueResponseModel> orderedIssues =
-              sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
-          emit(state.copyWith(
-            status: ContentStatus.loaded,
-            issues: orderedIssues,
-          ));
-        },
-      );
-    }, onError: (e) {
-      log(e.toString());
-      if (isClosed) return;
-      if (state.issues != null) return;
-      emit(state.copyWith(status: ContentStatus.error, errorMsg: e.toString()));
-    });
-  }
-
-  void emitStreamAllActiveForElevator(String elevatorId) {
-    if (state.status == ContentStatus.loading ||
-        _streamElevatorSubscription != null) {
-      return;
-    }
-
-    emit(state.copyWith(status: ContentStatus.loading));
-
-    _streamElevatorSubscription =
-        _repo.streamElevatorActiveIssues(elevatorId).listen((stream) {
-      if (isClosed) return;
-      stream.fold(
-        (errMsg) => emit(state.copyWith(
-            status: ContentStatus.error, errorMsg: errMsg.errMessage)),
-        (issues) {
-          if (issues.isEmpty) {
-            emit(state.copyWith(status: ContentStatus.empty, issues: []));
-            return;
-          }
-          final List<IssueResponseModel> orderedIssues =
-              sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
-          emit(state.copyWith(
-            status: ContentStatus.loaded,
-            issues: orderedIssues,
-          ));
-        },
-      );
-    }, onError: (e) {
-      log(e.toString());
-      if (isClosed) return;
-      if (state.issues != null) return;
-      emit(state.copyWith(status: ContentStatus.error, errorMsg: e.toString()));
-    });
+  void selectIssue(String issueId) {
+    if (state.status == ContentStatus.loading || state.issues == null) return;
+    emit(state.copyWith(
+        currentIssue:
+            state.issues!.firstWhereOrNull((issue) => issue.id == issueId)));
   }
 
   @override

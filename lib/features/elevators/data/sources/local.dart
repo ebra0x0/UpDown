@@ -25,6 +25,19 @@ class ElevatorsLocalDataSource {
     }
   }
 
+  Future<List<ElevatorModel>> getAll() async {
+    try {
+      final box = await _getBox();
+      final keys = box.keys.cast<String>();
+      final elevators = await Future.wait(
+        keys.map((key) async => await box.get(key)),
+      );
+      return elevators.whereType<ElevatorModel>().toList();
+    } catch (e) {
+      throw ('Failed to get all elevators: $e');
+    }
+  }
+
   Future<List<ElevatorModel>> getByBuilding(String buildingId) async {
     try {
       final box = await _getBox();

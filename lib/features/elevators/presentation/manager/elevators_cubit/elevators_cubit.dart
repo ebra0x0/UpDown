@@ -10,26 +10,19 @@ part 'elevators_state.dart';
 class ElevatorsCubit extends Cubit<ElevatorsState> {
   ElevatorsCubit(this._repo) : super(ElevatorsState());
   final ElevatorsRepo _repo;
-  StreamSubscription? _byBuildingSubscription;
-  StreamSubscription? _byBuildingsSubscription;
-  String? currentBuildingId;
-  List<String> currentBuildingIds = [];
+  StreamSubscription? _streamSubscription;
 
-  void emitStreamByBuilding(String buildingId) {
-    if (currentBuildingId == buildingId ||
-        state.status == ContentStatus.loading) {
+  void emitStreamAll() {
+    if (state.status == ContentStatus.loading) {
       return;
     }
-
-    currentBuildingId = buildingId;
-    _byBuildingSubscription?.cancel();
+    _streamSubscription?.cancel();
 
     emit(state.copyWith(
         status: ContentStatus.loading,
         elevators: List.generate(2, (_) => ElevatorModel.empty())));
 
-    _byBuildingSubscription =
-        _repo.streamBuildingElevators(buildingId).listen((stream) {
+    _streamSubscription = _repo.streamAllElevators().listen((stream) {
       if (isClosed) return;
 
       stream.fold(
@@ -38,48 +31,45 @@ class ElevatorsCubit extends Cubit<ElevatorsState> {
         (response) {
           emit(state.copyWith(
               status: ContentStatus.loaded, elevators: response));
+
+          if (state.buildingElevators != null &&
+              state.buildingElevators!.isNotEmpty) {
+            selectBuildingElevators(state.buildingElevators!.first.buildingId);
+          }
+
+          if (state.currentElevator != null) {
+            selectElevator(state.currentElevator!.id);
+          }
         },
       );
-    }, onError: (e) {
-      if (isClosed) return;
-      if (state.elevators != null) return;
-      emit(state.copyWith(
-          status: ContentStatus.error, errorMsg: "تعذر تحميل مصاعد المبنى"));
     });
   }
 
-  void callByBuildings(List<String> buildingIds) {
-    if (state.status == ContentStatus.loading ||
-        currentBuildingIds.equals(buildingIds)) {
+  void selectBuildingElevators(String buildingId) {
+    if (state.status == ContentStatus.loading || state.elevators == null) {
       return;
     }
 
-    currentBuildingIds = buildingIds;
-    _byBuildingsSubscription?.cancel();
+    emit(state.copyWith(
+      buildingElevators: state.elevators
+          ?.where((elevator) => elevator.buildingId == buildingId)
+          .toList(),
+    ));
+  }
+
+  void selectElevator(String elevatorId) {
+    if (state.status == ContentStatus.loading || state.elevators == null) {
+      return;
+    }
 
     emit(state.copyWith(
-        status: ContentStatus.loading,
-        elevators: List.generate(2, (_) => ElevatorModel.empty())));
-
-    _byBuildingsSubscription =
-        _repo.streamBuildingsElevators(buildingIds).listen((stream) {
-      if (isClosed) return;
-
-      stream.fold(
-        (errMsg) => emit(state.copyWith(
-            status: ContentStatus.error, errorMsg: errMsg.errMessage)),
-        (response) {
-          emit(state.copyWith(
-              status: ContentStatus.loaded, elevators: response));
-        },
-      );
-    });
+        currentElevator: state.elevators
+            ?.firstWhereOrNull((elevator) => elevator.id == elevatorId)));
   }
 
   @override
   Future<void> close() async {
     super.close();
-    await _byBuildingSubscription?.cancel();
-    await _byBuildingsSubscription?.cancel();
+    await _streamSubscription?.cancel();
   }
 }

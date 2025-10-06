@@ -72,6 +72,7 @@ class ElevatorUnitCard extends StatelessWidget {
               padding: AppInsets.bottom8,
               child: BubbleStatus(color: unit.status.color),
             ),
+            // Needs enhancement to be more smooth
             Expanded(
               child: Center(
                 child: SvgPicture.asset(

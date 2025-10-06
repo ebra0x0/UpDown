@@ -32,19 +32,18 @@ class ElevatorsSectionBuilder extends StatelessWidget {
             child: SliverList(
               delegate: SliverChildListDelegate([
                 Visibility(
-                  visible: state.elevators?.isNotEmpty ?? false,
+                  visible: state.buildingElevators?.isNotEmpty ?? false,
                   child: HeaderSection(
                     title: "المصاعد",
                     titleStyle: AppTextStyles.textStyle18,
                   ),
                 ),
                 BlocBuilder<IssuesCubit, IssuesState>(
-                  buildWhen: (previous, current) =>
-                      current.status == ContentStatus.loaded,
+                  buildWhen: (previous, current) => previous != current,
                   builder: (context, issueState) {
                     return ElevatorsSection(
-                      elevators: state.elevators ?? [],
-                      activeIssue: issueState.issues?.firstOrNull,
+                      elevators: state.buildingElevators ?? [],
+                      issues: issueState.issues ?? [],
                     );
                   },
                 ),

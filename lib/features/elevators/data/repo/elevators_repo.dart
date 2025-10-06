@@ -187,4 +187,56 @@ class ElevatorsRepo {
       }
     });
   }
+
+  Stream<Either<Failure, List<ElevatorModel>>> streamAllElevators() async* {
+    try {
+      final local = await _local.getAll();
+
+      if (local.isNotEmpty) {
+        yield Right(local);
+      }
+
+      yield* Rx.merge([
+        if (isConnected) _handleAllElevatorsStream(true, local),
+        _netManager.connectionStream
+            .distinct()
+            .where((connected) => connected)
+            .asyncExpand((_) => _handleAllElevatorsStream(true, local))
+      ]);
+    } on Failure catch (e) {
+      yield Left(e);
+    } catch (e) {
+      yield Left(CustomFailure("تعذر تحميل المصاعد."));
+    }
+  }
+
+  Stream<Either<Failure, List<ElevatorModel>>> _handleAllElevatorsStream(
+      bool isConnected, List<ElevatorModel> local) async* {
+    if (!isConnected) return;
+
+    final remoteStream = _remote.streamAllElevators().handleError((error) {
+      if (error is RealtimeSubscribeException) {
+        Future.delayed(Duration(seconds: 5), () {
+          _remote.streamAllElevators();
+        });
+      }
+    });
+
+    yield* remoteStream.asyncMap((remoteRes) async {
+      try {
+        if (remoteRes.isEmpty) {
+          await _local.clear();
+          return const Right([]);
+        }
+
+        if (remoteRes != local) {
+          await _local.saveAll(remoteRes);
+        }
+
+        return Right(remoteRes);
+      } catch (e) {
+        return Right(remoteRes);
+      }
+    });
+  }
 }

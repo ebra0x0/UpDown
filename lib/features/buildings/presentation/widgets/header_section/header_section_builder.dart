@@ -1,10 +1,10 @@
 import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/header_section/header_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
-import 'package:UpDown/features/buildings/presentation/cubits/building_details_cubit/building_details_cubit.dart';
 import 'package:UpDown/core/theme/app_skeleton.dart';
 
 class BuildingDetailsHeaderSectionBuilder extends StatelessWidget {
@@ -14,11 +14,12 @@ class BuildingDetailsHeaderSectionBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BuildingDetailsCubit, BuildingDetailsState>(
+    return BlocBuilder<BuildingsCubit, BuildingsState>(
       builder: (context, state) {
         final building = state.status == ContentStatus.loaded
-            ? state.building!
+            ? state.currentBuilding!
             : BuildingModel.empty();
+
         return SliverPadding(
           padding: AppInsets.h8,
           sliver: AppSkeletonizer(

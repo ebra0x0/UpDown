@@ -15,11 +15,10 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class ElevatorCard extends StatelessWidget {
-  const ElevatorCard(
-      {super.key, required this.elevator, required this.activeIssue});
+  final IssueResponseModel? activeIssue;
+  const ElevatorCard({super.key, required this.elevator, this.activeIssue});
 
   final ElevatorModel elevator;
-  final IssueResponseModel? activeIssue;
 
   @override
   Widget build(BuildContext context) {

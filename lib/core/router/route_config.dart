@@ -7,14 +7,10 @@ import 'package:UpDown/features/account_setup/ui/cubit/account_setup_cubit.dart'
 import 'package:UpDown/features/account_setup/ui/views/account_setup_view.dart';
 import 'package:UpDown/features/auth/ui/views/login/login_view.dart';
 import 'package:UpDown/features/auth/ui/views/regestration/registration_view.dart';
-import 'package:UpDown/features/buildings/presentation/cubits/building_details_cubit/building_details_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/views/building_details_view.dart';
-import 'package:UpDown/features/elevators/presentation/manager/elevator_details_cubit/elevator_details_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/views/elevator_details_view.dart';
 import 'package:UpDown/features/home/presentation/views/home_view.dart';
-import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
-import 'package:UpDown/features/issues/presentation/manager/issue_details_cubit/issue_details_cubit.dart';
 import 'package:UpDown/features/issues/presentation/views/create_issue_view.dart';
 import 'package:UpDown/features/issues/presentation/views/issue_view.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
@@ -92,13 +88,9 @@ class RouteConfig {
 
   static GoRoute _issueDetailsRoute() {
     return GoRoute(
-      path: AppRoute.issue.path,
+      path: "${AppRoute.issue.path}/:id",
       builder: (context, state) {
-        return BlocProvider(
-          create: (context) =>
-              IssueDetailsCubit()..setIssue(state.extra as IssueResponseModel),
-          child: IssueView(),
-        );
+        return IssueView(issueId: state.pathParameters['id'] as String);
       },
     );
   }
@@ -107,11 +99,8 @@ class RouteConfig {
     return GoRoute(
         path: "${AppRoute.elevator.path}/:id",
         builder: (context, state) {
-          return BlocProvider(
-            create: (context) => ElevatorDetailsCubit(getIt()),
-            child: ElevatorDetailsView(
-              elevatorId: state.pathParameters['id'] as String,
-            ),
+          return ElevatorDetailsView(
+            elevatorId: state.pathParameters['id'] as String,
           );
         });
   }
@@ -120,11 +109,8 @@ class RouteConfig {
     return GoRoute(
         path: "${AppRoute.building.path}/:id",
         builder: (context, state) {
-          return BlocProvider(
-            create: (context) => BuildingDetailsCubit(getIt()),
-            child: BuildingDetailsView(
-              buildingId: state.pathParameters['id'] as String,
-            ),
+          return BuildingDetailsView(
+            buildingId: state.pathParameters['id'] as String,
           );
         });
   }

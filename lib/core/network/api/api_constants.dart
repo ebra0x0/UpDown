@@ -3,6 +3,15 @@ abstract class ApiConstants {
   static const String apiKey =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9hbnlkemJyZGphc3FieHZvYmh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYwOTgzODAsImV4cCI6MjA1MTY3NDM4MH0.PwKij6KclXUD3lmJdYErbqYFQ3WbxUe4iP_K3Fkxveo";
 
+  // Supabase Database
+  static const String usersTable = "Users";
+  static const String buildingsTable = "Buildings";
+  static const String elevatorsTable = "Elevators";
+  static const String maintenancesTable = "Maintenances";
+  static const String reportsTable = "Reports";
+  static const String issuesTable = "Issues";
+  static const String mediaTable = "Media";
+
   // Supabase Storage
   // Avatars Bucket
   static const String avatarsBucket = "avatars";

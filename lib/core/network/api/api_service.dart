@@ -198,7 +198,8 @@ class ApiService {
       // Insert profile into database
       await safeRequest(
         networkManager: _netManager,
-        request: () => _supabase.from('Users').insert(profile.toJson()),
+        request: () =>
+            _supabase.from(ApiConstants.usersTable).insert(profile.toJson()),
         errorMessage: "فشل الاتصال اثناء انشاء بيانات المستخدم. حاول مرة اخرى",
       );
     } on PostgrestException catch (e) {
@@ -320,7 +321,7 @@ class ApiService {
       await safeRequest(
           networkManager: _netManager,
           request: () => _supabase
-              .from('Users')
+              .from(ApiConstants.usersTable)
               .update(profile.toJson())
               .eq("id", _supabase.auth.currentUser!.id));
     } on PostgrestException catch (e) {
@@ -341,7 +342,7 @@ class ApiService {
     yield* _supabase
         .from("Buildings")
         .stream(primaryKey: ["id"])
-        .eq("owner_id", _supabase.auth.currentUser!.id)
+        .eq("owner_id", user!.id)
         .distinct();
   }
 
@@ -352,7 +353,7 @@ class ApiService {
       yield null;
     }
     yield* _supabase
-        .from('Buildings')
+        .from(ApiConstants.buildingsTable)
         .stream(primaryKey: ["id"])
         .eq('id', buildingId)
         .map((list) => list.isNotEmpty ? list.first : null)
@@ -369,7 +370,7 @@ class ApiService {
       yield null;
     }
     yield* _supabase
-        .from('Elevators')
+        .from(ApiConstants.elevatorsTable)
         .stream(primaryKey: ["id"])
         .eq('id', elevatorId)
         .asyncMap((list) async {
@@ -393,7 +394,7 @@ class ApiService {
       yield [];
     }
     yield* _supabase
-        .from('Elevators')
+        .from(ApiConstants.elevatorsTable)
         .stream(primaryKey: ["id"])
         .eq('building_id', buildingId)
         .distinct();
@@ -407,9 +408,22 @@ class ApiService {
     }
 
     yield* _supabase
-        .from('Elevators')
+        .from(ApiConstants.elevatorsTable)
         .stream(primaryKey: ["id"])
         .inFilter('building_id', buildingIds)
+        .distinct();
+  }
+
+  Stream<List<Map<String, dynamic>>> streamAllElevators() async* {
+    _ensureInitialized();
+    if (!isConnected) {
+      yield [];
+    }
+
+    yield* _supabase
+        .from(ApiConstants.elevatorsTable)
+        .stream(primaryKey: ["id"])
+        .eq("user_id", user!.id)
         .distinct();
   }
 
@@ -444,8 +458,10 @@ class ApiService {
         try {
           await safeRequest(
             networkManager: _netManager,
-            request: () =>
-                _supabase.from('Issues').delete().eq('id', issueReq.id!),
+            request: () => _supabase
+                .from(ApiConstants.issuesTable)
+                .delete()
+                .eq('id', issueReq.id!),
           );
         } catch (_) {}
         throw (CustomFailure("حدث خطاء اثناء رفع الوسائط"));
@@ -488,7 +504,9 @@ class ApiService {
       // 4. إدخال الميديا في قاعدة البيانات
       await safeRequest(
         networkManager: _netManager,
-        request: () => _supabase.from('Media').insert(mediaWithUrl.toJson()),
+        request: () => _supabase
+            .from(ApiConstants.mediaTable)
+            .insert(mediaWithUrl.toJson()),
       );
 
       return mediaWithUrl.url;
@@ -500,7 +518,7 @@ class ApiService {
     await safeRequest(
         networkManager: _netManager,
         request: () => _supabase
-            .from('Issues')
+            .from(ApiConstants.issuesTable)
             .update({"media_urls": mediaUrls}).eq("id", issueId));
   }
 
@@ -544,8 +562,11 @@ class ApiService {
   Future<Map<String, dynamic>?> _fetchMedia(String mediaUrl) async {
     final Map<String, dynamic>? response = await safeRequest(
         networkManager: _netManager,
-        request: () =>
-            _supabase.from('Media').select().eq('url', mediaUrl).maybeSingle());
+        request: () => _supabase
+            .from(ApiConstants.mediaTable)
+            .select()
+            .eq('url', mediaUrl)
+            .maybeSingle());
 
     if (response != null) {
       response["url"] = await _getMediaPublicUrl(response["url"]);
@@ -562,7 +583,7 @@ class ApiService {
     }
 
     yield* _supabase
-        .from('Issues')
+        .from(ApiConstants.issuesTable)
         .stream(primaryKey: ["id"])
         .eq('building_id', buildingId)
         .distinct();
@@ -575,7 +596,7 @@ class ApiService {
       yield [];
     }
     yield* _supabase
-        .from('Issues')
+        .from(ApiConstants.issuesTable)
         .stream(primaryKey: ["id"])
         .eq('elevator_id', elevatorId)
         .distinct();
@@ -589,7 +610,7 @@ class ApiService {
     }
 
     yield* _supabase
-        .from('Issues')
+        .from(ApiConstants.issuesTable)
         .stream(primaryKey: ["id"])
         .eq('user_id', _supabase.auth.currentUser!.id)
         .distinct()
@@ -613,8 +634,11 @@ class ApiService {
       return null;
     }
 
-    final response =
-        await _supabase.from('Issues').select().eq('id', issueId).maybeSingle();
+    final response = await _supabase
+        .from(ApiConstants.issuesTable)
+        .select()
+        .eq('id', issueId)
+        .maybeSingle();
 
     if (response == null) {
       return null;
@@ -639,7 +663,7 @@ class ApiService {
       yield null;
     }
     yield* _supabase
-        .from('Maintenance')
+        .from(ApiConstants.maintenancesTable)
         .stream(primaryKey: ["id"])
         .eq('status', MaintenanceStatus.inProgress.name)
         .map((list) => list.isNotEmpty ? list.first : null)

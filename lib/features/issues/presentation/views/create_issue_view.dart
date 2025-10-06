@@ -15,7 +15,7 @@ class _CreateIssueViewState extends State<CreateIssueView> {
   @override
   initState() {
     super.initState();
-    context.read<BuildingsCubit>().emitStreamBuildings();
+    context.read<BuildingsCubit>().emitStreamAll();
   }
 
   @override
