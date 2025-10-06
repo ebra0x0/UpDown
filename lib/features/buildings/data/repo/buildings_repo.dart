@@ -18,57 +18,6 @@ class BuildingsRepo {
 
   BuildingsRepo(this._local, this._remote, this._netManager);
 
-  Stream<Either<Failure, BuildingModel?>> get(String buildingId) async* {
-    try {
-      final local = await _local.get(buildingId);
-
-      if (local != null) {
-        yield Right(local);
-      }
-
-      yield* Rx.merge([
-        if (isConnected) _handleBuildingStream(true, local, buildingId),
-        _netManager.connectionStream
-            .distinct()
-            .where((connected) => connected)
-            .asyncExpand((_) => _handleBuildingStream(true, local, buildingId))
-      ]);
-    } on Failure catch (e) {
-      yield Left(e);
-    } catch (_) {
-      yield Left(CustomFailure("تعذر تحميل الأبنية."));
-    }
-  }
-
-  Stream<Either<Failure, BuildingModel?>> _handleBuildingStream(
-      bool isConnected, BuildingModel? local, String buildingId) async* {
-    if (!isConnected) return;
-    final remoteStream = _remote.get(buildingId).handleError((error) {
-      if (error is RealtimeSubscribeException) {
-        Future.delayed(Duration(seconds: 5), () {
-          _remote.getAll();
-        });
-      }
-    });
-
-    yield* remoteStream.asyncMap((remoteRes) async {
-      try {
-        if (remoteRes == null) {
-          await _local.clear();
-          return const Right(null);
-        }
-
-        if (remoteRes != local) {
-          await _local.save(remoteRes);
-        }
-
-        return Right(remoteRes);
-      } catch (e) {
-        return Right(remoteRes);
-      }
-    });
-  }
-
   Stream<Either<Failure, List<BuildingModel>>> getAll() async* {
     try {
       final local = await _local.getAll();
