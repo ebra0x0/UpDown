@@ -9,7 +9,7 @@ class AccountSetupState {
   final String? phone;
   final String? address;
   final String? avatarPath;
-  AccountSetupState({
+  const AccountSetupState({
     this.status = AccountSetupStatus.initial,
     this.error,
     this.name,

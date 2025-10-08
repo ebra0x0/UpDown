@@ -7,7 +7,7 @@ part 'account_setup_state.dart';
 
 class AccountSetupCubit extends Cubit<AccountSetupState> {
   final AccountSetupRepo _repo;
-  AccountSetupCubit(this._repo) : super(AccountSetupState());
+  AccountSetupCubit(this._repo) : super(const AccountSetupState());
 
   void setAvatar(File avatar) {
     emit(state.copyWith(avatarPath: avatar.path));

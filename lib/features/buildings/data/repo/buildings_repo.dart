@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:UpDown/core/network/api/api_failure.dart';
+import 'package:UpDown/core/network/api/api_failure/api_failures.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/data/sources/local.dart';

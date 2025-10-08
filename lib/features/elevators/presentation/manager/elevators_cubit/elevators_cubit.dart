@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'elevators_state.dart';
 
 class ElevatorsCubit extends Cubit<ElevatorsState> {
-  ElevatorsCubit(this._repo) : super(ElevatorsState());
+  ElevatorsCubit(this._repo) : super(const ElevatorsState());
   final ElevatorsRepo _repo;
   StreamSubscription? _streamSubscription;
 

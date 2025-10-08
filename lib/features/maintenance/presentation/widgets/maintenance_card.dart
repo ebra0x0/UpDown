@@ -1,18 +1,29 @@
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/theme/app_radius.dart';
+import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
+import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/utils/extensions/icon_ext.dart';
+import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
+import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/features/maintenance/data/models/maintenanace_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class MaintenanceCard extends StatelessWidget {
+class MaintenanceCard extends StatefulWidget {
   final MaintenanceModel maintenance;
   const MaintenanceCard({super.key, required this.maintenance});
 
+  @override
+  State<MaintenanceCard> createState() => _MaintenanceCardState();
+}
+
+class _MaintenanceCardState extends State<MaintenanceCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,11 +35,13 @@ class MaintenanceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _TitleAndPrice(maintenance: maintenance),
+          _TitleAndPrice(maintenance: widget.maintenance),
           const SizedBox(height: 12),
-          _BuildingAndElevator(),
+          _BuildingAndElevator(
+              buildingId: widget.maintenance.buildingId,
+              elevatorId: widget.maintenance.elevatorId),
           const SizedBox(height: 16),
-          _TechnicianAndStatus(maintenance: maintenance)
+          _TechnicianAndStatus(maintenance: widget.maintenance)
         ],
       ),
     );
@@ -36,24 +49,56 @@ class MaintenanceCard extends StatelessWidget {
 }
 
 class _BuildingAndElevator extends StatelessWidget {
+  final String buildingId;
+  final String elevatorId;
+  const _BuildingAndElevator({
+    required this.buildingId,
+    required this.elevatorId,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _InfoChip(
-            label: "التوحيد",
-            icon: AppIcons.apartmentIcon.copyWith(
-              color: AppTheme.primary,
-              size: 18.sp,
-            )),
+        BlocBuilder<BuildingsCubit, BuildingsState>(
+          builder: (context, state) {
+            final String? buildingName = state.buildings
+                ?.firstWhereOrNull(
+                  (building) => building.id == buildingId,
+                )
+                ?.name;
+
+            return AppSkeletonizer(
+              enabled: state.status == ContentStatus.loading,
+              child: _InfoChip(
+                  label: buildingName ?? " ",
+                  icon: AppIcons.apartmentIcon.copyWith(
+                    color: AppTheme.primary,
+                    size: 18.sp,
+                  )),
+            );
+          },
+        ),
         const SizedBox(width: 8),
-        _InfoChip(
-            label: "الأيمن",
-            icon: AppIcons.elevatorIcon.copyWith(
-              color: AppTheme.primary,
-              size: 18.sp,
-            )),
+        BlocBuilder<ElevatorsCubit, ElevatorsState>(
+          builder: (context, state) {
+            final String? elevatorName = state.elevators
+                ?.firstWhereOrNull(
+                  (elevator) => elevator.id == elevatorId,
+                )
+                ?.name;
+
+            return AppSkeletonizer(
+              enabled: state.status == ContentStatus.loading,
+              child: _InfoChip(
+                  label: elevatorName ?? " ",
+                  icon: AppIcons.elevatorIcon.copyWith(
+                    color: AppTheme.primary,
+                    size: 18.sp,
+                  )),
+            );
+          },
+        ),
       ],
     );
   }
@@ -72,7 +117,7 @@ class _TechnicianAndStatus extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "اسم الفني : ابراهيم${maintenance.technicianId}",
+          "اسم الفني : ابراهيم",
           style: AppTextStyles.textStyle14,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
@@ -83,6 +128,8 @@ class _TechnicianAndStatus extends StatelessWidget {
             color: maintenance.status.color,
             fontWeight: FontWeight.bold,
           ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
       ],
     );
@@ -135,6 +182,8 @@ class _InfoChip extends StatelessWidget {
         Text(
           label,
           style: AppTextStyles.textStyle12,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
       ],
     );

@@ -25,7 +25,7 @@ class MaintenanceLocalDataSource {
     }
   }
 
-  Future<MaintenanceModel?> getActive() async {
+  Future<MaintenanceModel?> getCurrent() async {
     try {
       final box = await _getBox();
       final keys = box.keys.cast<String>();
@@ -33,13 +33,13 @@ class MaintenanceLocalDataSource {
       for (final key in keys) {
         final maintenance = await box.get(key);
         if (maintenance != null &&
-            maintenance.status == MaintenanceStatus.inProgress) {
+            maintenance.status != MaintenanceStatus.completed) {
           return maintenance;
         }
       }
       return null;
     } catch (e) {
-      throw ('Failed to get active maintenance: $e');
+      throw ('Failed to get current maintenance: $e');
     }
   }
 
@@ -49,6 +49,17 @@ class MaintenanceLocalDataSource {
       await box.put(maintenance.id, maintenance);
     } catch (e) {
       throw ('Failed to save maintenance ${maintenance.id}: $e');
+    }
+  }
+
+  Future<void> saveAll(List<MaintenanceModel> maintenances) async {
+    try {
+      final box = await _getBox();
+      for (final maintenance in maintenances) {
+        await box.put(maintenance.id, maintenance);
+      }
+    } catch (e) {
+      throw ('Failed to save maintenances: $e');
     }
   }
 

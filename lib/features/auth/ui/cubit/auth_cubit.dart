@@ -12,7 +12,7 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit({required AuthRepo authRepo})
       : _authRepo = authRepo,
-        super(AuthState()) {
+        super(const AuthState()) {
     authStateMonitor();
   }
 

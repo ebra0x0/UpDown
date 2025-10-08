@@ -1,4 +1,4 @@
-import 'package:UpDown/core/network/api/api_failure.dart';
+import 'package:UpDown/core/network/api/api_failure/api_failures.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:retry/retry.dart';
 import 'dart:async';

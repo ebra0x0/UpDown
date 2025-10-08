@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:UpDown/core/network/api/api_failure.dart';
+import 'package:UpDown/core/network/api/api_failure/api_failures.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/auth/data/model/auth_request_model.dart';

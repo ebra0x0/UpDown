@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:UpDown/core/network/api/api_constants.dart';
-import 'package:UpDown/core/network/api/api_failure.dart';
+import 'package:UpDown/core/network/api/api_failure/api_failures.dart';
 import 'package:UpDown/core/network/api/api_init.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/core/utils/helper/safe_request.dart';
@@ -657,7 +657,7 @@ class ApiService {
 
   // Maintenance
 
-  Stream<Map<String, dynamic>?> streamActiveMaintenance() async* {
+  Stream<Map<String, dynamic>?> streamCurrentMaintenance() async* {
     _ensureInitialized();
     if (!isConnected) {
       yield null;
@@ -665,8 +665,24 @@ class ApiService {
     yield* _supabase
         .from(ApiConstants.maintenancesTable)
         .stream(primaryKey: ["id"])
-        .eq('status', MaintenanceStatus.inProgress.name)
+        .neq('status', MaintenanceStatus.completed.name)
         .map((list) => list.isNotEmpty ? list.first : null)
         .distinct();
+  }
+
+  Future<List<Map<String, dynamic>>> fetchAllMaintenances() async {
+    _ensureInitialized();
+    if (!isConnected) {
+      throw (CustomFailure("لا يوجد اتصال بالإنترنت."));
+    }
+
+    final List<Map<String, dynamic>> response = await safeRequest(
+        networkManager: _netManager,
+        request: () => _supabase
+            .from(ApiConstants.maintenancesTable)
+            .select()
+            .eq('user_id', user!.id));
+
+    return response;
   }
 }

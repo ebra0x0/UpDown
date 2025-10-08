@@ -25,6 +25,10 @@ import 'package:UpDown/features/issues/data/repo/issues_repo.dart';
 import 'package:UpDown/features/issues/data/sources/local.dart';
 import 'package:UpDown/features/issues/data/sources/remote.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
+import 'package:UpDown/features/maintenance/data/repo/maintenance_repo.dart';
+import 'package:UpDown/features/maintenance/data/sources/local.dart';
+import 'package:UpDown/features/maintenance/data/sources/remote.dart';
+import 'package:UpDown/features/maintenance/presentation/cubit/maintenance_cubit.dart';
 import 'package:UpDown/features/profile/data/repos/profile_repo.dart';
 import 'package:UpDown/features/profile/data/sources/local/local.dart';
 import 'package:UpDown/features/profile/data/sources/remote/remote.dart';
@@ -108,4 +112,13 @@ void setupDependancyInjection() {
   getIt.registerLazySingleton<ProfileRepo>(
       () => ProfileRepo(getIt(), getIt(), getIt()));
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt()));
+
+  // Maintenance
+  getIt.registerLazySingleton<MaintenanceLocalDataSource>(
+      () => MaintenanceLocalDataSource());
+  getIt.registerLazySingleton<MaintenanceRemoteDataSource>(
+      () => MaintenanceRemoteDataSource(getIt()));
+  getIt.registerLazySingleton<MaintenanceRepo>(
+      () => MaintenanceRepo(getIt(), getIt(), getIt()));
+  getIt.registerFactory<MaintenanceCubit>(() => MaintenanceCubit(getIt()));
 }

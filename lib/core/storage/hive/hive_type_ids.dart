@@ -42,4 +42,9 @@ abstract class HiveTypeIds {
   static const int issuePriorityEnum = 75;
   // Media Enums
   static const int mediaTypeEnum = 76;
+
+  // Maintenance type ids (91 to 110)
+  static const int maintenanceModel = 91;
+  static const int maintenanceTypeEnum = 92;
+  static const int maintenanceStatusEnum = 93;
 }

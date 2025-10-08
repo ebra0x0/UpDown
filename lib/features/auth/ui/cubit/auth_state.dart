@@ -6,7 +6,7 @@ class AuthState {
   final Session? session;
   final User? user;
 
-  AuthState(
+  const AuthState(
       {this.status = AuthStatus.initial,
       this.errorMsg,
       this.session,

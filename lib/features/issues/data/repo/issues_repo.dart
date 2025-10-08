@@ -1,4 +1,4 @@
-import 'package:UpDown/core/network/api/api_failure.dart';
+import 'package:UpDown/core/network/api/api_failure/api_failures.dart';
 import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/features/issues/data/models/issue_request_model.dart';
 import 'package:UpDown/features/issues/data/models/issue_response_model.dart';

@@ -17,7 +17,7 @@ class HeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: AppInsets.v12,
+      padding: AppInsets.v2,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

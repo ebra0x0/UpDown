@@ -6,7 +6,7 @@ class BuildingsState {
   final List<BuildingModel>? buildings;
   final BuildingModel? currentBuilding;
 
-  BuildingsState({
+  const BuildingsState({
     this.status = ContentStatus.initial,
     this.errorMsg,
     this.buildings,

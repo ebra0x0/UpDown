@@ -205,18 +205,28 @@ enum MediaType {
   const MediaType(this.name);
 }
 
+@HiveType(typeId: HiveTypeIds.maintenanceTypeEnum)
+@JsonEnum(valueField: 'name')
 enum MaintenanceType {
+  @HiveField(0)
   gas("Gas"),
+  @HiveField(1)
   oil("Oil"),
+  @HiveField(2)
   inspection("Inspection");
 
   final String name;
   const MaintenanceType(this.name);
 }
 
+@HiveType(typeId: HiveTypeIds.maintenanceStatusEnum)
+@JsonEnum(valueField: 'name')
 enum MaintenanceStatus {
+  @HiveField(0)
   pending("Pending"),
+  @HiveField(1)
   inProgress("In_Progress"),
+  @HiveField(2)
   completed("Completed");
 
   final String name;

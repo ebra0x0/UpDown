@@ -7,7 +7,7 @@ class ElevatorsState {
   final List<ElevatorModel>? buildingElevators;
   final ElevatorModel? currentElevator;
 
-  ElevatorsState({
+  const ElevatorsState({
     this.status = ContentStatus.initial,
     this.errorMsg,
     this.elevators,

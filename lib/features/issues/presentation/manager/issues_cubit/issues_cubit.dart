@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'issues_state.dart';
 
 class IssuesCubit extends Cubit<IssuesState> {
-  IssuesCubit(this._repo) : super(IssuesState());
+  IssuesCubit(this._repo) : super(const IssuesState());
 
   final IssuesRepo _repo;
   StreamSubscription? _streamAllSubscription;

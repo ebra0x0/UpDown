@@ -13,7 +13,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   ProfileResponseModel? _profile;
   StreamSubscription? _streamSubscription;
-  ProfileCubit(this._repo) : super(ProfileState());
+  ProfileCubit(this._repo) : super(const ProfileState());
 
   Future<void> call() async {
     if (state.status == ContentStatus.loading || _streamSubscription != null) {

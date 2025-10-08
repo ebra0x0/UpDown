@@ -6,6 +6,7 @@ import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
+import 'package:UpDown/features/maintenance/presentation/cubit/maintenance_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,7 @@ class RootView extends StatelessWidget {
           BlocProvider(create: (context) => getIt.get<BuildingsCubit>()),
           BlocProvider(create: (context) => getIt.get<ElevatorsCubit>()),
           BlocProvider(create: (context) => getIt.get<IssuesCubit>()),
+          BlocProvider(create: (context) => getIt.get<MaintenanceCubit>()),
         ],
         child: Scaffold(
           body: navigationShell,
