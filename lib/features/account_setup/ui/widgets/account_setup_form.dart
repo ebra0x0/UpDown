@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/utils/constants/validators/validator.dart';
-import 'package:UpDown/core/utils/model/form_field_model.dart';
+import 'package:UpDown/core/utils/models/form_field_model.dart';
 import 'package:UpDown/core/widgets/avatar_picker.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
 import 'package:UpDown/features/account_setup/ui/cubit/account_setup_cubit.dart';

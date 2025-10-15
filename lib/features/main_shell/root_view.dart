@@ -25,6 +25,7 @@ class RootView extends StatelessWidget {
           BlocProvider(create: (context) => getIt.get<MaintenanceCubit>()),
         ],
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: navigationShell,
           bottomNavigationBar: Visibility(
             visible: MediaQuery.of(context).viewInsets.bottom == 0,

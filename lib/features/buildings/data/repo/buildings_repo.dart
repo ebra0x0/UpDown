@@ -42,10 +42,10 @@ class BuildingsRepo {
   Stream<Either<Failure, List<BuildingModel>>> _handleGetAllBuildingsStream(
       bool isConnected, List<BuildingModel> local) async* {
     if (!isConnected) return;
-    final remoteStream = _remote.getAll().handleError((error) {
+    final remoteStream = _remote.streamAllBuildings().handleError((error) {
       if (error is RealtimeSubscribeException) {
         Future.delayed(Duration(seconds: 5), () {
-          _remote.getAll();
+          _remote.streamAllBuildings();
         });
       }
     });

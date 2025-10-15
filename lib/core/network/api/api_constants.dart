@@ -8,6 +8,7 @@ abstract class ApiConstants {
   static const String buildingsTable = "Buildings";
   static const String elevatorsTable = "Elevators";
   static const String maintenancesTable = "Maintenances";
+  static const String techniciansTable = "Technicians";
   static const String reportsTable = "Reports";
   static const String issuesTable = "Issues";
   static const String mediaTable = "Media";

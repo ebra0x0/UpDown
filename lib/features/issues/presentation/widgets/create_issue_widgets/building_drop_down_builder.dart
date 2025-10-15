@@ -1,6 +1,6 @@
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/model/drop_down_model.dart';
+import 'package:UpDown/core/utils/models/drop_down_model.dart';
 
 import 'package:UpDown/core/widgets/custom_drop_down.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';

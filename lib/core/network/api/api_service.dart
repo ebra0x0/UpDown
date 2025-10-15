@@ -9,7 +9,7 @@ import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/core/utils/helper/safe_request.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/helper/media_compressor.dart';
-import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
+import 'package:UpDown/core/utils/models/media_models/media_request_model.dart';
 import 'package:UpDown/features/auth/data/model/auth_response_model.dart';
 import 'package:UpDown/features/profile/data/model/profile_request_model.dart';
 import 'package:UpDown/core/utils/helper/storage_path.dart';
@@ -34,7 +34,7 @@ class ApiService {
 
   void _ensureInitialized() => _apiInitializer.ensureInitialized();
 
-  // Auth Functions
+  // Auth
   Stream<AuthResponseModel> authStateStream() async* {
     _ensureInitialized();
     if (!isConnected) {
@@ -170,7 +170,7 @@ class ApiService {
     }
   }
 
-  // User Functions
+  // Account
   Future<void> createProfile(ProfileRequestModel profile) async {
     try {
       _ensureInitialized();
@@ -346,74 +346,7 @@ class ApiService {
         .distinct();
   }
 
-  Stream<Map<String, dynamic>?> streamBuildingDetails(
-      {required String buildingId}) async* {
-    _ensureInitialized();
-    if (!isConnected) {
-      yield null;
-    }
-    yield* _supabase
-        .from(ApiConstants.buildingsTable)
-        .stream(primaryKey: ["id"])
-        .eq('id', buildingId)
-        .map((list) => list.isNotEmpty ? list.first : null)
-        .distinct();
-  }
-
   // Elevators
-
-  Stream<Map<String, dynamic>?> streamElevatorDetails(
-      String elevatorId) async* {
-    _ensureInitialized();
-
-    if (!isConnected) {
-      yield null;
-    }
-    yield* _supabase
-        .from(ApiConstants.elevatorsTable)
-        .stream(primaryKey: ["id"])
-        .eq('id', elevatorId)
-        .asyncMap((list) async {
-          final buildingName = await _supabase
-              .from("Buildings")
-              .select("name")
-              .eq("id", list.first["building_id"])
-              .single();
-          if (list.isEmpty) {
-            return null;
-          }
-          return list.first..addAll({"building_name": buildingName["name"]});
-        })
-        .distinct();
-  }
-
-  Stream<List<Map<String, dynamic>>> streamBuildingElevators(
-      String buildingId) async* {
-    _ensureInitialized();
-    if (!isConnected) {
-      yield [];
-    }
-    yield* _supabase
-        .from(ApiConstants.elevatorsTable)
-        .stream(primaryKey: ["id"])
-        .eq('building_id', buildingId)
-        .distinct();
-  }
-
-  Stream<List<Map<String, dynamic>>> streamBuildingsElevators(
-      List<String> buildingIds) async* {
-    _ensureInitialized();
-    if (!isConnected) {
-      yield [];
-    }
-
-    yield* _supabase
-        .from(ApiConstants.elevatorsTable)
-        .stream(primaryKey: ["id"])
-        .inFilter('building_id', buildingIds)
-        .distinct();
-  }
-
   Stream<List<Map<String, dynamic>>> streamAllElevators() async* {
     _ensureInitialized();
     if (!isConnected) {
@@ -473,6 +406,118 @@ class ApiService {
     } catch (_) {
       throw (CustomFailure("حدث خطأ أثناء إنشاء العطل"));
     }
+  }
+
+  Stream<List<Map<String, dynamic>>> streamAllActiveIssues() async* {
+    _ensureInitialized();
+
+    if (!isConnected) {
+      yield [];
+    }
+
+    yield* _supabase
+        .from(ApiConstants.issuesTable)
+        .stream(primaryKey: ["id"])
+        .eq('user_id', _supabase.auth.currentUser!.id)
+        .distinct()
+        .asyncMap((list) async {
+          return await Future.wait(list.map((issue) async {
+            final List<Map<String, dynamic>?> mediaList = await Future.wait(
+              (issue["media_urls"] as List).map(
+                (mediaUrl) async => await _fetchMedia(mediaUrl),
+              ),
+            );
+            issue["media_list"] = mediaList;
+            return issue;
+          }));
+        });
+  }
+
+  Future<List<Map<String, dynamic>>> fetchIssues(
+      {int offset = 0, int limit = 5}) async {
+    _ensureInitialized();
+
+    if (!isConnected) {
+      return [];
+    }
+
+    final response = await safeRequest(
+        networkManager: _netManager,
+        request: () => _supabase
+            .from(ApiConstants.issuesTable)
+            .select()
+            .eq('user_id', user!.id)
+            .range(offset, offset + limit - 1));
+
+    return response;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchBuildingIssues(
+      {required String buildingId, int offset = 0, int limit = 5}) async {
+    _ensureInitialized();
+
+    if (!isConnected) {
+      return [];
+    }
+
+    final response = await safeRequest(
+        networkManager: _netManager,
+        request: () => _supabase
+            .from(ApiConstants.issuesTable)
+            .select()
+            .eq('building_id', buildingId)
+            .eq('user_id', user!.id)
+            .range(offset, offset + limit - 1));
+
+    return response;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchElevatorIssues(
+      {required String elevatorId, int offset = 0, int limit = 5}) async {
+    _ensureInitialized();
+
+    if (!isConnected) {
+      return [];
+    }
+
+    final response = await safeRequest(
+        networkManager: _netManager,
+        request: () => _supabase
+            .from(ApiConstants.issuesTable)
+            .select()
+            .eq('elevator_id', elevatorId)
+            .eq('user_id', user!.id)
+            .range(offset, offset + limit - 1));
+
+    return response;
+  }
+
+  Future<Map<String, dynamic>?> fetchIssueDetails(String issueId) async {
+    _ensureInitialized();
+
+    if (!isConnected) {
+      return null;
+    }
+
+    final response = await _supabase
+        .from(ApiConstants.issuesTable)
+        .select()
+        .eq('id', issueId)
+        .maybeSingle();
+
+    if (response == null) {
+      return null;
+    }
+
+    // Fetch media issue
+    final List<Map<String, dynamic>?> mediaList = await Future.wait(
+      (response["media_urls"] as List).map(
+        (mediaUrl) async => await _fetchMedia(mediaUrl),
+      ),
+    );
+
+    response["media_list"] = mediaList;
+    return response;
   }
 
   Future<void> _uploadAndInsertIssueMediaList({
@@ -575,88 +620,7 @@ class ApiService {
     return response;
   }
 
-  Stream<List<Map<String, dynamic>>> streamBuildingActiveIssues(
-      String buildingId) async* {
-    _ensureInitialized();
-    if (!isConnected) {
-      yield [];
-    }
-
-    yield* _supabase
-        .from(ApiConstants.issuesTable)
-        .stream(primaryKey: ["id"])
-        .eq('building_id', buildingId)
-        .distinct();
-  }
-
-  Stream<List<Map<String, dynamic>>> streamElevatorActiveIssues(
-      String elevatorId) async* {
-    _ensureInitialized();
-    if (!isConnected) {
-      yield [];
-    }
-    yield* _supabase
-        .from(ApiConstants.issuesTable)
-        .stream(primaryKey: ["id"])
-        .eq('elevator_id', elevatorId)
-        .distinct();
-  }
-
-  Stream<List<Map<String, dynamic>>> streamAllActiveIssues() async* {
-    _ensureInitialized();
-
-    if (!isConnected) {
-      yield [];
-    }
-
-    yield* _supabase
-        .from(ApiConstants.issuesTable)
-        .stream(primaryKey: ["id"])
-        .eq('user_id', _supabase.auth.currentUser!.id)
-        .distinct()
-        .asyncMap((list) async {
-          return await Future.wait(list.map((issue) async {
-            final List<Map<String, dynamic>?> mediaList = await Future.wait(
-              (issue["media_urls"] as List).map(
-                (mediaUrl) async => await _fetchMedia(mediaUrl),
-              ),
-            );
-            issue["media_list"] = mediaList;
-            return issue;
-          }));
-        });
-  }
-
-  Future<Map<String, dynamic>?> fetchIssueDetails(String issueId) async {
-    _ensureInitialized();
-
-    if (!isConnected) {
-      return null;
-    }
-
-    final response = await _supabase
-        .from(ApiConstants.issuesTable)
-        .select()
-        .eq('id', issueId)
-        .maybeSingle();
-
-    if (response == null) {
-      return null;
-    }
-
-    // Fetch media issue
-    final List<Map<String, dynamic>?> mediaList = await Future.wait(
-      (response["media_urls"] as List).map(
-        (mediaUrl) async => await _fetchMedia(mediaUrl),
-      ),
-    );
-
-    response["media_list"] = mediaList;
-    return response;
-  }
-
   // Maintenance
-
   Stream<Map<String, dynamic>?> streamCurrentMaintenance() async* {
     _ensureInitialized();
     if (!isConnected) {
@@ -670,7 +634,8 @@ class ApiService {
         .distinct();
   }
 
-  Future<List<Map<String, dynamic>>> fetchAllMaintenances() async {
+  Future<List<Map<String, dynamic>>> fetchMaintenances(
+      {int offset = 0, int limit = 5, DateTime? lastSync}) async {
     _ensureInitialized();
     if (!isConnected) {
       throw (CustomFailure("لا يوجد اتصال بالإنترنت."));
@@ -681,7 +646,26 @@ class ApiService {
         request: () => _supabase
             .from(ApiConstants.maintenancesTable)
             .select()
-            .eq('user_id', user!.id));
+            .eq('user_id', user!.id)
+            .range(offset, offset + limit - 1)
+            .order('updated_at', ascending: false));
+
+    return response;
+  }
+
+  Future<Map<String, dynamic>?> fetchTechnician(String technicianId) async {
+    _ensureInitialized();
+    if (!isConnected) {
+      return null;
+    }
+
+    final response = await safeRequest(
+        networkManager: _netManager,
+        request: () => _supabase
+            .from(ApiConstants.techniciansTable)
+            .select()
+            .eq('id', technicianId)
+            .maybeSingle());
 
     return response;
   }

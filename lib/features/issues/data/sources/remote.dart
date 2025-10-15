@@ -10,27 +10,31 @@ class IssuesRemoteDataSource {
   Future<void> createIssue(IssueRequestModel issueModel) async =>
       await _api.createIssue(issueModel);
 
-  Stream<List<IssueResponseModel>> fetchAllActiveIssues() {
+  Stream<List<IssueResponseModel>> streamAllActiveIssues() {
     return _api.streamAllActiveIssues().map((json) {
       if (json.isEmpty) return [];
       return json.map((map) => IssueResponseModel.fromJson(map)).toList();
     });
   }
 
-  Stream<List<IssueResponseModel>> fetchBuildingActiveIssues(
-      String buildingId) {
-    return _api.streamBuildingActiveIssues(buildingId).map((json) {
-      if (json.isEmpty) return [];
-      return json.map((map) => IssueResponseModel.fromJson(map)).toList();
-    });
+  Future<List<IssueResponseModel>> fetchIssues(
+      {int offset = 0, int limit = 5}) async {
+    final json = await _api.fetchIssues();
+    return json.map((map) => IssueResponseModel.fromJson(map)).toList();
   }
 
-  Stream<List<IssueResponseModel>> fetchElevatorActiveIssues(
-      String elevatorId) {
-    return _api.streamElevatorActiveIssues(elevatorId).map((json) {
-      if (json.isEmpty) return [];
-      return json.map((map) => IssueResponseModel.fromJson(map)).toList();
-    });
+  Future<List<IssueResponseModel>> fetchBuildingIssues(
+      {required String buildingId, int offset = 0, int limit = 5}) async {
+    final json = await _api.fetchBuildingIssues(
+        buildingId: buildingId, offset: offset, limit: limit);
+    return json.map((map) => IssueResponseModel.fromJson(map)).toList();
+  }
+
+  Future<List<IssueResponseModel>> fetchElevatorIssues(
+      {required String elevatorId, int offset = 0, int limit = 5}) async {
+    final json = await _api.fetchElevatorIssues(
+        elevatorId: elevatorId, offset: offset, limit: limit);
+    return json.map((map) => IssueResponseModel.fromJson(map)).toList();
   }
 
   Future<IssueResponseModel?> fetchIssueDetails(String issueId) async {

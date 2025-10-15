@@ -3,7 +3,7 @@ import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/icon_ext.dart';
-import 'package:UpDown/core/utils/model/drop_down_model.dart';
+import 'package:UpDown/core/utils/models/drop_down_model.dart';
 
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';

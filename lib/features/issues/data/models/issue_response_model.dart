@@ -2,7 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:UpDown/core/storage/hive/hive_type_ids.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/model/media_models/media_response_model.dart';
+import 'package:UpDown/core/utils/models/media_models/media_response_model.dart';
 
 part 'issue_response_model.freezed.dart';
 part 'issue_response_model.g.dart';

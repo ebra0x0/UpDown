@@ -6,17 +6,19 @@ import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/utils/extensions/icon_ext.dart';
+import 'package:UpDown/core/utils/models/technician_model.dart';
 import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
+import 'package:UpDown/features/maintenance/data/models/maintenanace_model.dart';
+import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenanace_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MaintenanceCard extends StatefulWidget {
-  final MaintenanceModel maintenance;
+  final MaintenanceViewModel maintenance;
   const MaintenanceCard({super.key, required this.maintenance});
 
   @override
@@ -24,6 +26,9 @@ class MaintenanceCard extends StatefulWidget {
 }
 
 class _MaintenanceCardState extends State<MaintenanceCard> {
+  MaintenanceModel get maintenance => widget.maintenance.data;
+  TechnicianModel get technician => widget.maintenance.technician;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,13 +40,16 @@ class _MaintenanceCardState extends State<MaintenanceCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _TitleAndPrice(maintenance: widget.maintenance),
+          _TitleAndPrice(title: maintenance.type.title, cost: maintenance.cost),
           const SizedBox(height: 12),
           _BuildingAndElevator(
-              buildingId: widget.maintenance.buildingId,
-              elevatorId: widget.maintenance.elevatorId),
+              buildingId: maintenance.buildingId,
+              elevatorId: maintenance.elevatorId),
           const SizedBox(height: 16),
-          _TechnicianAndStatus(maintenance: widget.maintenance)
+          _TechnicianAndStatus(
+            maintenanceStatus: maintenance.status,
+            technicianName: technician.name,
+          ),
         ],
       ),
     );
@@ -51,65 +59,95 @@ class _MaintenanceCardState extends State<MaintenanceCard> {
 class _BuildingAndElevator extends StatelessWidget {
   final String buildingId;
   final String elevatorId;
+
   const _BuildingAndElevator({
     required this.buildingId,
     required this.elevatorId,
   });
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        BlocBuilder<BuildingsCubit, BuildingsState>(
-          builder: (context, state) {
-            final String? buildingName = state.buildings
-                ?.firstWhereOrNull(
-                  (building) => building.id == buildingId,
-                )
-                ?.name;
-
-            return AppSkeletonizer(
-              enabled: state.status == ContentStatus.loading,
-              child: _InfoChip(
-                  label: buildingName ?? " ",
-                  icon: AppIcons.apartmentIcon.copyWith(
-                    color: AppTheme.primary,
-                    size: 18.sp,
-                  )),
-            );
-          },
-        ),
+        _BuildingBuilder(buildingId: buildingId),
         const SizedBox(width: 8),
-        BlocBuilder<ElevatorsCubit, ElevatorsState>(
-          builder: (context, state) {
-            final String? elevatorName = state.elevators
-                ?.firstWhereOrNull(
-                  (elevator) => elevator.id == elevatorId,
-                )
-                ?.name;
-
-            return AppSkeletonizer(
-              enabled: state.status == ContentStatus.loading,
-              child: _InfoChip(
-                  label: elevatorName ?? " ",
-                  icon: AppIcons.elevatorIcon.copyWith(
-                    color: AppTheme.primary,
-                    size: 18.sp,
-                  )),
-            );
-          },
-        ),
+        _ElevatorBuilder(elevatorId: elevatorId),
       ],
+    );
+  }
+}
+
+class _ElevatorBuilder extends StatelessWidget {
+  const _ElevatorBuilder({
+    required this.elevatorId,
+  });
+
+  final String elevatorId;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ElevatorsCubit, ElevatorsState>(
+      builder: (context, state) {
+        final String? elevatorName = state.elevators
+            ?.firstWhereOrNull(
+              (elevator) => elevator.id == elevatorId,
+            )
+            ?.name;
+
+        return AppSkeletonizer(
+          enabled: state.status == ContentStatus.loading,
+          child: _InfoChip(
+              label: elevatorName ?? " ",
+              icon: AppIcons.elevatorIcon.copyWith(
+                color: AppTheme.primary,
+                size: 18.sp,
+              )),
+        );
+      },
+    );
+  }
+}
+
+class _BuildingBuilder extends StatelessWidget {
+  const _BuildingBuilder({
+    required this.buildingId,
+  });
+
+  final String buildingId;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<BuildingsCubit, BuildingsState>(
+      builder: (context, state) {
+        final String? buildingName = state.buildings
+            ?.firstWhereOrNull(
+              (building) => building.id == buildingId,
+            )
+            ?.name;
+
+        return AppSkeletonizer(
+          enabled: state.status == ContentStatus.loading,
+          child: _InfoChip(
+              label: buildingName ?? " ",
+              icon: AppIcons.apartmentIcon.copyWith(
+                color: AppTheme.primary,
+                size: 18.sp,
+              )),
+        );
+      },
     );
   }
 }
 
 class _TechnicianAndStatus extends StatelessWidget {
   const _TechnicianAndStatus({
-    required this.maintenance,
+    required this.maintenanceStatus,
+    required this.technicianName,
   });
 
-  final MaintenanceModel maintenance;
+  final MaintenanceStatus maintenanceStatus;
+  final String technicianName;
 
   @override
   Widget build(BuildContext context) {
@@ -117,15 +155,15 @@ class _TechnicianAndStatus extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "اسم الفني : ابراهيم",
+          "اسم الفني : $technicianName",
           style: AppTextStyles.textStyle14,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
         ),
         Text(
-          maintenance.status.title,
+          maintenanceStatus.title,
           style: AppTextStyles.textStyle14.copyWith(
-            color: maintenance.status.color,
+            color: maintenanceStatus.color,
             fontWeight: FontWeight.bold,
           ),
           overflow: TextOverflow.ellipsis,
@@ -138,10 +176,12 @@ class _TechnicianAndStatus extends StatelessWidget {
 
 class _TitleAndPrice extends StatelessWidget {
   const _TitleAndPrice({
-    required this.maintenance,
+    required this.title,
+    required this.cost,
   });
 
-  final MaintenanceModel maintenance;
+  final String title;
+  final int cost;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +189,7 @@ class _TitleAndPrice extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            maintenance.type.title,
+            title,
             style: AppTextStyles.textStyle18,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
@@ -157,7 +197,7 @@ class _TitleAndPrice extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          "${maintenance.cost} جم",
+          "$cost جم",
           style: AppTextStyles.textStyle18.copyWith(
             fontWeight: FontWeight.bold,
           ),

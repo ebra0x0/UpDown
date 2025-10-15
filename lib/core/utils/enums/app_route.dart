@@ -9,6 +9,7 @@ enum AppRoute {
   createIssue("/create-issue"),
   profile("/profile"),
   issue("/issue"),
+  issues("/issues"),
   building("/building"),
   elevator("/elevator");
 

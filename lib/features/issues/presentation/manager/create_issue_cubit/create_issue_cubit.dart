@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
+import 'package:UpDown/core/utils/models/media_models/media_request_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
 import 'package:UpDown/features/elevators/data/repo/elevators_repo.dart';
@@ -27,7 +27,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
 
     final IssueRequestModel request = state.toRequestModel();
 
-    final result = await _repo.create(request);
+    final result = await _repo.createIssue(request);
     if (isClosed) return;
 
     result.fold(

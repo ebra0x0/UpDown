@@ -1,114 +1,113 @@
 import 'package:UpDown/core/storage/hive/hive_constants.dart';
+import 'package:UpDown/core/utils/helper/sort_list.dart';
 import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class IssuesLocalDataSource {
   static const _boxName = HiveConstants.issuesBox;
 
-  Future<LazyBox<IssueResponseModel>> _getBox() async {
-    try {
-      if (!Hive.isBoxOpen(_boxName)) {
-        return await Hive.openLazyBox<IssueResponseModel>(_boxName);
-      }
-      return Hive.lazyBox<IssueResponseModel>(_boxName);
-    } catch (e) {
-      throw ('Failed to open issues box: $e');
+  Future<LazyBox> _getBox() async {
+    if (!Hive.isBoxOpen(_boxName)) {
+      return await Hive.openLazyBox(_boxName);
     }
+    return Hive.lazyBox(_boxName);
   }
 
   Future<IssueResponseModel?> get(String issueId) async {
-    try {
-      final box = await _getBox();
-      return await box.get(issueId);
-    } catch (e) {
-      throw ('Failed to get issue $issueId: $e');
-    }
+    final box = await _getBox();
+    final issues = await _getAllIssues(box);
+    return issues[issueId];
   }
 
-  Future<List<IssueResponseModel>> _getFilteredIssues({
-    bool Function(IssueResponseModel)? filter,
+  Future<List<IssueResponseModel>> getList(
+      {int offset = 0, int limit = 5}) async {
+    final box = await _getBox();
+    final issues = await _getAllIssues(box);
+
+    final sortedIssues = sortList(
+        issues.values.toList(), (issue) => issue.updatedAt ?? issue.createdAt);
+
+    final paginated = sortedIssues.skip(offset).take(limit).toList();
+
+    return paginated;
+  }
+
+  Future<List<IssueResponseModel>> getBuildingIssues({
+    required String buildingId,
+    int offset = 0,
+    int limit = 5,
   }) async {
-    try {
-      final box = await _getBox();
-      final keys = box.keys.cast<String>();
+    final box = await _getBox();
+    final issues = await _getAllIssues(box);
 
-      final issues = await Future.wait(
-        keys.map((key) async => await box.get(key)),
-      );
+    final filteredIssues =
+        issues.values.where((issue) => issue.buildingId == buildingId).toList();
 
-      final validIssues = issues.whereType<IssueResponseModel>();
-      return filter != null
-          ? validIssues.where(filter).toList()
-          : validIssues.toList();
-    } catch (e) {
-      throw ('Failed to get issues: $e');
-    }
+    final sortedIssues =
+        sortList(filteredIssues, (issue) => issue.updatedAt ?? issue.createdAt);
+
+    final paginated = sortedIssues.skip(offset).take(limit).toList();
+
+    return paginated;
   }
 
-  Future<List<IssueResponseModel>> getAll() async {
-    return _getFilteredIssues();
-  }
+  Future<List<IssueResponseModel>> getElevatorIssues(
+      {required String elevatorId, int offset = 0, int limit = 5}) async {
+    final issues = await getList();
+    final filteredIssues =
+        issues.where((issue) => issue.elevatorId == elevatorId).toList();
 
-  Future<List<IssueResponseModel>> getIssuesForBuilding(
-      String buildingId) async {
-    return _getFilteredIssues(
-      filter: (issue) => issue.buildingId == buildingId,
-    );
-  }
+    final sortedIssues =
+        sortList(filteredIssues, (issue) => issue.updatedAt ?? issue.createdAt);
 
-  Future<List<IssueResponseModel>> getIssuesForElevator(
-      String elevatorId) async {
-    return _getFilteredIssues(
-      filter: (issue) => issue.elevatorId == elevatorId,
-    );
+    final paginated = sortedIssues.skip(offset).take(limit).toList();
+
+    return paginated;
   }
 
   Future<void> save(IssueResponseModel issue) async {
-    try {
-      final box = await _getBox();
-      await box.put(issue.id, issue);
-    } catch (e) {
-      throw ('Failed to save issue ${issue.id}: $e');
-    }
+    final box = await _getBox();
+    final issues = await _getAllIssues(box);
+
+    issues[issue.id] = issue;
+    await box.put(HiveConstants.issuesKey, issues);
   }
 
-  Future<void> saveAll(List<IssueResponseModel> issues) async {
-    try {
-      final box = await _getBox();
-      await Future.wait(
-        issues.map((issue) => box.put(issue.id, issue)),
-      );
-    } catch (e) {
-      throw ('Failed to save issues: $e');
-    }
+  Future<void> saveAll(List<IssueResponseModel> issuesList) async {
+    final box = await _getBox();
+    final issues = {for (final i in issuesList) i.id: i};
+
+    await Future.wait([
+      box.put(HiveConstants.issuesKey, issues),
+      box.put(HiveConstants.lastSyncKey, DateTime.now().toIso8601String()),
+    ]);
   }
 
   Future<void> delete(String issueId) async {
-    try {
-      final box = await _getBox();
-      await box.delete(issueId);
-    } catch (e) {
-      throw ('Failed to delete issue $issueId: $e');
+    final box = await _getBox();
+    final issues = await _getAllIssues(box);
+
+    if (issues.containsKey(issueId)) {
+      issues.remove(issueId);
+      await box.put(HiveConstants.issuesKey, issues);
     }
   }
 
   Future<void> clear() async {
-    try {
-      final box = await _getBox();
-      await box.clear();
-    } catch (e) {
-      throw ('Failed to clear issues: $e');
+    final box = await _getBox();
+    await box.clear();
+  }
+
+  Future<void> close() async {
+    if (Hive.isBoxOpen(_boxName)) {
+      final box = Hive.lazyBox(_boxName);
+      await box.close();
     }
   }
 
-  Future<void> closeBox() async {
-    try {
-      if (Hive.isBoxOpen(_boxName)) {
-        final box = Hive.lazyBox<IssueResponseModel>(_boxName);
-        await box.close();
-      }
-    } catch (e) {
-      throw ('Failed to close profile box: $e');
-    }
+  /// Helper function
+  Future<Map<String, IssueResponseModel>> _getAllIssues(LazyBox box) async {
+    final data = await box.get(HiveConstants.issuesKey) as Map?;
+    return (data ?? {}).cast<String, IssueResponseModel>();
   }
 }

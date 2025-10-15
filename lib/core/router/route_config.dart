@@ -13,6 +13,7 @@ import 'package:UpDown/features/home/presentation/views/home_view.dart';
 import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/create_issue_cubit.dart';
 import 'package:UpDown/features/issues/presentation/views/create_issue_view.dart';
 import 'package:UpDown/features/issues/presentation/views/issue_view.dart';
+import 'package:UpDown/features/issues/presentation/views/issues_list_view.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
 import 'package:UpDown/features/profile/presentation/views/profile_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
@@ -82,6 +83,7 @@ class RouteConfig {
                 _buildingDetailsRoute(),
                 _elevatorDetailsRoute(),
                 _issueDetailsRoute(),
+                _issuesListRoute(),
               ]),
         ]),
       ];
@@ -112,6 +114,14 @@ class RouteConfig {
           return BuildingDetailsView(
             buildingId: state.pathParameters['id'] as String,
           );
+        });
+  }
+
+  static GoRoute _issuesListRoute() {
+    return GoRoute(
+        path: AppRoute.issues.path,
+        builder: (context, state) {
+          return IssuesListView();
         });
   }
 }

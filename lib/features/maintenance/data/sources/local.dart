@@ -1,109 +1,86 @@
+import 'package:UpDown/core/storage/hive/hive_constants.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenanace_model.dart';
+import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
+import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MaintenanceLocalDataSource {
   static const String boxName = 'maintenance_box';
 
-  Future<LazyBox<MaintenanceModel>> _getBox() async {
-    try {
-      if (!Hive.isBoxOpen(boxName)) {
-        return await Hive.openLazyBox<MaintenanceModel>(boxName);
-      }
-      return Hive.lazyBox<MaintenanceModel>(boxName);
-    } catch (e) {
-      throw ('Failed to open maintenance box: $e');
+  Future<LazyBox> _getBox() async {
+    if (!Hive.isBoxOpen(boxName)) {
+      return await Hive.openLazyBox(boxName);
     }
+    return Hive.lazyBox(boxName);
   }
 
-  Future<MaintenanceModel?> get(String maintenanceId) async {
-    try {
-      final box = await _getBox();
-      return await box.get(maintenanceId);
-    } catch (e) {
-      throw ('Failed to get maintenance $maintenanceId: $e');
-    }
+  Future<MaintenanceViewModel?> get(String maintenanceId) async {
+    final box = await _getBox();
+    final maintenances = await _getAllMaintenances(box);
+    return maintenances[maintenanceId];
   }
 
-  Future<MaintenanceModel?> getCurrent() async {
-    try {
-      final box = await _getBox();
-      final keys = box.keys.cast<String>();
-
-      for (final key in keys) {
-        final maintenance = await box.get(key);
-        if (maintenance != null &&
-            maintenance.status != MaintenanceStatus.completed) {
-          return maintenance;
-        }
-      }
-      return null;
-    } catch (e) {
-      throw ('Failed to get current maintenance: $e');
-    }
+  Future<List<MaintenanceViewModel>> getAll() async {
+    final box = await _getBox();
+    final maintenances = await _getAllMaintenances(box);
+    return maintenances.values.toList();
   }
 
-  Future<void> save(MaintenanceModel maintenance) async {
-    try {
-      final box = await _getBox();
-      await box.put(maintenance.id, maintenance);
-    } catch (e) {
-      throw ('Failed to save maintenance ${maintenance.id}: $e');
-    }
+  Future<MaintenanceViewModel?> getCurrent() async {
+    final maintenances = await getAll();
+    return maintenances.firstWhereOrNull(
+      (m) => m.data.status != MaintenanceStatus.completed,
+    );
   }
 
-  Future<void> saveAll(List<MaintenanceModel> maintenances) async {
-    try {
-      final box = await _getBox();
-      for (final maintenance in maintenances) {
-        await box.put(maintenance.id, maintenance);
-      }
-    } catch (e) {
-      throw ('Failed to save maintenances: $e');
-    }
+  Future<void> save(MaintenanceViewModel maintenance) async {
+    final box = await _getBox();
+    final maintenances = await _getAllMaintenances(box);
+    maintenances[maintenance.data.id] = maintenance;
+
+    await Future.wait([
+      box.put(HiveConstants.maintenancesKey, maintenances),
+      box.put(HiveConstants.lastSyncKey, DateTime.now().toIso8601String()),
+    ]);
   }
 
-  Future<List<MaintenanceModel>> getAll() async {
-    try {
-      final box = await _getBox();
-      final keys = box.keys.cast<String>();
+  Future<void> saveAll(List<MaintenanceViewModel> maintenancesList) async {
+    final box = await _getBox();
+    final maintenances = {
+      for (final m in maintenancesList) m.data.id: m,
+    };
 
-      final maintenances = await Future.wait(
-        keys.map((key) async => await box.get(key)),
-      );
-
-      return maintenances.whereType<MaintenanceModel>().toList();
-    } catch (e) {
-      throw ('Failed to get all maintenances: $e');
-    }
+    await Future.wait([
+      box.put(HiveConstants.maintenancesKey, maintenances),
+      box.put(HiveConstants.lastSyncKey, DateTime.now().toIso8601String()),
+    ]);
   }
 
   Future<void> delete(String maintenanceId) async {
-    try {
-      final box = await _getBox();
-      await box.delete(maintenanceId);
-    } catch (e) {
-      throw ('Failed to delete maintenance $maintenanceId: $e');
+    final box = await _getBox();
+    final maintenances = await _getAllMaintenances(box);
+    if (maintenances.containsKey(maintenanceId)) {
+      maintenances.remove(maintenanceId);
     }
+    await box.put(HiveConstants.maintenancesKey, maintenances);
   }
 
   Future<void> clear() async {
-    try {
-      final box = await _getBox();
-      await box.clear();
-    } catch (e) {
-      throw ('Failed to clear maintenance box: $e');
-    }
+    final box = await _getBox();
+    await box.clear();
   }
 
   Future<void> close() async {
-    try {
-      if (Hive.isBoxOpen(boxName)) {
-        final box = Hive.lazyBox<MaintenanceModel>(boxName);
-        await box.close();
-      }
-    } catch (e) {
-      throw ('Failed to close maintenance box: $e');
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.lazyBox(boxName);
+      await box.close();
     }
+  }
+
+  // Helper function
+  Future<Map<String, MaintenanceViewModel>> _getAllMaintenances(
+      LazyBox box) async {
+    final data = await box.get(HiveConstants.maintenancesKey) as Map?;
+    return (data ?? {}).cast<String, MaintenanceViewModel>();
   }
 }

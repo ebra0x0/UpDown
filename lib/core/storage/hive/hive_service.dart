@@ -1,5 +1,6 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/model/media_models/media_response_model.dart';
+import 'package:UpDown/core/utils/models/media_models/media_response_model.dart';
+import 'package:UpDown/core/utils/models/technician_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
 import 'package:UpDown/features/elevators/data/models/units/cabin_model.dart';
@@ -8,6 +9,8 @@ import 'package:UpDown/features/elevators/data/models/units/counter_model.dart';
 import 'package:UpDown/features/elevators/data/models/units/engine_model.dart';
 import 'package:UpDown/features/elevators/data/models/units/wires_model.dart';
 import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
+import 'package:UpDown/features/maintenance/data/models/maintenanace_model.dart';
+import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
 import 'package:UpDown/features/profile/data/model/profile_response_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -60,6 +63,13 @@ class HiveService {
     // Media adapters
     Hive.registerAdapter(MediaResponseModelAdapter());
     Hive.registerAdapter(MediaTypeAdapter());
+    // Maintenance adapters
+    Hive.registerAdapter(MaintenanceViewModelAdapter());
+    Hive.registerAdapter(MaintenanceModelAdapter());
+    Hive.registerAdapter(MaintenanceStatusAdapter());
+    Hive.registerAdapter(MaintenanceTypeAdapter());
+    // Technician adapters
+    Hive.registerAdapter(TechnicianModelAdapter());
   }
 
   Future<void> clear(List<String> boxNames) async {

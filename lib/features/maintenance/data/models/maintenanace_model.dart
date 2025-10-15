@@ -2,11 +2,12 @@ import 'package:UpDown/core/storage/hive/hive_type_ids.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
 part 'maintenanace_model.freezed.dart';
 part 'maintenanace_model.g.dart';
 
-@Freezed(toJson: false)
 @HiveType(typeId: HiveTypeIds.maintenanceModel)
+@Freezed(toJson: false)
 class MaintenanceModel with _$MaintenanceModel {
   const factory MaintenanceModel({
     @HiveField(0) required String id,

@@ -5,103 +5,84 @@ import 'package:hive_flutter/hive_flutter.dart';
 class ElevatorsLocalDataSource {
   static const _boxName = HiveConstants.elevatorsBox;
 
-  Future<LazyBox<ElevatorModel>> _getBox() async {
-    try {
-      if (!Hive.isBoxOpen(_boxName)) {
-        return await Hive.openLazyBox<ElevatorModel>(_boxName);
-      }
-      return Hive.lazyBox<ElevatorModel>(_boxName);
-    } catch (e) {
-      throw ('Failed to open elevators box: $e');
+  Future<LazyBox> _getBox() async {
+    if (!Hive.isBoxOpen(_boxName)) {
+      return await Hive.openLazyBox(_boxName);
     }
+    return Hive.lazyBox(_boxName);
   }
 
   Future<ElevatorModel?> get(String id) async {
-    try {
-      final box = await _getBox();
-      return await box.get(id);
-    } catch (e) {
-      throw ('Failed to get elevator $id: $e');
-    }
+    final box = await _getBox();
+
+    final elevators = await _getAllElevators(box);
+
+    return elevators[id];
   }
 
   Future<List<ElevatorModel>> getAll() async {
-    try {
-      final box = await _getBox();
-      final keys = box.keys.cast<String>();
-      final elevators = await Future.wait(
-        keys.map((key) async => await box.get(key)),
-      );
-      return elevators.whereType<ElevatorModel>().toList();
-    } catch (e) {
-      throw ('Failed to get all elevators: $e');
-    }
+    final box = await _getBox();
+
+    final elevators = await _getAllElevators(box);
+
+    return elevators.values.toList();
   }
 
   Future<List<ElevatorModel>> getByBuilding(String buildingId) async {
-    try {
-      final box = await _getBox();
-      final keys = box.keys.cast<String>();
-      final elevators = await Future.wait(
-        keys.map((key) async => await box.get(key)),
-      );
-      return elevators
-          .whereType<ElevatorModel>()
-          .where((e) => e.buildingId == buildingId)
-          .toList();
-    } catch (e) {
-      throw ('Failed to get elevators for building $buildingId: $e');
-    }
+    final elevators = await getAll();
+
+    return elevators.where((e) => e.buildingId == buildingId).toList();
   }
 
   Future<void> save(ElevatorModel elevator) async {
-    try {
-      final box = await _getBox();
-      await box.put(elevator.id, elevator);
-    } catch (e) {
-      throw ('Failed to save elevator ${elevator.id}: $e');
-    }
+    final box = await _getBox();
+    final elevators = await _getAllElevators(box);
+    elevators[elevator.id] = elevator;
+
+    await Future.wait([
+      box.put(HiveConstants.elevatorsKey, elevators),
+      box.put(HiveConstants.lastSyncKey, DateTime.now().toIso8601String()),
+    ]);
   }
 
-  Future<void> saveAll(List<ElevatorModel> elevators) async {
-    try {
-      final box = await _getBox();
-      await Future.wait(
-        elevators.map((elevator) => box.put(elevator.id, elevator)),
-      );
-    } catch (e) {
-      throw ('Failed to save elevators: $e');
-    }
+  Future<void> saveAll(List<ElevatorModel> elevatorsList) async {
+    final box = await _getBox();
+
+    final elevators = {
+      for (final e in elevatorsList) e.id: e,
+    };
+
+    await Future.wait([
+      box.put(HiveConstants.elevatorsKey, elevators),
+      box.put(HiveConstants.lastSyncKey, DateTime.now().toIso8601String()),
+    ]);
   }
 
   Future<void> delete(String id) async {
-    try {
-      final box = await _getBox();
-      if (box.containsKey(id)) {
-        await box.delete(id);
-      }
-    } catch (e) {
-      throw ('Failed to delete elevator $id: $e');
+    final box = await _getBox();
+    final elevators = await _getAllElevators(box);
+
+    if (elevators.containsKey(id)) {
+      elevators.remove(id);
     }
+    await box.put(HiveConstants.elevatorsKey, elevators);
   }
 
   Future<void> clear() async {
-    try {
-      final box = await _getBox();
-      await box.clear();
-    } catch (e) {
-      throw ('Failed to clear elevators: $e');
+    final box = await _getBox();
+    await box.clear();
+  }
+
+  Future<void> close() async {
+    if (Hive.isBoxOpen(_boxName)) {
+      final box = Hive.lazyBox<ElevatorModel>(_boxName);
+      await box.close();
     }
   }
 
-  Future<void> closeBox() async {
-    try {
-      if (Hive.isBoxOpen(_boxName)) {
-        final box = Hive.lazyBox<ElevatorModel>(_boxName);
-        await box.close();
-      }
-    } catch (e) {
-      throw ('Failed to close elevators box: $e');
-    }
+  // Helper function
+  Future<Map<String, ElevatorModel>> _getAllElevators(LazyBox box) async {
+    final data = await box.get(HiveConstants.elevatorsKey) as Map?;
+    return (data ?? {}).cast<String, ElevatorModel>();
   }
 }

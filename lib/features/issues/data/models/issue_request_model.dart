@@ -1,5 +1,5 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
+import 'package:UpDown/core/utils/models/media_models/media_request_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'issue_request_model.g.dart';

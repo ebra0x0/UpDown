@@ -1,5 +1,5 @@
 import 'package:UpDown/core/network/api/api_constants.dart';
-import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
+import 'package:UpDown/core/utils/models/media_models/media_request_model.dart';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 

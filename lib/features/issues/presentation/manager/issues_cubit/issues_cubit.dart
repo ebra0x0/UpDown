@@ -13,10 +13,8 @@ class IssuesCubit extends Cubit<IssuesState> {
 
   final IssuesRepo _repo;
   StreamSubscription? _streamAllSubscription;
-  StreamSubscription? _streamBuildingSubscription;
-  StreamSubscription? _streamElevatorSubscription;
 
-  void emitStreamAllActive() {
+  void emitStreamAllActiveIssues() {
     if (state.status == ContentStatus.loading ||
         _streamAllSubscription != null) {
       return;
@@ -66,6 +64,81 @@ class IssuesCubit extends Cubit<IssuesState> {
     });
   }
 
+  Future<void> emitIssues() async {
+    if (state.status == ContentStatus.loading) return;
+
+    emit(
+      state.copyWith(
+        status: ContentStatus.loading,
+        issues: List.generate(
+          2,
+          (_) => IssueResponseModel.empty(),
+        ),
+      ),
+    );
+
+    final result =
+        await _repo.getIssues(offset: state.issues?.length ?? 0, limit: 5);
+    if (isClosed) return;
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+          status: ContentStatus.error, errorMsg: failure.errMessage)),
+      (issues) =>
+          emit(state.copyWith(status: ContentStatus.loaded, issues: issues)),
+    );
+  }
+
+  Future<void> emitBuildingIssues(String buildingId) async {
+    if (state.status == ContentStatus.loading) return;
+
+    emit(
+      state.copyWith(
+        status: ContentStatus.loading,
+        issues: List.generate(
+          2,
+          (_) => IssueResponseModel.empty(),
+        ),
+      ),
+    );
+
+    final result = await _repo.getBuildingIssues(
+        buildingId: buildingId, offset: state.issues?.length ?? 0, limit: 5);
+    if (isClosed) return;
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+          status: ContentStatus.error, errorMsg: failure.errMessage)),
+      (issues) =>
+          emit(state.copyWith(status: ContentStatus.loaded, issues: issues)),
+    );
+  }
+
+  Future<void> emitElevatorIssues(String elevatorId) async {
+    if (state.status == ContentStatus.loading) return;
+
+    emit(
+      state.copyWith(
+        status: ContentStatus.loading,
+        issues: List.generate(
+          2,
+          (_) => IssueResponseModel.empty(),
+        ),
+      ),
+    );
+
+    final result = await _repo.getElevatorIssues(
+        elevatorId: elevatorId, offset: state.issues?.length ?? 0, limit: 5);
+    if (isClosed) return;
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+          status: ContentStatus.error, errorMsg: failure.errMessage)),
+      (issues) =>
+          emit(state.copyWith(status: ContentStatus.loaded, issues: issues)),
+    );
+  }
+
   void selectIssue(String issueId) {
     if (state.status == ContentStatus.loading || state.issues == null) return;
     emit(state.copyWith(
@@ -76,8 +149,6 @@ class IssuesCubit extends Cubit<IssuesState> {
   @override
   Future<void> close() {
     _streamAllSubscription?.cancel();
-    _streamBuildingSubscription?.cancel();
-    _streamElevatorSubscription?.cancel();
     return super.close();
   }
 }

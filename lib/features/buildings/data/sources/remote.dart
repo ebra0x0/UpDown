@@ -6,14 +6,7 @@ class BuildingsRemoteDataSource {
 
   BuildingsRemoteDataSource(this._api);
 
-  Stream<BuildingModel?> get(String buildingId) {
-    return _api.streamBuildingDetails(buildingId: buildingId).map((json) {
-      if (json == null) return null;
-      return BuildingModel.fromJson(json);
-    });
-  }
-
-  Stream<List<BuildingModel>> getAll() {
+  Stream<List<BuildingModel>> streamAllBuildings() {
     return _api.streamUserBuildings().map((json) {
       if (json.isEmpty) return [];
       return json.map((b) => BuildingModel.fromJson(b)).toList();

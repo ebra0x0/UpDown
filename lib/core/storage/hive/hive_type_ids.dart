@@ -44,7 +44,10 @@ abstract class HiveTypeIds {
   static const int mediaTypeEnum = 76;
 
   // Maintenance type ids (91 to 110)
-  static const int maintenanceModel = 91;
-  static const int maintenanceTypeEnum = 92;
-  static const int maintenanceStatusEnum = 93;
+  static const int maintenanceViewModel = 91;
+  static const int maintenanceModel = 92;
+  static const int maintenanceTypeEnum = 93;
+  static const int maintenanceStatusEnum = 94;
+
+  static const int technicianModel = 95;
 }

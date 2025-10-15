@@ -8,7 +8,7 @@ import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/core/utils/helper/check_file_size.dart';
 import 'package:UpDown/core/utils/helper/media_picker_service.dart';
 import 'package:UpDown/core/utils/helper/toast.dart';
-import 'package:UpDown/core/utils/model/media_models/media_request_model.dart';
+import 'package:UpDown/core/utils/models/media_models/media_request_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';

@@ -1,6 +1,6 @@
 import 'package:UpDown/core/network/api/api_failure/api_failures.dart';
 import 'package:UpDown/core/network/network_manager.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenanace_model.dart';
+import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
 import 'package:UpDown/features/maintenance/data/sources/local.dart';
 import 'package:UpDown/features/maintenance/data/sources/remote.dart';
 import 'package:either_dart/either.dart';
@@ -15,7 +15,8 @@ class MaintenanceRepo {
 
   MaintenanceRepo(this._local, this._remote, this._netManager);
 
-  Stream<Either<Failure, MaintenanceModel?>> streamCurrentMaintenance() async* {
+  Stream<Either<Failure, MaintenanceViewModel?>>
+      streamCurrentMaintenance() async* {
     try {
       final local = await _local.getCurrent();
       if (local != null) {
@@ -36,8 +37,9 @@ class MaintenanceRepo {
     }
   }
 
-  Stream<Either<Failure, MaintenanceModel?>> _handleCurrentMaintainanceStream(
-      bool isConnected, MaintenanceModel? local) async* {
+  Stream<Either<Failure, MaintenanceViewModel?>>
+      _handleCurrentMaintainanceStream(
+          bool isConnected, MaintenanceViewModel? local) async* {
     if (!isConnected) return;
 
     final remoteStream =
@@ -66,14 +68,24 @@ class MaintenanceRepo {
     });
   }
 
-  Future<Either<Failure, List<MaintenanceModel>>> fetchAllMaintenances() async {
+  Future<Either<Failure, List<MaintenanceViewModel>>> fetchAllMaintenances(
+      {int offset = 0, int limit = 5}) async {
     if (!isConnected) {
+      final local = await _local.getAll();
+
+      if (local.isNotEmpty) {
+        return Right(local);
+      }
+
       return const Left(CustomFailure("لا يوجد اتصال بالإنترنت."));
     }
 
     try {
-      final remoteRes = await _remote.fetchAllMaintenances();
-      await _local.saveAll(remoteRes);
+      final remoteRes =
+          await _remote.fetchAllMaintenances(offset: offset, limit: limit);
+
+      if (remoteRes.isNotEmpty) await _local.saveAll(remoteRes);
+
       return Right(remoteRes);
     } on Failure catch (e) {
       return Left(e);

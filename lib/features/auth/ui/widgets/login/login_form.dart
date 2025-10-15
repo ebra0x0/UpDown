@@ -1,7 +1,7 @@
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/utils/constants/validators/validator.dart';
 import 'package:UpDown/core/widgets/custom_text_form_field.dart';
-import 'package:UpDown/core/utils/model/form_field_model.dart';
+import 'package:UpDown/core/utils/models/form_field_model.dart';
 import 'package:UpDown/core/widgets/password_field.dart';
 import 'package:UpDown/features/auth/ui/widgets/login/sign_up_link_text.dart';
 import 'package:UpDown/features/auth/ui/cubit/auth_cubit.dart';

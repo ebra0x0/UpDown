@@ -39,7 +39,8 @@ class MaintenanceCubit extends Cubit<MaintenanceState> {
   Future<void> fetchAllMaintenances() async {
     emit(state.copyWith(status: ContentStatus.loading));
 
-    final result = await _repo.fetchAllMaintenances();
+    final result = await _repo.fetchAllMaintenances(
+        offset: state.maintenances?.length ?? 0, limit: 5);
 
     result.fold(
       (failure) => emit(state.copyWith(
