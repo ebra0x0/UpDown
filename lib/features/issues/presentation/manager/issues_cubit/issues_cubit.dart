@@ -43,11 +43,11 @@ class IssuesCubit extends Cubit<IssuesState> {
             return;
           }
 
-          final List<IssueResponseModel> orderedIssues =
+          final List<IssueResponseModel> sortedIssues =
               sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
           emit(state.copyWith(
             status: ContentStatus.loaded,
-            issues: orderedIssues,
+            issues: sortedIssues,
           ));
           if (state.currentIssue != null) {
             selectIssue(state.currentIssue!.id);
@@ -82,11 +82,14 @@ class IssuesCubit extends Cubit<IssuesState> {
     if (isClosed) return;
 
     result.fold(
-      (failure) => emit(state.copyWith(
-          status: ContentStatus.error, errorMsg: failure.errMessage)),
-      (issues) =>
-          emit(state.copyWith(status: ContentStatus.loaded, issues: issues)),
-    );
+        (failure) => emit(state.copyWith(
+            status: ContentStatus.error,
+            errorMsg: failure.errMessage)), (issues) {
+      final sortedIssues =
+          sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
+
+      emit(state.copyWith(status: ContentStatus.loaded, issues: sortedIssues));
+    });
   }
 
   Future<void> emitBuildingIssues(String buildingId) async {
@@ -107,11 +110,14 @@ class IssuesCubit extends Cubit<IssuesState> {
     if (isClosed) return;
 
     result.fold(
-      (failure) => emit(state.copyWith(
-          status: ContentStatus.error, errorMsg: failure.errMessage)),
-      (issues) =>
-          emit(state.copyWith(status: ContentStatus.loaded, issues: issues)),
-    );
+        (failure) => emit(state.copyWith(
+            status: ContentStatus.error,
+            errorMsg: failure.errMessage)), (issues) {
+      final sortedIssues =
+          sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
+
+      emit(state.copyWith(status: ContentStatus.loaded, issues: sortedIssues));
+    });
   }
 
   Future<void> emitElevatorIssues(String elevatorId) async {
@@ -132,11 +138,14 @@ class IssuesCubit extends Cubit<IssuesState> {
     if (isClosed) return;
 
     result.fold(
-      (failure) => emit(state.copyWith(
-          status: ContentStatus.error, errorMsg: failure.errMessage)),
-      (issues) =>
-          emit(state.copyWith(status: ContentStatus.loaded, issues: issues)),
-    );
+        (failure) => emit(state.copyWith(
+            status: ContentStatus.error,
+            errorMsg: failure.errMessage)), (issues) {
+      final sortedIssues =
+          sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
+
+      emit(state.copyWith(status: ContentStatus.loaded, issues: sortedIssues));
+    });
   }
 
   void selectIssue(String issueId) {
