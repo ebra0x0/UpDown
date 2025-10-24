@@ -29,7 +29,7 @@ class AccountSetupView extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             'إعداد الملف الشخصي',
-            style: AppTextStyles.textStyle24,
+            style: AppTextStyles.textStyle22,
           ),
         ),
         body: AccountSetupViewBody(),

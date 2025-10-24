@@ -13,6 +13,7 @@ abstract class AppColors {
   static const Color lightGreen = Color(0xFF07CFB1);
   static const Color lightRed = Color(0xFFEF476F);
   static const Color lightBlue = Color(0xFF2F80ED);
+  static const Color lightOverlay = Color(0x99000000);
 
   // Dark Theme Colors
   static const Color darkPrimary = Color(0xFF8e6ff7);
@@ -26,6 +27,7 @@ abstract class AppColors {
   static const Color darkGreen = Color(0xFF029B84);
   static const Color darkRed = Color(0xFFEF476F);
   static const Color darkBlue = Color(0xFF2F80ED);
+  static const Color darkOverlay = Color(0x99000000);
 
   // Light ThemeData
   static ThemeData get lightTheme {

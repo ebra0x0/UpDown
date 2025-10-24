@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppBorders {
   static final Border generalBoxBorder = Border.all(
-    color: AppTheme.red.withValues(
+    color: AppTheme.grey.withValues(
       alpha: 0.2,
     ),
     width: 1.3.w,

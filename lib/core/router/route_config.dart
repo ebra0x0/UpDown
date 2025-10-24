@@ -14,6 +14,7 @@ import 'package:UpDown/features/issues/presentation/manager/create_issue_cubit/c
 import 'package:UpDown/features/issues/presentation/views/create_issue_view.dart';
 import 'package:UpDown/features/issues/presentation/views/issue_view.dart';
 import 'package:UpDown/features/issues/presentation/views/issues_list_view.dart';
+import 'package:UpDown/features/maintenances/presentation/views/maintenance_list_view.dart';
 import 'package:UpDown/features/profile/presentation/manager/profile_cubit/cubit/profile_cubit.dart';
 import 'package:UpDown/features/profile/presentation/views/profile_view.dart';
 import 'package:UpDown/features/splash/presentation/views/splash_view.dart';
@@ -84,6 +85,7 @@ class RouteConfig {
                 _elevatorDetailsRoute(),
                 _issueDetailsRoute(),
                 _issuesListRoute(),
+                _maintenancesListRoute(),
               ]),
         ]),
       ];
@@ -122,6 +124,14 @@ class RouteConfig {
         path: AppRoute.issues.path,
         builder: (context, state) {
           return IssuesListView();
+        });
+  }
+
+  static GoRoute _maintenancesListRoute() {
+    return GoRoute(
+        path: AppRoute.maintenances.path,
+        builder: (context, state) {
+          return MaintenanceListView();
         });
   }
 }

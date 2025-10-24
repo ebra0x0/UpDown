@@ -46,4 +46,6 @@ class AppTheme {
   static Color get grey => _isDark ? AppColors.darkGrey : AppColors.lightGrey;
   static Color get yellow =>
       _isDark ? AppColors.darkYellow : AppColors.lightYellow;
+  static Color get overlay =>
+      _isDark ? AppColors.darkOverlay : AppColors.lightOverlay;
 }

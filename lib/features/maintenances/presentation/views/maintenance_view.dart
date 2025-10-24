@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:UpDown/features/maintenance/presentation/widgets/maintenance_view_body.dart';
+import 'package:UpDown/features/maintenances/presentation/widgets/maintenance_view_body.dart';
 
 class MaintenanceView extends StatelessWidget {
   const MaintenanceView({super.key});

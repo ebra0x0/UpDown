@@ -1,7 +1,7 @@
 import 'package:UpDown/core/network/api/api_service.dart';
 import 'package:UpDown/core/utils/models/technician_model.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenanace_model.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
+import 'package:UpDown/features/maintenances/data/models/maintenanace_model.dart';
+import 'package:UpDown/features/maintenances/data/models/maintenance_view_model.dart';
 
 class MaintenanceRemoteDataSource {
   final ApiService _api;

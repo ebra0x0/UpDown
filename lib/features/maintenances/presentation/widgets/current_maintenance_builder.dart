@@ -2,10 +2,10 @@ import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/widgets/header_section.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
-import 'package:UpDown/features/maintenance/presentation/cubit/maintenance_cubit.dart';
-import 'package:UpDown/features/maintenance/presentation/cubit/maintenance_state.dart';
-import 'package:UpDown/features/maintenance/presentation/widgets/maintenance_card.dart';
+import 'package:UpDown/features/maintenances/data/models/maintenance_view_model.dart';
+import 'package:UpDown/features/maintenances/presentation/cubit/maintenance_cubit.dart';
+import 'package:UpDown/features/maintenances/presentation/cubit/maintenance_state.dart';
+import 'package:UpDown/features/maintenances/presentation/widgets/maintenance_card.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

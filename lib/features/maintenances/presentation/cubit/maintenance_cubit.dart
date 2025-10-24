@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/features/maintenance/data/repo/maintenance_repo.dart';
-import 'package:UpDown/features/maintenance/presentation/cubit/maintenance_state.dart';
+import 'package:UpDown/features/maintenances/data/models/maintenance_view_model.dart';
+import 'package:UpDown/features/maintenances/data/repo/maintenance_repo.dart';
+import 'package:UpDown/features/maintenances/presentation/cubit/maintenance_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MaintenanceCubit extends Cubit<MaintenanceState> {
@@ -37,7 +38,14 @@ class MaintenanceCubit extends Cubit<MaintenanceState> {
   }
 
   Future<void> fetchAllMaintenances() async {
-    emit(state.copyWith(status: ContentStatus.loading));
+    if (state.status == ContentStatus.loading) return;
+
+    emit(state.copyWith(
+        status: ContentStatus.loading,
+        maintenances: List.generate(
+          2,
+          (_) => MaintenanceViewModel.empty(),
+        )));
 
     final result = await _repo.fetchAllMaintenances(
         offset: state.maintenances?.length ?? 0, limit: 5);

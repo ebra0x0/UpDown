@@ -120,7 +120,7 @@ class ProfileViewBody extends StatelessWidget {
                 loadingColor: AppTheme.red,
                 title: "تسجيل الخروج",
                 leading: AppIcons.logoutIcon.copyWith(color: AppTheme.red),
-                onTap: () async => await authCubit.signOut(),
+                onTap: () async => await authCubit.signOut(context),
               ),
             ),
           ),

@@ -1,8 +1,8 @@
 import 'package:UpDown/core/network/api/api_failure/api_failures.dart';
 import 'package:UpDown/core/network/network_manager.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
-import 'package:UpDown/features/maintenance/data/sources/local.dart';
-import 'package:UpDown/features/maintenance/data/sources/remote.dart';
+import 'package:UpDown/features/maintenances/data/models/maintenance_view_model.dart';
+import 'package:UpDown/features/maintenances/data/sources/local.dart';
+import 'package:UpDown/features/maintenances/data/sources/remote.dart';
 import 'package:either_dart/either.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

@@ -1,6 +1,6 @@
 import 'package:UpDown/core/storage/hive/hive_constants.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
+import 'package:UpDown/features/maintenances/data/models/maintenance_view_model.dart';
 import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

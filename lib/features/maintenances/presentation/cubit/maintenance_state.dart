@@ -1,5 +1,5 @@
 import 'package:UpDown/core/utils/enums/enums.dart';
-import 'package:UpDown/features/maintenance/data/models/maintenance_view_model.dart';
+import 'package:UpDown/features/maintenances/data/models/maintenance_view_model.dart';
 
 class MaintenanceState {
   final ContentStatus status;

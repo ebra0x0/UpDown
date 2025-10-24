@@ -6,10 +6,12 @@ import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
 import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
 import 'package:UpDown/features/elevators/presentation/manager/elevators_cubit/elevators_cubit.dart';
-import 'package:UpDown/features/maintenance/presentation/cubit/maintenance_cubit.dart';
+import 'package:UpDown/features/maintenances/presentation/cubit/maintenance_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class RootView extends StatelessWidget {
   const RootView({super.key, required this.navigationShell});
@@ -24,33 +26,46 @@ class RootView extends StatelessWidget {
           BlocProvider(create: (context) => getIt.get<IssuesCubit>()),
           BlocProvider(create: (context) => getIt.get<MaintenanceCubit>()),
         ],
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: navigationShell,
-          bottomNavigationBar: Visibility(
-            visible: MediaQuery.of(context).viewInsets.bottom == 0,
-            child: BottomNavigationBar(
-              onTap: (value) {
-                navigationShell.goBranch(value);
-              },
-              currentIndex: navigationShell.currentIndex,
-              backgroundColor: AppTheme.tabBar,
-              selectedItemColor: AppTheme.primary,
-              unselectedItemColor: AppTheme.tabBarItem,
-              items: [
-                BottomNavigationBarItem(
-                    activeIcon: CustomActiveNavBarItem(icon: AppIcons.homeIcon),
-                    icon: AppIcons.homeIcon,
-                    label: 'الرئيسية'),
-                BottomNavigationBarItem(
-                    activeIcon: CustomActiveNavBarItem(icon: AppIcons.addIcon),
-                    icon: AppIcons.addIcon,
-                    label: 'إنشاء عطل'),
-                BottomNavigationBarItem(
-                    activeIcon: CustomActiveNavBarItem(icon: AppIcons.userIcon),
-                    icon: AppIcons.userIcon,
-                    label: 'الحساب'),
-              ],
+        child: LoaderOverlay(
+          overlayColor: AppTheme.overlay,
+          overlayWidgetBuilder: (context) => Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 6.sp,
+              strokeCap: StrokeCap.round,
+              color: AppTheme.primary,
+            ),
+          ),
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: navigationShell,
+            bottomNavigationBar: Visibility(
+              visible: MediaQuery.of(context).viewInsets.bottom == 0,
+              child: BottomNavigationBar(
+                onTap: (value) {
+                  navigationShell.goBranch(value);
+                },
+                currentIndex: navigationShell.currentIndex,
+                backgroundColor: AppTheme.tabBar,
+                selectedItemColor: AppTheme.primary,
+                unselectedItemColor: AppTheme.tabBarItem,
+                items: [
+                  BottomNavigationBarItem(
+                      activeIcon:
+                          CustomActiveNavBarItem(icon: AppIcons.homeIcon),
+                      icon: AppIcons.homeIcon,
+                      label: 'الرئيسية'),
+                  BottomNavigationBarItem(
+                      activeIcon:
+                          CustomActiveNavBarItem(icon: AppIcons.addIcon),
+                      icon: AppIcons.addIcon,
+                      label: 'إنشاء عطل'),
+                  BottomNavigationBarItem(
+                      activeIcon:
+                          CustomActiveNavBarItem(icon: AppIcons.userIcon),
+                      icon: AppIcons.userIcon,
+                      label: 'الحساب'),
+                ],
+              ),
             ),
           ),
         ));

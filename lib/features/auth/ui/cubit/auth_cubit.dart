@@ -4,7 +4,9 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/auth/data/model/auth_request_model.dart';
 import 'package:UpDown/features/auth/data/model/auth_response_model.dart';
 import 'package:UpDown/features/auth/data/repos/auth_repo.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'auth_state.dart';
@@ -32,8 +34,10 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut(BuildContext context) async {
     emit(state.copyWith(status: AuthStatus.loading));
+
+    context.loaderOverlay.show();
 
     final res = await _authRepo.signOut();
 

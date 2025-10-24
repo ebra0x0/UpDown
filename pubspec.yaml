@@ -11,12 +11,12 @@ environment:
 
 dependencies:
     cupertino_icons: ^1.0.8
-    either_dart: ^1.0.0
     flutter:
         sdk: flutter
-    flutter_bloc: ^9.1.1
     flutter_localizations:
         sdk: flutter
+    either_dart: ^1.0.0
+    flutter_bloc: ^9.1.1
     # Responsive Design
     flutter_screenutil: ^5.9.3
     # Dependency Injection
@@ -51,6 +51,8 @@ dependencies:
     crypto: ^3.0.6
     # Skeleton
     skeletonizer: ^2.0.1
+    # Loading Overlay
+    loader_overlay: ^5.0.0
     # Network
     internet_connection_checker_plus: ^2.7.2
     retry: ^3.1.2

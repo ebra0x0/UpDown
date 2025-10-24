@@ -1,7 +1,7 @@
 import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/widgets/custom_sliver_app_bar.dart';
 import 'package:UpDown/features/issues/presentation/widgets/issues_section/issues_section_builder.dart';
-import 'package:UpDown/features/maintenance/presentation/widgets/current_maintenance_builder.dart';
+import 'package:UpDown/features/maintenances/presentation/widgets/current_maintenance_builder.dart';
 import 'package:flutter/widgets.dart';
 import 'package:UpDown/features/buildings/presentation/widgets/buildings_section/grid_section_builder.dart';
 
