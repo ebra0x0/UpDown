@@ -91,11 +91,12 @@ class InfoRow extends StatelessWidget {
         padding: EdgeInsets.zero,
         leading: BubbleIcon(
           icon: leadingIcon,
-          color: iconColor ?? AppTheme.primary,
+          color: iconColor ?? AppTheme.primaryColor,
         ),
         title: title,
         subtitle: value,
-        titleStyle: AppTextStyles.textStyle12.copyWith(color: AppTheme.grey),
+        titleStyle:
+            AppTextStyles.textStyle12.copyWith(color: AppTheme.greyColor),
         subtitleStyle: AppTextStyles.textStyle14);
   }
 }

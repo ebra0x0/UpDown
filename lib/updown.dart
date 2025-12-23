@@ -27,22 +27,16 @@ class UpDown extends StatelessWidget {
         designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
-        child: BlocBuilder<ThemeCubit, ThemeMode>(
+        child: BlocConsumer<ThemeCubit, ThemeMode>(
           buildWhen: (prev, curr) => prev != curr,
-          builder: (context, themeMode) {
+          listener: (context, mode) {
             final brightness =
                 WidgetsBinding.instance.platformDispatcher.platformBrightness;
-
-            final Brightness actualBrightness =
-                _getActualBrightness(themeMode, brightness);
-
-            // Set the theme based on the current theme mode
-            AppTheme.setTheme(mode: themeMode, bright: brightness);
-            final theme = AppTheme.themeData;
-
-            // Set the system UI overlay style based on the actual brightness
-            _setSystemUIOverlayStyle(actualBrightness);
-
+            final actual = _getActualBrightness(mode, brightness);
+            AppTheme.setTheme(mode: mode, bright: brightness);
+            _setSystemUIOverlayStyle(actual);
+          },
+          builder: (context, themeMode) {
             return MaterialApp.router(
               routerConfig: AppRouter.router(),
               debugShowCheckedModeBanner: false,
@@ -66,8 +60,8 @@ class UpDown extends StatelessWidget {
                 LocaleService.updateLocale(chosen.languageCode);
                 return chosen;
               },
-              theme: theme,
-              darkTheme: theme,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
               themeMode: themeMode,
             );
           },
@@ -90,7 +84,7 @@ class UpDown extends StatelessWidget {
   void _setSystemUIOverlayStyle(Brightness brightness) {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        systemNavigationBarColor: AppTheme.scaffold,
+        systemNavigationBarColor: AppTheme.scaffoldColor,
         systemNavigationBarIconBrightness: brightness,
       ),
     );

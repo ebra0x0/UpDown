@@ -43,15 +43,15 @@ extension ElevatorStatusExtension on ElevatorStatus {
   Color get color {
     switch (this) {
       case ElevatorStatus.working:
-        return AppTheme.green;
+        return AppTheme.greenColor;
       case ElevatorStatus.broken:
-        return AppTheme.red;
+        return AppTheme.redColor;
       case ElevatorStatus.repair:
-        return AppTheme.blue;
+        return AppTheme.blueColor;
       case ElevatorStatus.maintenance:
-        return AppTheme.yellow;
+        return AppTheme.yellowColor;
       case ElevatorStatus.disabled:
-        return AppTheme.grey;
+        return AppTheme.greyColor;
     }
   }
 
@@ -166,13 +166,13 @@ extension IssueStatusExtension on IssueStatus {
   Color get color {
     switch (this) {
       case IssueStatus.notFixed:
-        return AppTheme.red;
+        return AppTheme.redColor;
       case IssueStatus.needsParts:
-        return AppTheme.blue;
+        return AppTheme.blueColor;
       case IssueStatus.escalated:
-        return AppTheme.yellow;
+        return AppTheme.yellowColor;
       case IssueStatus.fixed:
-        return AppTheme.green;
+        return AppTheme.greenColor;
     }
   }
 }
@@ -218,17 +218,17 @@ extension ReportStatusExtension on ReportStatus {
   Color get color {
     switch (this) {
       case ReportStatus.pending:
-        return AppTheme.grey;
+        return AppTheme.greyColor;
       case ReportStatus.reported:
-        return AppTheme.red;
+        return AppTheme.redColor;
       case ReportStatus.coming:
-        return AppTheme.red;
+        return AppTheme.redColor;
       case ReportStatus.arrived:
-        return AppTheme.blue;
+        return AppTheme.blueColor;
       case ReportStatus.inProgress:
-        return AppTheme.yellow;
+        return AppTheme.yellowColor;
       case ReportStatus.resolved:
-        return AppTheme.green;
+        return AppTheme.greenColor;
     }
   }
 }
@@ -286,13 +286,13 @@ extension UnitStatusExtension on UnitStatus {
   Color get color {
     switch (this) {
       case UnitStatus.active:
-        return AppTheme.green;
+        return AppTheme.greenColor;
       case UnitStatus.maintenance:
-        return AppTheme.yellow;
+        return AppTheme.yellowColor;
       case UnitStatus.outOfService:
-        return AppTheme.red;
+        return AppTheme.redColor;
       case UnitStatus.requiresReplacement:
-        return AppTheme.blue;
+        return AppTheme.blueColor;
     }
   }
 }
@@ -315,13 +315,13 @@ extension FloorStatusExtension on FloorStatus {
   Color get color {
     switch (this) {
       case FloorStatus.accessible:
-        return AppTheme.green;
+        return AppTheme.greenColor;
       case FloorStatus.outOfService:
-        return AppTheme.red;
+        return AppTheme.redColor;
       case FloorStatus.closed:
-        return AppTheme.grey;
+        return AppTheme.greyColor;
       case FloorStatus.restricted:
-        return AppTheme.blue;
+        return AppTheme.blueColor;
     }
   }
 }
@@ -356,11 +356,11 @@ extension PartConditionExtension on PartCondition {
   Color get color {
     switch (this) {
       case PartCondition.good:
-        return AppTheme.green;
+        return AppTheme.greenColor;
       case PartCondition.worn:
-        return AppTheme.yellow;
+        return AppTheme.yellowColor;
       case PartCondition.broken:
-        return AppTheme.red;
+        return AppTheme.redColor;
     }
   }
 }
@@ -380,11 +380,11 @@ extension MaintenanceStatusExtension on MaintenanceStatus {
   Color get color {
     switch (this) {
       case MaintenanceStatus.pending:
-        return AppTheme.grey;
+        return AppTheme.greyColor;
       case MaintenanceStatus.inProgress:
-        return AppTheme.yellow;
+        return AppTheme.yellowColor;
       case MaintenanceStatus.completed:
-        return AppTheme.green;
+        return AppTheme.greenColor;
     }
   }
 }

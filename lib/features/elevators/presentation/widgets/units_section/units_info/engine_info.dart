@@ -47,7 +47,8 @@ class EngineInfo extends StatelessWidget {
               InfoRow(
                 title: 'تاريخ الزيت',
                 value: DateFormat('yyyy-MM-dd').format(unit.oilDate),
-                iconColor: unit.isOilGood ? AppTheme.green : AppTheme.red,
+                iconColor:
+                    unit.isOilGood ? AppTheme.greenColor : AppTheme.redColor,
               ),
               InfoRow(
                 title: 'نوع طارة المناول',
@@ -98,11 +99,12 @@ class InfoRow extends StatelessWidget {
         padding: EdgeInsets.zero,
         leading: BubbleIcon(
           icon: leadingIcon,
-          color: iconColor ?? AppTheme.primary,
+          color: iconColor ?? AppTheme.primaryColor,
         ),
         title: title,
         subtitle: value,
-        titleStyle: AppTextStyles.textStyle12.copyWith(color: AppTheme.grey),
+        titleStyle:
+            AppTextStyles.textStyle12.copyWith(color: AppTheme.greyColor),
         subtitleStyle: AppTextStyles.textStyle14);
   }
 }

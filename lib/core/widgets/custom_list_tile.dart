@@ -49,14 +49,14 @@ class CustomListTile extends StatelessWidget {
           AppInsets.h16.copyWith(top: AppSpacing.s2, bottom: AppSpacing.s2),
       shape: RoundedRectangleBorder(borderRadius: AppRadius.borderRadius8),
       enabled: !isLoading,
-      tileColor: backgroundColor ?? AppTheme.background,
+      tileColor: backgroundColor ?? AppTheme.backgroundColor,
       onTap: isLoading ? null : onTap,
       title: Text(
         title,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
         style: titleStyle ??
-            AppTextStyles.textStyle14.copyWith(color: AppTheme.text),
+            AppTextStyles.textStyle14.copyWith(color: AppTheme.textColor),
       ),
       subtitle: subtitle == null
           ? null
@@ -66,7 +66,7 @@ class CustomListTile extends StatelessWidget {
               maxLines: 1,
               style: subtitleStyle ??
                   AppTextStyles.textStyle12.copyWith(
-                    color: AppTheme.grey,
+                    color: AppTheme.greyColor,
                   ),
             ),
       leading: isLoading

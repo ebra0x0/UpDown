@@ -33,12 +33,13 @@ class ScreenEcho extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: 6,
           children: [
-            icon ?? AppIcons.errorOutlineIcon.copyWith(color: AppTheme.grey),
+            icon ??
+                AppIcons.errorOutlineIcon.copyWith(color: AppTheme.greyColor),
             Text(
               message,
               textAlign: TextAlign.center,
               style: AppTextStyles.textStyle14.copyWith(
-                color: isError ? AppTheme.red : AppTheme.grey,
+                color: isError ? AppTheme.redColor : AppTheme.greyColor,
               ),
             ),
           ],

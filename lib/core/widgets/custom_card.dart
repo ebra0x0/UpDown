@@ -15,7 +15,7 @@ class CustomCard extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: AppRadius.borderRadius8),
       elevation: 5,
-      shadowColor: AppTheme.shadow.withValues(
+      shadowColor: AppTheme.shadowColor.withValues(
         alpha: .1,
       ),
       child: Padding(

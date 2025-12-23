@@ -21,11 +21,11 @@ class BubbleIcon extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color?.withValues(alpha: 0.2) ??
-            AppTheme.primary.withValues(alpha: 0.2),
+            AppTheme.primaryColor.withValues(alpha: 0.2),
       ),
       padding: padding ?? AppInsets.all8,
       child: icon.copyWith(
-        color: color ?? AppTheme.primary,
+        color: color ?? AppTheme.primaryColor,
       ),
     );
   }

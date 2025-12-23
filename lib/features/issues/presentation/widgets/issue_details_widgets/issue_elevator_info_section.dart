@@ -27,7 +27,7 @@ class IssueElevatorInfoSection extends StatelessWidget {
             title: "المصعد",
             subtitle: elevatorName,
             titleStyle:
-                AppTextStyles.textStyle12.copyWith(color: AppTheme.grey),
+                AppTextStyles.textStyle12.copyWith(color: AppTheme.greyColor),
             subtitleStyle: AppTextStyles.textStyle14),
         CustomListTile(
             padding: EdgeInsets.zero,
@@ -35,7 +35,7 @@ class IssueElevatorInfoSection extends StatelessWidget {
             title: "المبنى",
             subtitle: buildingName,
             titleStyle:
-                AppTextStyles.textStyle12.copyWith(color: AppTheme.grey),
+                AppTextStyles.textStyle12.copyWith(color: AppTheme.greyColor),
             subtitleStyle: AppTextStyles.textStyle14),
       ],
     );

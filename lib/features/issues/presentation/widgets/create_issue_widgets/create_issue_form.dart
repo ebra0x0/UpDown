@@ -16,8 +16,6 @@ class _CreateIssueFormState extends State<CreateIssueForm> {
   final formKey = GlobalKey<FormState>();
   AutovalidateMode autoValidateMode = AutovalidateMode.disabled;
 
-  final descriptionController = TextEditingController();
-
   Future<void> submit(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();

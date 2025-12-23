@@ -3,6 +3,7 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/features/maintenances/data/models/maintenance_view_model.dart';
 import 'package:UpDown/features/maintenances/data/repo/maintenance_repo.dart';
 import 'package:UpDown/features/maintenances/presentation/cubit/maintenance_state.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MaintenanceCubit extends Cubit<MaintenanceState> {
@@ -56,6 +57,15 @@ class MaintenanceCubit extends Cubit<MaintenanceState> {
       (maintenances) => emit(state.copyWith(
           status: ContentStatus.loaded, maintenances: maintenances)),
     );
+  }
+
+  void selectMaintenance(String maintenanceId) {
+    if (state.status == ContentStatus.loading || state.maintenances == null) {
+      return;
+    }
+    emit(state.copyWith(
+        currentMaintenance: state.maintenances!.firstWhereOrNull(
+            (maintenance) => maintenance.data.id == maintenanceId)));
   }
 
   @override

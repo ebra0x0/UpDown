@@ -81,7 +81,7 @@ class _ElevatorCardFooter extends StatelessWidget {
         child: TextAndbubbleTextRow(
           text: issueDate?.toDateTimeFormat() ?? "",
           bubbleText: issueType?.priority(context) ?? "",
-          bubbleColor: AppTheme.red,
+          bubbleColor: AppTheme.redColor,
         ));
   }
 }

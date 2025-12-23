@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/helper/sort_list.dart';
 import 'package:UpDown/features/issues/data/models/issue_response_model.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'issues_state.dart';
@@ -23,7 +23,7 @@ class IssuesCubit extends Cubit<IssuesState> {
     emit(
       state.copyWith(
         status: ContentStatus.loading,
-        issues: List.generate(
+        activeIssues: List.generate(
           2,
           (_) => IssueResponseModel.empty(),
         ),
@@ -39,16 +39,12 @@ class IssuesCubit extends Cubit<IssuesState> {
         )),
         (issues) {
           if (issues.isEmpty) {
-            emit(state.copyWith(status: ContentStatus.empty, issues: []));
+            emit(state.copyWith(status: ContentStatus.empty, activeIssues: []));
             return;
           }
 
-          final List<IssueResponseModel> sortedIssues =
-              sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
-          emit(state.copyWith(
-            status: ContentStatus.loaded,
-            issues: sortedIssues,
-          ));
+          _sortAndEmitActiveIssues(issues);
+
           if (state.currentIssue != null) {
             selectIssue(state.currentIssue!.id);
           }
@@ -56,7 +52,7 @@ class IssuesCubit extends Cubit<IssuesState> {
       );
     }, onError: (e) {
       if (isClosed) return;
-      if (state.issues != null) return;
+      if (state.activeIssues != null) return;
       emit(state.copyWith(
         status: ContentStatus.error,
         errorMsg: e.toString(),
@@ -64,32 +60,30 @@ class IssuesCubit extends Cubit<IssuesState> {
     });
   }
 
-  Future<void> emitIssues() async {
+  Future<void> emitAllIssues() async {
     if (state.status == ContentStatus.loading) return;
 
-    emit(
-      state.copyWith(
-        status: ContentStatus.loading,
-        issues: List.generate(
-          2,
-          (_) => IssueResponseModel.empty(),
-        ),
-      ),
-    );
+    final int currentLength = state.issues?.length ?? 0;
 
-    final result =
-        await _repo.getIssues(offset: state.issues?.length ?? 0, limit: 5);
+    if (currentLength == 0) {
+      emit(
+        state.copyWith(
+          status: ContentStatus.loading,
+          issues: List.generate(
+            2,
+            (_) => IssueResponseModel.empty(),
+          ),
+        ),
+      );
+    }
+
+    final result = await _repo.getIssues(offset: currentLength, limit: 5);
     if (isClosed) return;
 
     result.fold(
         (failure) => emit(state.copyWith(
-            status: ContentStatus.error,
-            errorMsg: failure.errMessage)), (issues) {
-      final sortedIssues =
-          sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
-
-      emit(state.copyWith(status: ContentStatus.loaded, issues: sortedIssues));
-    });
+            status: ContentStatus.error, errorMsg: failure.errMessage)),
+        (issues) => _sortAndEmit(issues));
   }
 
   Future<void> emitBuildingIssues(String buildingId) async {
@@ -113,10 +107,7 @@ class IssuesCubit extends Cubit<IssuesState> {
         (failure) => emit(state.copyWith(
             status: ContentStatus.error,
             errorMsg: failure.errMessage)), (issues) {
-      final sortedIssues =
-          sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
-
-      emit(state.copyWith(status: ContentStatus.loaded, issues: sortedIssues));
+      _sortAndEmit(issues);
     });
   }
 
@@ -141,18 +132,48 @@ class IssuesCubit extends Cubit<IssuesState> {
         (failure) => emit(state.copyWith(
             status: ContentStatus.error,
             errorMsg: failure.errMessage)), (issues) {
-      final sortedIssues =
-          sortList(issues, (issue) => issue.updatedAt ?? issue.createdAt);
-
-      emit(state.copyWith(status: ContentStatus.loaded, issues: sortedIssues));
+      _sortAndEmit(issues);
     });
   }
 
   void selectIssue(String issueId) {
     if (state.status == ContentStatus.loading || state.issues == null) return;
+
+    final issueExists = state.issues!.any((issue) => issue.id == issueId);
+
+    log("issueExists: $issueExists");
+
+    if (!issueExists) return;
+
     emit(state.copyWith(
         currentIssue:
-            state.issues!.firstWhereOrNull((issue) => issue.id == issueId)));
+            state.issues!.firstWhere((issue) => issue.id == issueId)));
+  }
+
+  void _sortAndEmit(List<IssueResponseModel> issues) {
+    final List<IssueResponseModel> sortedIssues =
+        sortList(issues, (issue) => issue.createdAt);
+    emit(state.copyWith(
+      issues: sortedIssues,
+      status: ContentStatus.loaded,
+    ));
+  }
+
+  void _sortAndEmitActiveIssues(List<IssueResponseModel> issues) {
+    final List<IssueResponseModel> sortedIssues =
+        sortList(issues, (issue) => issue.createdAt);
+
+    final Set<IssueResponseModel> activeIssuesAndIdle = {
+      ...state.issues ?? [],
+      ...sortedIssues
+    };
+
+    log(activeIssuesAndIdle.length.toString());
+    emit(state.copyWith(
+      status: ContentStatus.loaded,
+      activeIssues: sortedIssues,
+      issues: activeIssuesAndIdle.toList(),
+    ));
   }
 
   @override

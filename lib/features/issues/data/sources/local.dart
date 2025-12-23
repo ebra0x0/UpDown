@@ -24,8 +24,8 @@ class IssuesLocalDataSource {
     final box = await _getBox();
     final issues = await _getAllIssues(box);
 
-    final sortedIssues = sortList(
-        issues.values.toList(), (issue) => issue.updatedAt ?? issue.createdAt);
+    final sortedIssues =
+        sortList(issues.values.toList(), (issue) => issue.createdAt);
 
     final paginated = sortedIssues.skip(offset).take(limit).toList();
 
@@ -43,8 +43,7 @@ class IssuesLocalDataSource {
     final filteredIssues =
         issues.values.where((issue) => issue.buildingId == buildingId).toList();
 
-    final sortedIssues =
-        sortList(filteredIssues, (issue) => issue.updatedAt ?? issue.createdAt);
+    final sortedIssues = sortList(filteredIssues, (issue) => issue.createdAt);
 
     final paginated = sortedIssues.skip(offset).take(limit).toList();
 
@@ -57,8 +56,7 @@ class IssuesLocalDataSource {
     final filteredIssues =
         issues.where((issue) => issue.elevatorId == elevatorId).toList();
 
-    final sortedIssues =
-        sortList(filteredIssues, (issue) => issue.updatedAt ?? issue.createdAt);
+    final sortedIssues = sortList(filteredIssues, (issue) => issue.createdAt);
 
     final paginated = sortedIssues.skip(offset).take(limit).toList();
 

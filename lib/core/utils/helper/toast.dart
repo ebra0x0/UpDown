@@ -30,7 +30,7 @@ void showToast(
         ],
       ),
       backgroundColor:
-          type == ToastType.success ? AppTheme.green : AppTheme.red,
+          type == ToastType.success ? AppTheme.greenColor : AppTheme.redColor,
     ),
   );
 }

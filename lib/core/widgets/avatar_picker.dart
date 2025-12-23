@@ -96,7 +96,7 @@ class _AvatarPickerState extends State<AvatarPicker> {
           children: [
             CircleAvatar(
               radius: 76.h,
-              backgroundColor: AppTheme.background,
+              backgroundColor: AppTheme.backgroundColor,
               backgroundImage: imageFile != null
                   ? Image.file(
                       imageFile,
@@ -112,7 +112,7 @@ class _AvatarPickerState extends State<AvatarPicker> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(76.h),
                   child: Container(
-                    color: AppTheme.black.withValues(alpha: 0.7),
+                    color: AppTheme.blackColor.withValues(alpha: 0.7),
                     child: const Center(
                       child: CircularProgressIndicator(),
                     ),

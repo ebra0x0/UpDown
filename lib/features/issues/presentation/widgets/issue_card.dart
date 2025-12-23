@@ -35,16 +35,16 @@ class IssueCard extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         issue.issueType.title(context),
-        style: AppTextStyles.textStyle16.copyWith(color: AppTheme.text),
+        style: AppTextStyles.textStyle16.copyWith(color: AppTheme.textColor),
       ),
       subtitle: Text("${issue.buildingName} - ${issue.elevatorName}",
           style: AppTextStyles.textStyle12.copyWith(
-            color: AppTheme.grey,
+            color: AppTheme.greyColor,
           )),
       footer: TextAndbubbleTextRow(
           text: issue.createdAt.toDateTimeFormat(),
           bubbleText: issue.status.title(context),
-          bubbleColor: AppTheme.red),
+          bubbleColor: AppTheme.redColor),
       onTap: () {
         context.push("${AppRoute.home.path}${AppRoute.issue.path}/${issue.id}",
             extra: issue);

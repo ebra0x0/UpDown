@@ -23,6 +23,8 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
       : super(const CreateIssueState());
 
   Future<void> create() async {
+    if (state.status == CreateIssueStatus.loading) return;
+
     emit(state.copyWith(status: CreateIssueStatus.loading));
 
     final IssueRequestModel request = state.toRequestModel();

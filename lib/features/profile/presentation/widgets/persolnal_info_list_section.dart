@@ -21,7 +21,7 @@ class PersonalInfoListSection extends StatelessWidget {
         title: "الاسم",
         subtitle: profile.name,
         leading: AppIcons.userIcon.copyWith(
-          color: AppTheme.grey,
+          color: AppTheme.greyColor,
         ),
       ),
       CustomListTile(

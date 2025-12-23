@@ -1,17 +1,17 @@
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/features/maintenances/presentation/cubit/maintenance_cubit.dart';
-import 'package:UpDown/features/maintenances/presentation/widgets/maintenance_list_view_body.dart';
+import 'package:UpDown/features/maintenances/presentation/widgets/all_maintenances_view/all_maintenances_view_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MaintenanceListView extends StatefulWidget {
-  const MaintenanceListView({super.key});
+class AllMaintenancesView extends StatefulWidget {
+  const AllMaintenancesView({super.key});
 
   @override
-  State<MaintenanceListView> createState() => _MaintenanceListViewState();
+  State<AllMaintenancesView> createState() => _AllMaintenancesViewState();
 }
 
-class _MaintenanceListViewState extends State<MaintenanceListView> {
+class _AllMaintenancesViewState extends State<AllMaintenancesView> {
   @override
   void initState() {
     super.initState();

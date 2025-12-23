@@ -37,7 +37,7 @@ class ElevatorUnitCard extends StatelessWidget {
       isDismissible: true,
       showDragHandle: true,
       useSafeArea: true,
-      backgroundColor: AppTheme.scaffold,
+      backgroundColor: AppTheme.scaffoldColor,
       builder: (BuildContext context) =>
           SmartBottomSheet(children: [_getUnitInfoWidget(unit)]),
     );
@@ -78,7 +78,7 @@ class ElevatorUnitCard extends StatelessWidget {
                 child: SvgPicture.asset(
                   unit.type.assetPath(),
                   placeholderBuilder: (context) => CircleAvatar(
-                    backgroundColor: AppTheme.surface,
+                    backgroundColor: AppTheme.surfaceColor,
                     radius: 45.sp,
                   ),
                   height: 90.sp,

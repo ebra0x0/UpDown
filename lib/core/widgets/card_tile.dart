@@ -42,7 +42,7 @@ class CardTile extends StatelessWidget {
         padding: padding ?? AppInsets.all16,
         decoration: decoration ??
             BoxDecoration(
-              color: AppTheme.background,
+              color: AppTheme.backgroundColor,
               borderRadius: AppRadius.borderRadius18,
               boxShadow: [AppShadows.boxShadow],
             ),
@@ -52,13 +52,15 @@ class CardTile extends StatelessWidget {
           spacing: 8.sp,
           children: [
             if (leading != null) leading!,
-            _CardTileContent(
-              title: title,
-              subtitle: subtitle,
-              body: body,
-              footer: footer,
+            Expanded(
+              child: _CardTileContent(
+                title: title,
+                subtitle: subtitle,
+                body: body,
+                footer: footer,
+              ),
             ),
-            if (trailing != null) ...[Spacer(), trailing!]
+            if (trailing != null) trailing!
           ],
         ),
       ),

@@ -1,11 +1,14 @@
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
+import 'package:UpDown/core/utils/enums/app_route.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/widgets/header_section.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
-import 'package:UpDown/features/issues/presentation/widgets/issues_section/issues_list_section.dart';
+import 'package:UpDown/features/issues/presentation/widgets/active_issues_section/issues_list_section.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:UpDown/core/theme/app_skeleton.dart';
+import 'package:go_router/go_router.dart';
 
 class IssuesSectionBuilder extends StatelessWidget {
   const IssuesSectionBuilder({
@@ -24,16 +27,20 @@ class IssuesSectionBuilder extends StatelessWidget {
               delegate: SliverChildListDelegate(
                 [
                   Visibility(
-                    visible: state.issues?.isNotEmpty ?? false,
+                    visible: state.activeIssues?.isNotEmpty ?? false,
                     child: HeaderSection(
                       title: "الأعطال الحالية",
+                      titleIcon: AppIcons.reportProblemIcon,
                       titleStyle: AppTextStyles.textStyle18,
                       actionText: "عرض الكل",
-                      onActionTap: () {},
+                      onActionTap: () {
+                        context.push(
+                            "${AppRoute.home.path}${AppRoute.issues.path}");
+                      },
                     ),
                   ),
                   IssuesListSection(
-                    issues: state.issues ?? [],
+                    issues: state.activeIssues ?? [],
                   ),
                 ],
               ),

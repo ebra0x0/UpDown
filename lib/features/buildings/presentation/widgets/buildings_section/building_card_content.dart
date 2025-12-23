@@ -59,13 +59,14 @@ class _BuildingCardHeader extends StatelessWidget {
               ),
               Text(
                 "$elevatorsCount مصعد",
-                style: AppTextStyles.textStyle14.copyWith(color: AppTheme.grey),
+                style: AppTextStyles.textStyle14
+                    .copyWith(color: AppTheme.greyColor),
               ),
             ],
           ),
         ),
         AppIcons.apartmentIcon.copyWith(
-          color: hasActiveReport ? AppTheme.red : null,
+          color: hasActiveReport ? AppTheme.redColor : null,
         )
       ],
     );
@@ -88,11 +89,11 @@ class _BuildingCardFooter extends StatelessWidget {
           visible: hasActiveReport,
           child: Text(
             "يوجد عطل",
-            style: AppTextStyles.textStyle14.copyWith(color: AppTheme.red),
+            style: AppTextStyles.textStyle14.copyWith(color: AppTheme.redColor),
           ),
         ),
         AppIcons.forwardIcon.copyWith(
-          color: hasActiveReport ? AppTheme.red : null,
+          color: hasActiveReport ? AppTheme.redColor : null,
         )
       ],
     );

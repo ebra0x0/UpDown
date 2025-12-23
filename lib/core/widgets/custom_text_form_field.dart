@@ -97,20 +97,20 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         labelText: widget.labelText,
         labelStyle: AppTextStyles.textStyle14.copyWith(
           color: hasError
-              ? AppTheme.red
+              ? AppTheme.redColor
               : isFocused
-                  ? AppTheme.primary
-                  : AppTheme.grey,
-          backgroundColor: AppTheme.scaffold,
+                  ? AppTheme.primaryColor
+                  : AppTheme.greyColor,
+          backgroundColor: AppTheme.scaffoldColor,
         ),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         hintText: widget.hintText,
         prefixIcon: widget.prefixIcon?.copyWith(
           color: hasError
-              ? AppTheme.red
+              ? AppTheme.redColor
               : isFocused
-                  ? AppTheme.primary
-                  : AppTheme.grey,
+                  ? AppTheme.primaryColor
+                  : AppTheme.greyColor,
         ),
         suffixIcon: widget.suffixIcon,
         errorStyle: const TextStyle(height: 0),

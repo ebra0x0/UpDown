@@ -17,7 +17,7 @@ class ElevatorDropDownBuilder extends StatelessWidget {
     return BlocBuilder<CreateIssueCubit, CreateIssueState>(
       builder: (context, state) {
         final bool isCreating = state.status == CreateIssueStatus.loading;
-        // final CreateIssueCubit cubit = context.read<CreateIssueCubit>();
+
         final List<ElevatorModel>? elevators = state.elevatorsList;
         final ElevatorModel? selectedElevator = state.selectedElevator;
 

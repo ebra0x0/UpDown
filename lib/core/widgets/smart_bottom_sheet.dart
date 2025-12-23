@@ -17,7 +17,7 @@ class SmartBottomSheet extends StatelessWidget {
       snapSizes: const [0.7, 1.0],
       builder: (context, scrollController) {
         return Container(
-          color: AppTheme.scaffold,
+          color: AppTheme.scaffoldColor,
           child: SafeArea(
             top: false,
             child: ListView(

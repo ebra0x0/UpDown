@@ -1,5 +1,5 @@
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
-import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_view_builder.dart';
+import 'package:UpDown/features/issues/presentation/widgets/issue_details_widgets/issue_view_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +21,7 @@ class _IssueViewState extends State<IssueView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IssueViewBuilder(),
+      body: IssueViewBody(),
     );
   }
 }

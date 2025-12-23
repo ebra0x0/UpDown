@@ -26,7 +26,7 @@ class SignUpLinkText extends StatelessWidget {
                   Theme.of(context).colorScheme.primary)),
           child: Text("إنشاء حساب",
               style: AppTextStyles.textStyle14.copyWith(
-                color: AppTheme.primary,
+                color: AppTheme.primaryColor,
               )),
         )
       ],

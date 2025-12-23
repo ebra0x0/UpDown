@@ -3,12 +3,12 @@ import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/widgets/screen_echo.dart';
 import 'package:UpDown/features/issues/presentation/manager/issues_cubit/issues_cubit.dart';
-import 'package:UpDown/features/issues/presentation/widgets/issues_section/issue_card.dart';
+import 'package:UpDown/features/issues/presentation/widgets/issue_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class IssuesListViewBody extends StatelessWidget {
-  const IssuesListViewBody({super.key});
+class AllIssuesViewBody extends StatelessWidget {
+  const AllIssuesViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {

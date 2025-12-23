@@ -70,6 +70,14 @@ class CreateIssueState {
   }
 
   CreateIssueState reset() {
-    return const CreateIssueState();
+    return const CreateIssueState(
+      status: CreateIssueStatus.initial,
+      mediaList: [],
+      selectedBuilding: null,
+      selectedElevator: null,
+      elevatorsList: null,
+      issueType: null,
+      description: null,
+    );
   }
 }

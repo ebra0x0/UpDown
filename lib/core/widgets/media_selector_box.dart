@@ -121,7 +121,7 @@ class _MediaSelectorBoxState extends State<_MediaSelectorBox> {
                     children: [
                       AppIcons.checkIcon.copyWith(
                         size: 52.w,
-                        color: AppTheme.green,
+                        color: AppTheme.greenColor,
                       ),
                       Text(
                         'تم تحميل الفيديو',

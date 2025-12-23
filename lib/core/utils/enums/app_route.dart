@@ -12,7 +12,8 @@ enum AppRoute {
   issues("/issues"),
   building("/building"),
   elevator("/elevator"),
-  maintenances("/maintenances");
+  maintenances("/maintenances"),
+  maintenance("/maintenance");
 
   final String path;
   const AppRoute(this.path);

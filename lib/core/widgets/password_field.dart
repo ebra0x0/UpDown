@@ -37,7 +37,7 @@ class PasswordField extends StatelessWidget {
       suffixIcon: IconButton(
         icon: obscureText
             ? AppIcons.hideIcon
-            : AppIcons.showIcon.copyWith(color: AppTheme.primary),
+            : AppIcons.showIcon.copyWith(color: AppTheme.primaryColor),
         onPressed: toggleVisibility,
       ),
       validator: validator,

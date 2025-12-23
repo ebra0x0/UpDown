@@ -34,7 +34,7 @@ class IssueInfoSection extends StatelessWidget {
           children: [
             BubbleIcon(
               icon: issueType.icon,
-              color: AppTheme.red,
+              color: AppTheme.redColor,
             ),
             Expanded(
               child: Column(
@@ -94,7 +94,7 @@ class _DateTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SectionBox(
       crossAxisAlignment: CrossAxisAlignment.center,
-      color: AppTheme.surface,
+      color: AppTheme.surfaceColor,
       spacing: 4.sp,
       children: [
         Row(

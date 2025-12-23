@@ -418,7 +418,9 @@ class ApiService {
     yield* _supabase
         .from(ApiConstants.issuesTable)
         .stream(primaryKey: ["id"])
-        .eq('user_id', _supabase.auth.currentUser!.id)
+        .eq('user_id', user!.id)
+        .limit(5)
+        .order('created_at', ascending: false)
         .distinct()
         .asyncMap((list) async {
           return await Future.wait(list.map((issue) async {
@@ -447,7 +449,8 @@ class ApiService {
             .from(ApiConstants.issuesTable)
             .select()
             .eq('user_id', user!.id)
-            .range(offset, offset + limit - 1));
+            .range(offset, offset + limit - 1)
+            .order('created_at', ascending: false));
 
     return response;
   }

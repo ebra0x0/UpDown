@@ -1,3 +1,4 @@
+import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
@@ -28,9 +29,8 @@ class CurrentMaintenanceBuilder extends StatelessWidget {
                 if (isLoading || hasData)
                   HeaderSection(
                     title: "الصيانة الحالية",
+                    titleIcon: AppIcons.maintenanceIcon,
                     titleStyle: AppTextStyles.textStyle18,
-                    actionText: "عرض الكل",
-                    onActionTap: () {},
                   ),
                 if (isLoading || hasData)
                   MaintenanceCard(

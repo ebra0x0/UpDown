@@ -21,8 +21,8 @@ class AppSkeletonizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ShimmerEffect effect = ShimmerEffect(
-      baseColor: AppTheme.surface,
-      highlightColor: AppTheme.primary.withValues(alpha: 0.1),
+      baseColor: AppTheme.surfaceColor,
+      highlightColor: AppTheme.primaryColor.withValues(alpha: 0.1),
       duration: Duration(milliseconds: 1000),
     );
 
@@ -30,7 +30,7 @@ class AppSkeletonizer extends StatelessWidget {
       return Skeletonizer.sliver(
         enabled: enabled,
         effect: effect,
-        containersColor: AppTheme.background,
+        containersColor: AppTheme.backgroundColor,
         ignoreContainers: ignoreContainers,
         ignorePointers: ignorePointer,
         child: child,
@@ -39,7 +39,7 @@ class AppSkeletonizer extends StatelessWidget {
     return Skeletonizer(
       enabled: enabled,
       effect: effect,
-      containersColor: AppTheme.background,
+      containersColor: AppTheme.backgroundColor,
       ignoreContainers: ignoreContainers,
       ignorePointers: ignorePointer,
       child: child,

@@ -20,7 +20,7 @@ class IssueMediaBox extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: AppRadius.borderRadius8,
-        color: AppTheme.surface,
+        color: AppTheme.surfaceColor,
       ),
       child: CachedNetworkImage(
         imageUrl: mediaUrl,

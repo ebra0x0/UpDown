@@ -4,7 +4,6 @@ import 'package:UpDown/core/theme/app_text_styles.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:UpDown/core/utils/extensions/icon_ext.dart';
 import 'package:UpDown/core/utils/models/drop_down_model.dart';
-
 import 'package:UpDown/core/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,12 +48,12 @@ class _CustomDropDownState extends State<CustomDropDown> {
           errorStyle: TextStyle(height: 0),
           prefixIcon: widget.prefixIcon?.copyWith(
             color: hasError
-                ? AppTheme.red
+                ? AppTheme.redColor
                 : widget.listItem.isEmpty
-                    ? AppTheme.grey.withValues(
+                    ? AppTheme.greyColor.withValues(
                         alpha: 0.5,
                       )
-                    : AppTheme.grey,
+                    : AppTheme.greyColor,
             size: 24.sp,
           )),
       hint: widget.isLoading
@@ -64,20 +63,20 @@ class _CustomDropDownState extends State<CustomDropDown> {
           : Text(
               widget.hint,
               style: AppTextStyles.textStyle14.copyWith(
-                color: hasError ? AppTheme.red : AppTheme.grey,
+                color: hasError ? AppTheme.redColor : AppTheme.greyColor,
               ),
             ),
-      dropdownColor: AppTheme.background,
+      dropdownColor: AppTheme.backgroundColor,
       value: widget.value,
       menuMaxHeight: 250,
-      iconEnabledColor: AppTheme.grey,
-      iconDisabledColor: AppTheme.grey.withValues(
+      iconEnabledColor: AppTheme.greyColor,
+      iconDisabledColor: AppTheme.greyColor.withValues(
         alpha: 0.5,
       ),
       icon: Icon(
         Icons.arrow_drop_down_rounded,
         size: 32.sp,
-        color: hasError ? AppTheme.red : null,
+        color: hasError ? AppTheme.redColor : null,
       ),
       isDense: false,
       isExpanded: true,

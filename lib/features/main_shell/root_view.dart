@@ -27,12 +27,12 @@ class RootView extends StatelessWidget {
           BlocProvider(create: (context) => getIt.get<MaintenanceCubit>()),
         ],
         child: LoaderOverlay(
-          overlayColor: AppTheme.overlay,
+          overlayColor: AppTheme.overlayColor,
           overlayWidgetBuilder: (context) => Center(
             child: CircularProgressIndicator(
               strokeWidth: 6.sp,
               strokeCap: StrokeCap.round,
-              color: AppTheme.primary,
+              color: AppTheme.primaryColor,
             ),
           ),
           child: Scaffold(
@@ -45,9 +45,9 @@ class RootView extends StatelessWidget {
                   navigationShell.goBranch(value);
                 },
                 currentIndex: navigationShell.currentIndex,
-                backgroundColor: AppTheme.tabBar,
-                selectedItemColor: AppTheme.primary,
-                unselectedItemColor: AppTheme.tabBarItem,
+                backgroundColor: AppTheme.tabBarColor,
+                selectedItemColor: AppTheme.primaryColor,
+                unselectedItemColor: AppTheme.tabBarItemColor,
                 items: [
                   BottomNavigationBarItem(
                       activeIcon:
@@ -82,7 +82,7 @@ class CustomActiveNavBarItem extends StatelessWidget {
       padding: AppInsets.v2,
       width: 60,
       decoration: BoxDecoration(
-        color: AppTheme.primary.withValues(alpha: .2),
+        color: AppTheme.primaryColor.withValues(alpha: .2),
         borderRadius: AppRadius.borderRadius18,
       ),
       child: icon,

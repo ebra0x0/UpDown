@@ -54,29 +54,29 @@ class ActiveIssueCardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardTile(
       decoration: BoxDecoration(
-        color: AppTheme.red.withValues(alpha: 0.2),
+        color: AppTheme.redColor.withValues(alpha: 0.2),
         border: AppBorders.generalBoxBorder
-            .copyWith(color: AppTheme.red.withValues(alpha: 0.2)),
+            .copyWith(color: AppTheme.redColor.withValues(alpha: 0.2)),
         borderRadius: AppRadius.borderRadius18,
       ),
       leading: BubbleIcon(
         icon: activeIssue.issueType.icon,
-        color: AppTheme.red,
+        color: AppTheme.redColor,
         padding: AppInsets.all8,
       ),
       title: Text("عطل ${activeIssue.issueType.priority(context)}",
           style: AppTextStyles.textStyle16.copyWith(
-            color: AppTheme.red,
+            color: AppTheme.redColor,
             fontWeight: FontWeight.w900,
           )),
       body: Text(
         activeIssue.issueType.title(context),
-        style: AppTextStyles.textStyle14.copyWith(color: AppTheme.text),
+        style: AppTextStyles.textStyle14.copyWith(color: AppTheme.textColor),
       ),
       footer: TextAndbubbleTextRow(
           text: activeIssue.createdAt.toDateTimeFormat(),
           bubbleText: activeIssue.status.title(context),
-          bubbleColor: AppTheme.red),
+          bubbleColor: AppTheme.redColor),
     );
   }
 }

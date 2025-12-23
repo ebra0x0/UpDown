@@ -48,7 +48,8 @@ class CabinInfo extends StatelessWidget {
               InfoRow(
                 title: 'مروحة',
                 value: unit.hasFan ? 'نعم' : 'لا',
-                iconColor: unit.hasFan ? AppTheme.green : AppTheme.red,
+                iconColor:
+                    unit.hasFan ? AppTheme.greenColor : AppTheme.redColor,
               ),
             ],
           ),
@@ -67,8 +68,9 @@ class CabinInfo extends StatelessWidget {
               InfoRow(
                 title: 'مفعّلة؟',
                 value: unit.password.isActive ? 'نعم' : 'لا',
-                iconColor:
-                    unit.password.isActive ? AppTheme.green : AppTheme.red,
+                iconColor: unit.password.isActive
+                    ? AppTheme.greenColor
+                    : AppTheme.redColor,
               ),
             ],
           ),
@@ -115,11 +117,12 @@ class InfoRow extends StatelessWidget {
         padding: EdgeInsets.zero,
         leading: BubbleIcon(
           icon: leadingIcon,
-          color: iconColor ?? AppTheme.primary,
+          color: iconColor ?? AppTheme.primaryColor,
         ),
         title: title,
         subtitle: value,
-        titleStyle: AppTextStyles.textStyle12.copyWith(color: AppTheme.grey),
+        titleStyle:
+            AppTextStyles.textStyle12.copyWith(color: AppTheme.greyColor),
         subtitleStyle: AppTextStyles.textStyle14);
   }
 }

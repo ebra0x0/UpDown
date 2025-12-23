@@ -3,6 +3,7 @@ import 'package:UpDown/core/theme/app_insets.dart';
 import 'package:UpDown/core/theme/app_radius.dart';
 import 'package:UpDown/core/theme/app_skeleton.dart';
 import 'package:UpDown/core/theme/app_text_styles.dart';
+import 'package:UpDown/core/utils/enums/app_route.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/enums/enums_extensions.dart';
 import 'package:UpDown/core/utils/extensions/icon_ext.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/widgets.dart';
 import 'package:UpDown/core/theme/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class MaintenanceCard extends StatefulWidget {
   final MaintenanceViewModel maintenance;
@@ -31,26 +33,32 @@ class _MaintenanceCardState extends State<MaintenanceCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.background,
-        borderRadius: AppRadius.borderRadius12,
-      ),
-      padding: AppInsets.all16,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TitleAndPrice(title: maintenance.type.title, cost: maintenance.cost),
-          const SizedBox(height: 12),
-          _BuildingAndElevator(
-              buildingId: maintenance.buildingId,
-              elevatorId: maintenance.elevatorId),
-          const SizedBox(height: 16),
-          _TechnicianAndStatus(
-            maintenanceStatus: maintenance.status,
-            technicianName: technician.name,
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => context.push(
+          "${AppRoute.home.path}${AppRoute.maintenance.path}/${maintenance.id}",
+          extra: maintenance),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.backgroundColor,
+          borderRadius: AppRadius.borderRadius12,
+        ),
+        padding: AppInsets.all16,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _TitleAndPrice(
+                title: maintenance.type.title, cost: maintenance.cost),
+            const SizedBox(height: 12),
+            _BuildingAndElevator(
+                buildingId: maintenance.buildingId,
+                elevatorId: maintenance.elevatorId),
+            const SizedBox(height: 16),
+            _TechnicianAndStatus(
+              maintenanceStatus: maintenance.status,
+              technicianName: technician.name,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -100,7 +108,7 @@ class _ElevatorBuilder extends StatelessWidget {
           child: _InfoChip(
               label: elevatorName ?? " ",
               icon: AppIcons.elevatorIcon.copyWith(
-                color: AppTheme.primary,
+                color: AppTheme.primaryColor,
                 size: 18.sp,
               )),
         );
@@ -131,7 +139,7 @@ class _BuildingBuilder extends StatelessWidget {
           child: _InfoChip(
               label: buildingName ?? " ",
               icon: AppIcons.apartmentIcon.copyWith(
-                color: AppTheme.primary,
+                color: AppTheme.primaryColor,
                 size: 18.sp,
               )),
         );
@@ -198,8 +206,9 @@ class _TitleAndPrice extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           "$cost جم",
-          style: AppTextStyles.textStyle18.copyWith(
+          style: AppTextStyles.textStyle20.copyWith(
             fontWeight: FontWeight.bold,
+            color: AppTheme.greenColor,
           ),
         ),
       ],

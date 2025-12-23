@@ -18,7 +18,7 @@ class IssueDescriptionSection extends StatelessWidget {
       children: [
         Text('وصف العطل', style: AppTextStyles.textStyle16),
         SizedBox(height: 12.sp),
-        SectionBox(color: AppTheme.surface, children: [
+        SectionBox(color: AppTheme.surfaceColor, children: [
           Text(
             issuerDescription,
             style: AppTextStyles.textStyle14,

@@ -53,7 +53,7 @@ class _AppDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: AppTheme.blue,
+              color: AppTheme.blueColor,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,9 +61,9 @@ class _AppDrawer extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 28.r,
-                  backgroundColor: AppTheme.white,
+                  backgroundColor: AppTheme.whiteColor,
                   child: AppIcons.userIcon
-                      .copyWith(color: AppTheme.blue, size: 32),
+                      .copyWith(color: AppTheme.blueColor, size: 32),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -98,7 +98,7 @@ class _AppDrawer extends StatelessWidget {
           ),
           Divider(
             thickness: .3.sp,
-            color: AppTheme.grey,
+            color: AppTheme.greyColor,
           ),
           ListTile(
             leading: AppIcons.logoutIcon,

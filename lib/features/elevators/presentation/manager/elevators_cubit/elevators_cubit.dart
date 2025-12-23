@@ -42,6 +42,11 @@ class ElevatorsCubit extends Cubit<ElevatorsState> {
           }
         },
       );
+    }, onError: (e) {
+      if (isClosed) return;
+      if (state.elevators != null) return;
+      emit(state.copyWith(
+          status: ContentStatus.error, errorMsg: "تعذر تحميل بيانات المصاعد"));
     });
   }
 

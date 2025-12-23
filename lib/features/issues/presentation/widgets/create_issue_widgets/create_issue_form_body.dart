@@ -62,7 +62,7 @@ class _CreateIssueFormBodyState extends State<CreateIssueFormBody> {
               maxLines: 6,
               maxLength: 200,
               prefixIcon: AppIcons.descriptionIcon.copyWith(
-                color: AppTheme.primary,
+                color: AppTheme.primaryColor,
               ),
               onChanged: (value) => state.status == CreateIssueStatus.loading
                   ? null

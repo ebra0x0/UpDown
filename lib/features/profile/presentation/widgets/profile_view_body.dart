@@ -117,9 +117,9 @@ class ProfileViewBody extends StatelessWidget {
             sliver: SliverToBoxAdapter(
               child: CustomListTile(
                 isLoading: authCubit.state.status == AuthStatus.loading,
-                loadingColor: AppTheme.red,
+                loadingColor: AppTheme.redColor,
                 title: "تسجيل الخروج",
-                leading: AppIcons.logoutIcon.copyWith(color: AppTheme.red),
+                leading: AppIcons.logoutIcon.copyWith(color: AppTheme.redColor),
                 onTap: () async => await authCubit.signOut(context),
               ),
             ),

@@ -25,7 +25,7 @@ class SectionBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color ?? AppTheme.background,
+        color: color ?? AppTheme.backgroundColor,
         borderRadius: borderRadius ?? AppRadius.borderRadius12,
       ),
       padding: padding ?? AppInsets.all16,

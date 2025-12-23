@@ -1,7 +1,6 @@
 import 'package:UpDown/core/theme/app_icons.dart';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/models/drop_down_model.dart';
-
 import 'package:UpDown/core/widgets/custom_drop_down.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/buildings/presentation/cubits/buildings_cubit/buildings_cubit.dart';
@@ -16,40 +15,45 @@ class BuildingDropDownBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BuildingsCubit, BuildingsState>(
+    return BlocBuilder<CreateIssueCubit, CreateIssueState>(
+        buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
-      final CreateIssueState issueCubitState =
-          context.watch<CreateIssueCubit>().state;
-      final bool isCreating =
-          issueCubitState.status == CreateIssueStatus.loading;
-      final BuildingModel? selectedBuilding = issueCubitState.selectedBuilding;
-      final List<BuildingModel>? buildings =
-          state.status == ContentStatus.loaded ? state.buildings : null;
+          final BuildingsState buildingsCubitState =
+              context.watch<BuildingsCubit>().state;
 
-      final dropDownList = buildings
-              ?.map((e) => DropDownModel(
-                    label: e.name,
-                    value: e,
-                  ))
-              .toList() ??
-          [];
+          final bool isCreating = state.status == CreateIssueStatus.loading;
 
-      final matchValue = dropDownList.cast<DropDownModel?>().firstWhere(
-            (e) => (e!.value as BuildingModel).id == selectedBuilding?.id,
-            orElse: () => null,
+          final BuildingModel? selectedBuilding = state.selectedBuilding;
+
+          final List<BuildingModel>? buildings =
+              buildingsCubitState.status == ContentStatus.loaded
+                  ? buildingsCubitState.buildings
+                  : null;
+
+          final dropDownList = buildings
+                  ?.map((e) => DropDownModel(
+                        label: e.name,
+                        value: e,
+                      ))
+                  .toList() ??
+              [];
+
+          final matchValue = dropDownList.cast<DropDownModel?>().firstWhere(
+                (e) => (e!.value as BuildingModel).id == selectedBuilding?.id,
+                orElse: () => null,
+              );
+
+          return CustomDropDown(
+            isEnabled: !isCreating,
+            isLoading: buildingsCubitState.status == ContentStatus.loading,
+            listItem: dropDownList,
+            hint: "إختر المبنى",
+            value: matchValue,
+            error: "يرجى إختيار المبنى",
+            prefixIcon: AppIcons.apartmentIcon,
+            onChanged: (value) => onChanged(context, value as DropDownModel?),
           );
-
-      return CustomDropDown(
-        isEnabled: !isCreating,
-        isLoading: state.status == ContentStatus.loading,
-        listItem: dropDownList,
-        hint: "إختر المبنى",
-        value: matchValue,
-        error: "يرجى إختيار المبنى",
-        prefixIcon: AppIcons.apartmentIcon,
-        onChanged: (value) => onChanged(context, value as DropDownModel?),
-      );
-    });
+        });
   }
 
   void onChanged(BuildContext context, DropDownModel? value) {

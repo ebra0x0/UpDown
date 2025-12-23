@@ -28,7 +28,7 @@ class CustomButton extends StatelessWidget {
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
               borderRadius: AppRadius.borderRadius8,
             )),
-            backgroundColor: WidgetStatePropertyAll(AppTheme.primary),
+            backgroundColor: WidgetStatePropertyAll(AppTheme.primaryColor),
           ),
           child: isLoading
               ? LoadingIndicator(
