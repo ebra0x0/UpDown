@@ -45,7 +45,8 @@ class FloorListTile extends StatelessWidget {
           ],
         ),
       ),
-      title: "الدور ${floor.number == 0 ? "الأرضي" : floor.number}",
+      title: floor.name,
+      subtitle: "${floor.unitsCount} وحدات",
     );
   }
 }

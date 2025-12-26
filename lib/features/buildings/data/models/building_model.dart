@@ -42,57 +42,38 @@ class BuildingModel with _$BuildingModel {
 class FloorModel with _$FloorModel {
   const factory FloorModel({
     @HiveField(0) required String id,
-    @HiveField(1) required List<DoorModel> doors,
-    @HiveField(2) required int number,
-    @HiveField(3) required FloorStatus status,
-    @HiveField(4) required DateTime createdAt,
-    @HiveField(5) required DateTime? updatedAt,
-    @HiveField(6) required String buildingId,
+    @HiveField(1) required String name,
+    @HiveField(2) String? notes,
+    @HiveField(3) required int number,
+    @HiveField(4) required FloorStatus status,
+    @HiveField(5) required DateTime createdAt,
+    @HiveField(6) DateTime? updatedAt,
+    @HiveField(7) @Default([]) List<String> elevators,
+    @HiveField(8) @JsonKey(name: 'units_count') @Default(0) int unitsCount,
+    @HiveField(9)
+    @JsonKey(name: 'units_active_count')
+    @Default(0)
+    int unitsActiveCount,
+    @HiveField(10)
+    @JsonKey(name: 'is_accessible')
+    @Default(true)
+    bool isAccessible,
   }) = _FloorModel;
 
   factory FloorModel.fromJson(Map<String, dynamic> json) =>
       _$FloorModelFromJson(json);
 
   factory FloorModel.empty() => FloorModel(
-        id: '12345678',
-        doors: const [],
+        id: '',
+        name: '',
+        notes: null,
         number: 0,
         status: FloorStatus.accessible,
         createdAt: DateTime(2020, 1, 1),
         updatedAt: null,
-        buildingId: '',
+        elevators: const [],
+        unitsCount: 0,
+        unitsActiveCount: 0,
+        isAccessible: true,
       );
-}
-
-@freezed
-@HiveType(typeId: HiveTypeIds.doorModel)
-class DoorModel with _$DoorModel {
-  const factory DoorModel({
-    @HiveField(0) required String id,
-    @HiveField(1) required List<PartModel> parts,
-    @HiveField(2) required DoorStatus status,
-    @HiveField(3) required String location,
-    @HiveField(4) required String elevatorId,
-    @HiveField(5) required DateTime installedAt,
-  }) = _DoorModel;
-
-  factory DoorModel.fromJson(Map<String, dynamic> json) =>
-      _$DoorModelFromJson(json);
-}
-
-@freezed
-@HiveType(typeId: HiveTypeIds.partModel)
-class PartModel with _$PartModel {
-  const factory PartModel({
-    @HiveField(0) required String id,
-    @HiveField(1) required PartType type,
-    @HiveField(2) required String model,
-    @HiveField(3) String? notes,
-    @HiveField(4) required UnitStatus status,
-    @HiveField(5) required PartCondition condition,
-    @HiveField(6) required DateTime installedAt,
-  }) = _PartModel;
-
-  factory PartModel.fromJson(Map<String, dynamic> json) =>
-      _$PartModelFromJson(json);
 }
