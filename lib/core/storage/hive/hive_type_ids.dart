@@ -2,7 +2,7 @@ abstract class HiveTypeIds {
   // Profile type ids (11 to 30)
   static const int profileModel = 11;
 
-  // Building type ids (31 to 50)
+  // Building ids (31 to 50)
   static const int buildingModel = 31;
   static const int floorModel = 32;
   static const int doorModel = 33;
@@ -10,10 +10,11 @@ abstract class HiveTypeIds {
   // Floor Enums
   static const int floorStatusEnum = 35;
   static const int doorStatusEnum = 36;
-  static const int partTypeEnum = 37;
-  static const int partConditionEnum = 38;
+  static const int partStatusEnum = 37;
+  static const int partTypeEnum = 38;
+  static const int partConditionEnum = 39;
 
-  // Elevator type ids (51 to 70)
+  // Elevator ids (51 to 70)
   static const int elevatorModel = 51;
   // Unit Models
   static const int unitModel = 52;
@@ -32,6 +33,8 @@ abstract class HiveTypeIds {
   static const int unitStatusEnum = 61;
   // Elevator Enums
   static const int elevatorStatusEnum = 62;
+  // Served Floor Model
+  static const int servedFloorModel = 63;
 
   // Issue type ids (71 to 90)
   static const int issueModel = 71;

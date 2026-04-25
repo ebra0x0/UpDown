@@ -36,10 +36,10 @@ class HiveService {
     Hive.registerAdapter(FloorModelAdapter());
     Hive.registerAdapter(FloorStatusAdapter());
     // Doors adapters
-    // Hive.registerAdapter(DoorModelAdapter());
+    Hive.registerAdapter(DoorModelAdapter());
     Hive.registerAdapter(DoorStatusAdapter());
     // Parts adapters
-    // Hive.registerAdapter(PartModelAdapter());
+    Hive.registerAdapter(PartModelAdapter());
     Hive.registerAdapter(PartTypeAdapter());
     Hive.registerAdapter(PartConditionAdapter());
     // Elevators adapters

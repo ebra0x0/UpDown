@@ -3,6 +3,7 @@ import 'package:UpDown/core/network/network_manager.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
 import 'package:UpDown/features/elevators/data/sources/local.dart';
 import 'package:UpDown/features/elevators/data/sources/remote.dart';
+import 'package:collection/collection.dart';
 import 'package:either_dart/either.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,24 +13,14 @@ class ElevatorsRepo {
   final ElevatorsRemoteDataSource _remote;
   final NetworkManager _netManager;
   bool get isConnected => _netManager.isConnected;
-
-  final Map<String, Stream<Either<Failure, List<ElevatorModel>>>> _streamCache =
-      {};
+  bool isStreaming = false;
 
   ElevatorsRepo(this._local, this._remote, this._netManager);
 
-  Stream<Either<Failure, List<ElevatorModel>>> streamAllElevators() {
-    const key = 'all';
-    if (_streamCache.containsKey(key)) return _streamCache[key]!;
-
-    final stream = _buildAllElevatorsStream().shareReplay(maxSize: 1);
-    _streamCache[key] = stream;
-    return stream;
-  }
-
-  Stream<Either<Failure, List<ElevatorModel>>>
-      _buildAllElevatorsStream() async* {
+  Stream<Either<Failure, List<ElevatorModel>>> streamAllElevators() async* {
     try {
+      if (isStreaming) return;
+      isStreaming = true;
       final local = await _local.getAll();
       if (local.isNotEmpty) yield Right(local);
 
@@ -66,7 +57,10 @@ class ElevatorsRepo {
           return const Right([]);
         }
 
-        if (remoteRes != local) {
+        final bool isSame =
+            const UnorderedIterableEquality().equals(local, remoteRes);
+
+        if (!isSame) {
           await _local.saveAll(remoteRes);
         }
 

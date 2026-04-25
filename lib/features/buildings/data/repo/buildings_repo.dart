@@ -15,11 +15,14 @@ class BuildingsRepo {
   final NetworkManager _netManager;
 
   bool get isConnected => _netManager.isConnected;
+  bool isStreaming = false;
 
   BuildingsRepo(this._local, this._remote, this._netManager);
 
-  Stream<Either<Failure, List<BuildingModel>>> getAll() async* {
+  Stream<Either<Failure, List<BuildingModel>>> streamAllBuildings() async* {
     try {
+      if (isStreaming) return;
+      isStreaming = true;
       final local = await _local.getAll();
       if (local.isNotEmpty) {
         yield Right(local);

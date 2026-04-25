@@ -26,7 +26,7 @@ class BuildingsCubit extends Cubit<BuildingsState> {
       ),
     ));
 
-    _streamSubscription = _repo.getAll().listen((stream) {
+    _streamSubscription = _repo.streamAllBuildings().listen((stream) {
       if (isClosed) return;
       stream.fold(
         (e) => emit(state.copyWith(

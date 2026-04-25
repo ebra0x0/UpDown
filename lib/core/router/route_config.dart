@@ -64,7 +64,7 @@ class RouteConfig {
           GoRoute(
             path: AppRoute.createIssue.path,
             builder: (context, state) => BlocProvider(
-              create: (context) => CreateIssueCubit(getIt(), getIt()),
+              create: (context) => CreateIssueCubit(getIt()),
               child: const CreateIssueView(),
             ),
           ),

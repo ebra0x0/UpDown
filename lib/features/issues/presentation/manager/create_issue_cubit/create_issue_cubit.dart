@@ -4,7 +4,6 @@ import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/models/media_models/media_request_model.dart';
 import 'package:UpDown/features/buildings/data/models/building_model.dart';
 import 'package:UpDown/features/elevators/data/models/elevator_model.dart';
-import 'package:UpDown/features/elevators/data/repo/elevators_repo.dart';
 import 'package:UpDown/features/issues/data/models/issue_request_model.dart';
 import 'package:UpDown/features/issues/data/repo/issues_repo.dart';
 import 'package:flutter/widgets.dart';
@@ -14,13 +13,10 @@ part 'create_issue_state.dart';
 
 class CreateIssueCubit extends Cubit<CreateIssueState> {
   final IssuesRepo _repo;
-  final ElevatorsRepo _elevatorsRepo;
-  StreamSubscription? _elevatorsSubscription;
 
   final descriptionController = TextEditingController();
 
-  CreateIssueCubit(this._repo, this._elevatorsRepo)
-      : super(const CreateIssueState());
+  CreateIssueCubit(this._repo) : super(const CreateIssueState());
 
   Future<void> create() async {
     if (state.status == CreateIssueStatus.loading) return;
@@ -66,33 +62,7 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
 
     emit(state.copyWith(status: CreateIssueStatus.selectLoading));
 
-    _elevatorsSubscription =
-        _elevatorsRepo.streamAllElevators().listen((stream) {
-      if (isClosed) return;
-      stream.fold(
-        (err) => emit(state.copyWith(
-          status: CreateIssueStatus.error,
-          error: err.errMessage,
-        )),
-        (elevators) {
-          final buildingElevators = elevators
-              .where((elevator) => elevator.buildingId == building.id)
-              .toList();
-
-          emit(state.copyWith(
-            status: CreateIssueStatus.selected,
-            selectedBuilding: building,
-            elevatorsList: buildingElevators,
-          ));
-        },
-      );
-    }, onError: (e) {
-      if (isClosed) return;
-      emit(state.copyWith(
-        status: CreateIssueStatus.error,
-        error: e.toString(),
-      ));
-    });
+    // Write get building elevators logic here ...
   }
 
   void selectElevator(ElevatorModel elevator) {
@@ -121,7 +91,6 @@ class CreateIssueCubit extends Cubit<CreateIssueState> {
 
   @override
   Future<void> close() {
-    _elevatorsSubscription?.cancel();
     descriptionController.dispose();
     return super.close();
   }

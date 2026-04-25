@@ -4,8 +4,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'enums.g.dart';
 
+// Content Status
 enum ContentStatus { initial, loading, loaded, error, empty, updated, updating }
 
+// Authentication Status
 enum AuthStatus {
   initial,
   loading,
@@ -16,6 +18,7 @@ enum AuthStatus {
   error
 }
 
+// Elevator Status
 @HiveType(typeId: HiveTypeIds.elevatorStatusEnum)
 @JsonEnum(valueField: 'name')
 enum ElevatorStatus {
@@ -34,6 +37,7 @@ enum ElevatorStatus {
   const ElevatorStatus(this.name);
 }
 
+// Report Status
 @JsonEnum(valueField: 'name')
 enum ReportStatus {
   pending("Pending"),
@@ -47,6 +51,7 @@ enum ReportStatus {
   const ReportStatus(this.name);
 }
 
+// Issue Status
 @HiveType(typeId: HiveTypeIds.issueStatusEnum)
 @JsonEnum(valueField: 'name')
 enum IssueStatus {
@@ -63,6 +68,7 @@ enum IssueStatus {
   const IssueStatus(this.name);
 }
 
+// Issue Type
 @HiveType(typeId: HiveTypeIds.issueTypeEnum)
 @JsonEnum(valueField: 'name')
 enum IssueType {
@@ -85,6 +91,7 @@ enum IssueType {
   const IssueType(this.name);
 }
 
+// Issue Priority
 @HiveType(typeId: HiveTypeIds.issuePriorityEnum)
 @JsonEnum(valueField: 'name')
 enum IssuePriority {
@@ -99,6 +106,7 @@ enum IssuePriority {
   const IssuePriority(this.name);
 }
 
+// Unit Type
 @HiveType(typeId: HiveTypeIds.unitTypeEnum)
 @JsonEnum(valueField: 'name')
 enum UnitType {
@@ -117,6 +125,7 @@ enum UnitType {
   const UnitType(this.name);
 }
 
+// Unit Status
 @HiveType(typeId: HiveTypeIds.unitStatusEnum)
 @JsonEnum(valueField: 'name')
 enum UnitStatus {
@@ -133,6 +142,7 @@ enum UnitStatus {
   const UnitStatus(this.name);
 }
 
+// Floor Status
 @HiveType(typeId: HiveTypeIds.floorStatusEnum)
 @JsonEnum(valueField: 'name')
 enum FloorStatus {
@@ -149,6 +159,7 @@ enum FloorStatus {
   const FloorStatus(this.name);
 }
 
+// Door Status
 @HiveType(typeId: HiveTypeIds.doorStatusEnum)
 @JsonEnum(valueField: 'name')
 enum DoorStatus {
@@ -163,6 +174,22 @@ enum DoorStatus {
   const DoorStatus(this.name);
 }
 
+// Part Status
+@HiveType(typeId: HiveTypeIds.partStatusEnum)
+@JsonEnum(valueField: 'name')
+enum PartStatus {
+  @HiveField(0)
+  active("Active"),
+  @HiveField(1)
+  needsMaintenance("Needs_Maintenance"),
+  @HiveField(2)
+  needsReplacement("Needs_Replacement");
+
+  final String name;
+  const PartStatus(this.name);
+}
+
+// Part Type
 @HiveType(typeId: HiveTypeIds.partTypeEnum)
 @JsonEnum(valueField: 'name')
 enum PartType {
@@ -177,6 +204,7 @@ enum PartType {
   const PartType(this.name);
 }
 
+// Part Condition
 @HiveType(typeId: HiveTypeIds.partConditionEnum)
 @JsonEnum(valueField: 'name')
 enum PartCondition {
@@ -191,6 +219,7 @@ enum PartCondition {
   const PartCondition(this.name);
 }
 
+// Media Type
 @HiveType(typeId: HiveTypeIds.mediaTypeEnum)
 @JsonEnum(valueField: 'name')
 enum MediaType {
@@ -205,6 +234,7 @@ enum MediaType {
   const MediaType(this.name);
 }
 
+// Maintenance Type
 @HiveType(typeId: HiveTypeIds.maintenanceTypeEnum)
 @JsonEnum(valueField: 'name')
 enum MaintenanceType {
@@ -219,6 +249,7 @@ enum MaintenanceType {
   const MaintenanceType(this.name);
 }
 
+// Maintenance Status
 @HiveType(typeId: HiveTypeIds.maintenanceStatusEnum)
 @JsonEnum(valueField: 'name')
 enum MaintenanceStatus {

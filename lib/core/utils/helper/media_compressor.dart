@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:UpDown/core/utils/enums/enums.dart';
 import 'package:UpDown/core/utils/helper/check_file_size.dart';
@@ -50,7 +51,7 @@ abstract class MediaCompressor {
 
 class ImageCompressorService extends MediaCompressor {
   static const int _maxSizeMB = 10;
-  static const int _defaultQuality = 70;
+  static const int _defaultQuality = 50;
   static const _supportedFormats = {
     '.jpg': CompressFormat.jpeg,
     '.jpeg': CompressFormat.jpeg,
@@ -78,19 +79,39 @@ class ImageCompressorService extends MediaCompressor {
         filePath: inputPath,
         mediaType: MediaType.image,
       );
+      log('Before compression - Output file size: ${await File(inputPath).length()} bytes');
       if (!isValidSize) {
         throw MediaCompressionException('حجم الصورة كبير جدًا');
       }
 
       // إنشاء مسار الإخراج
-      final outputPath = await generateOutputPath(inputPath);
+      CompressFormat targetFormat = _supportedFormats[extension]!;
+      String targetExtension = extension;
+
+      // إذا كانت الصورة PNG، نحولها إلى WEBP لتقليل الحجم مع الحفاظ على الشفافية
+      if (targetFormat == CompressFormat.png) {
+        targetFormat = CompressFormat.webp;
+        targetExtension = '.webp';
+      }
+
+      // إنشاء مسار الإخراج الأساسي
+      String outputPath = await generateOutputPath(inputPath);
+
+      // التأكد من أن مسار الإخراج ينتهي بالامتداد الصحيح (خاصة لو تم تحويله لـ WEBP)
+      if (path.extension(outputPath).toLowerCase() != targetExtension) {
+        // نقوم بحذف الامتداد القديم وإضافة الامتداد الجديد
+        outputPath = path.withoutExtension(outputPath) + targetExtension;
+      }
 
       // ضغط الصورة
       final XFile? result = await FlutterImageCompress.compressAndGetFile(
         inputPath,
         outputPath,
         quality: quality ?? defaultQuality,
-        format: _supportedFormats[extension]!,
+        minWidth: 1080,
+        minHeight: 1080,
+        // format: _supportedFormats[extension]!,
+        format: targetFormat,
       );
 
       if (result == null) {
@@ -102,6 +123,7 @@ class ImageCompressorService extends MediaCompressor {
         filePath: result.path,
         mediaType: MediaType.image,
       );
+      log('Output file size: ${await File(result.path).length()} bytes');
       if (!isOutputValid) {
         await cleanUp(result.path);
         throw MediaCompressionException('حجم الصورة المضغوطة كبير جدًا');
